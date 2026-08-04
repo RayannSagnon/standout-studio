@@ -1,62 +1,32 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef, type ReactNode } from "react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { Children, isValidElement, useRef, type ReactNode } from "react";
 
 type SiteApproachProps = {
   children: ReactNode;
 };
 
+/**
+ * Sticky stack: Selected Work stays pinned while Packages rises over it.
+ * Desktop only — mobile keeps normal document flow.
+ */
 export function SiteApproach({ children }: SiteApproachProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const items = Children.toArray(children);
+  const work = items[0];
+  const overlay = items[1];
 
-  useGSAP(
-    () => {
-      const root = rootRef.current;
-      const panel = panelRef.current;
-      if (!root || !panel) return;
-
-      const work = document.getElementById("work");
-      if (work) gsap.set(work, { clearProps: "opacity,filter,transform" });
-      gsap.set(panel, { clearProps: "transform,filter,opacity" });
-
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const desktop = window.matchMedia("(min-width: 768px)").matches;
-      if (reduce || !desktop) return;
-
-      gsap.fromTo(
-        panel,
-        {
-          yPercent: 28,
-          transformOrigin: "50% 0%",
-          force3D: true,
-        },
-        {
-          yPercent: 0,
-          ease: "none",
-          force3D: true,
-          scrollTrigger: {
-            trigger: root,
-            start: "top 95%",
-            end: "top 30%",
-            scrub: 0.4,
-            invalidateOnRefresh: true,
-          },
-        },
-      );
-    },
-    { scope: rootRef },
-  );
+  if (!isValidElement(work) || !overlay) {
+    return <div ref={rootRef}>{children}</div>;
+  }
 
   return (
-    <div ref={rootRef} className="relative z-20 overflow-x-clip">
-      <div ref={panelRef} className="will-change-transform">
-        {children}
+    <div ref={rootRef} className="relative">
+      <div className="relative z-10 md:sticky md:top-0 md:z-10">
+        {work}
+      </div>
+      <div className="relative z-20 md:-mt-[min(52vh,420px)]">
+        {overlay}
       </div>
     </div>
   );

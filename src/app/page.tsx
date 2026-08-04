@@ -18,8 +18,8 @@ export default function HomePage() {
       <Hero />
       <Trust />
       <WhatWeDo />
-      <SelectedWork />
       <SiteApproach>
+        <SelectedWork />
         <Packages />
       </SiteApproach>
       <Why />

@@ -65,7 +65,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
   mediaZoom = 1.35,
   scrollDistance = 1.2,
   holdDistance = 0.35,
-  smoothing = 0.1,
+  smoothing = 0.06,
   overlayScrim = 0.45,
   useWindowScroll = false,
   enabled = true,
@@ -85,6 +85,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
   const scrimRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLDivElement | null>(null);
   const onProgressRef = useRef(onProgress);
+  const lastEmittedRef = useRef(-1);
   onProgressRef.current = onProgress;
 
   const propsRef = useRef<Required<Pick<ScrollExpandProps, ConfigKey>>>(
@@ -116,7 +117,9 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     const h = c.startHeight + (100 - c.startHeight) * e;
     const ix = Math.max(0, (100 - w) / 2);
     const iy = Math.max(0, (100 - h) / 2);
-    const r = c.startRadius + (c.endRadius - c.startRadius) * e;
+    // Keep radius soft early, snap to endRadius late to avoid clip-path round jank.
+    const rEase = smoothstep(0, 0.85, e);
+    const r = c.startRadius + (c.endRadius - c.startRadius) * rEase;
     frame.style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${r}px)`;
 
     media.style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * e})`;
@@ -124,25 +127,30 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     if (scrimRef.current) scrimRef.current.style.opacity = `${c.overlayScrim * e}`;
 
     if (titleRef.current) {
-      const out = smoothstep(0.4, 0.88, p);
-      titleRef.current.style.opacity = `${1 - out}`;
-      titleRef.current.style.transform = `translate3d(0, ${-28 * out}px, 0) scale(${1 + 0.06 * out})`;
+      const out = smoothstep(0.28, 0.7, p);
+      const opacity = 1 - out;
+      titleRef.current.style.opacity = `${opacity}`;
+      titleRef.current.style.transform = `translate3d(0, ${-24 * out}px, 0)`;
+      titleRef.current.style.visibility = opacity < 0.02 ? "hidden" : "visible";
     }
 
     if (hintRef.current) {
-      const gone = smoothstep(0, 0.12, p);
+      const gone = smoothstep(0, 0.1, p);
       hintRef.current.style.opacity = `${1 - gone}`;
-      hintRef.current.style.transform = `translate3d(0, ${8 * gone}px, 0)`;
     }
 
     if (overlayRef.current) {
-      const inn = smoothstep(0.68, 1, p);
+      const inn = smoothstep(0.62, 0.95, p);
       overlayRef.current.style.opacity = `${inn}`;
-      overlayRef.current.style.transform = `translate3d(0, ${18 * (1 - inn)}px, 0)`;
-      overlayRef.current.style.pointerEvents = inn > 0.85 ? "auto" : "none";
+      overlayRef.current.style.transform = `translate3d(0, ${14 * (1 - inn)}px, 0)`;
+      overlayRef.current.style.pointerEvents = inn > 0.9 ? "auto" : "none";
     }
 
-    onProgressRef.current?.(p);
+    const rounded = Math.round(p * 40) / 40;
+    if (rounded !== lastEmittedRef.current) {
+      lastEmittedRef.current = rounded;
+      onProgressRef.current?.(p);
+    }
   }, []);
 
   useEffect(() => {
@@ -158,6 +166,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     let target = 0;
     let stageH = 0;
     let running = false;
+    let resizeRaf = 0;
 
     const measure = () => {
       const c = propsRef.current;
@@ -183,9 +192,9 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
 
     const tick = () => {
       const c = propsRef.current;
-      const k = c.smoothing <= 0 ? 1 : 1 - Math.exp(-1 / (60 * c.smoothing));
+      const k = c.smoothing <= 0 ? 1 : 1 - Math.exp(-1 / (60 * Math.max(0.02, c.smoothing)));
       current += (target - current) * k;
-      if (Math.abs(target - current) < 0.0004) {
+      if (Math.abs(target - current) < 0.00035) {
         current = target;
         running = false;
       }
@@ -210,11 +219,17 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     };
 
     const onResize = () => {
-      measure();
-      target = readProgress();
-      current = target;
-      applyProgress(current);
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = 0;
+        measure();
+        target = readProgress();
+        current = target;
+        applyProgress(current);
+      });
     };
+
+    document.documentElement.classList.add("is-hero-expanding");
 
     measure();
     target = readProgress();
@@ -224,16 +239,29 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     const scroller = useWindowScroll ? window : root;
     scroller.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    const ro = new ResizeObserver(onResize);
-    ro.observe(root);
+    // Only observe element resize for nested scrollers — window mode
+    // rewrites track height and would thrash ResizeObserver mid-expand.
+    let ro: ResizeObserver | null = null;
+    if (!useWindowScroll) {
+      ro = new ResizeObserver(onResize);
+      ro.observe(root);
+    }
 
     return () => {
+      document.documentElement.classList.remove("is-hero-expanding");
       if (raf) cancelAnimationFrame(raf);
+      if (resizeRaf) cancelAnimationFrame(resizeRaf);
       scroller.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
-      ro.disconnect();
+      ro?.disconnect();
     };
   }, [applyProgress, useWindowScroll]);
+
+  useEffect(() => {
+    if (!enabled) {
+      document.documentElement.classList.remove("is-hero-expanding");
+    }
+  }, [enabled]);
 
   const media =
     mediaType === "video" ? (
@@ -254,6 +282,8 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
         src={src}
         alt={alt}
         draggable={false}
+        decoding="async"
+        fetchPriority="high"
       />
     );
 
@@ -266,6 +296,11 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     >
       <div ref={trackRef} className="scroll-expand__track">
         <div ref={stageRef} className="scroll-expand__stage">
+          {title ? (
+            <div ref={titleRef} className="scroll-expand__title">
+              {title}
+            </div>
+          ) : null}
           <div ref={frameRef} className="scroll-expand__frame">
             {media}
             <div ref={scrimRef} className="scroll-expand__scrim" />
@@ -275,11 +310,6 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
               </div>
             ) : null}
           </div>
-          {title ? (
-            <div ref={titleRef} className="scroll-expand__title">
-              {title}
-            </div>
-          ) : null}
           {scrollHint ? (
             <div ref={hintRef} className="scroll-expand__hint">
               {scrollHint}

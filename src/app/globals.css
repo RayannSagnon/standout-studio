@@ -35,8 +35,13 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* auto — smooth fights scrubbed ScrollExpand and feels stuttery */
+  scroll-behavior: auto;
   overflow-x: clip;
+}
+
+html.allow-smooth-scroll {
+  scroll-behavior: smooth;
 }
 
 @keyframes marquee {
@@ -85,6 +90,19 @@ html {
   50% {
     transform: translateX(-2%);
   }
+}
+
+@keyframes hero-copy-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-hero-copy-fade {
+  animation: hero-copy-fade 0.85s ease-out both;
 }
 
 @keyframes loader-mark-in {
@@ -199,6 +217,7 @@ html.is-booting {
   .animate-float,
   .animate-float-delayed,
   .animate-wave-drift,
+  .animate-hero-copy-fade,
   .page-loader__mark,
   .page-loader__bar {
     animation: none;

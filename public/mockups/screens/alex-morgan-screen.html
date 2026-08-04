@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=390, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 390px; height: 844px; overflow: hidden; }
+      body {
+        font-family: Outfit, system-ui, sans-serif;
+        background: #0b1c1f;
+        color: #fff;
+      }
+      .screen {
+        position: relative;
+        width: 390px;
+        height: 844px;
+        padding: 88px 28px 32px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .glow {
+        position: absolute; inset: 0; opacity: 0.4; pointer-events: none;
+        background:
+          radial-gradient(circle at 80% 90%, rgba(15,118,110,0.35), transparent 40%),
+          radial-gradient(circle at 10% 85%, rgba(15,118,110,0.2), transparent 35%);
+      }
+      .stripes {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 224px;
+        opacity: 0.3; pointer-events: none;
+        background-image: repeating-linear-gradient(115deg, transparent 0 10px, rgba(15,118,110,0.2) 10px 11px);
+      }
+      .avatar {
+        position: relative;
+        width: 112px; height: 112px;
+        margin: 0 auto;
+        border-radius: 999px;
+        overflow: hidden;
+        box-shadow: 0 0 0 3px rgba(15,118,110,0.6);
+      }
+      .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .name {
+        position: relative;
+        margin-top: 20px;
+        text-align: center;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .role {
+        position: relative;
+        margin-top: 6px;
+        text-align: center;
+        font-size: 15px;
+        color: #9fd3cd;
+      }
+      .rows {
+        position: relative;
+        margin-top: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .icon {
+        width: 28px; height: 28px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.1);
+        color: #9fd3cd;
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .label {
+        font-size: 14px;
+        color: rgba(255,255,255,0.9);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .footer {
+        position: relative;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 28px;
+      }
+      .qr {
+        width: 140px; height: 140px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        display: grid;
+        place-items: center;
+      }
+      .qr svg { width: 100%; height: 100%; }
+      .save {
+        margin-top: 12px;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        color: rgba(255,255,255,0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="screen">
+      <div class="glow"></div>
+      <div class="stripes"></div>
+      <div class="avatar">
+        <img src="../alex-portrait.jpg" alt="" />
+      </div>
+      <p class="name">Alex Morgan</p>
+      <p class="role">Financial Consultant</p>
+      <div class="rows">
+        <div class="row"><span class="icon">☎</span><span class="label">+1 (613) 555-0182</span></div>
+        <div class="row"><span class="icon">@</span><span class="label">alex@morganfinance.ca</span></div>
+        <div class="row"><span class="icon">◎</span><span class="label">morganfinance.ca</span></div>
+        <div class="row"><span class="icon">⌖</span><span class="label">Ottawa, ON</span></div>
+      </div>
+      <div class="footer">
+        <div class="qr">
+          <svg viewBox="0 0 80 80" aria-hidden="true">
+            <rect width="80" height="80" fill="white" />
+            <path fill="black" d="M8 8h28v28H8zm6 6h16v16H14zm30-6h28v28H44zm6 6h16v16H50zM8 44h28v28H8zm6 6h16v16H14zm46-6h6v6h-6zm-6 12h6v6h-6zm12 0h6v6h-6zm-6 12h18v6H54zm12-24h6v18h-6z" />
+          </svg>
+        </div>
+        <p class="save">Save contact</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollExpand from "@/components/ScrollExpand";
-import SplitText from "@/components/SplitText";
 import { publishHeroProgress } from "@/components/layout/SiteHeader";
 import { HeroAtmosphere } from "@/components/sections/HeroAtmosphere";
 import { Button } from "@/components/ui/Button";
@@ -12,12 +11,21 @@ export function Hero() {
   const [etherReady, setEtherReady] = useState(false);
   const [heroInView, setHeroInView] = useState(true);
   const [expandEnabled, setExpandEnabled] = useState(true);
+  const [copyReady, setCopyReady] = useState(false);
+  const openedRef = useRef(false);
+  const copyReadyRef = useRef(false);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
       setExpandEnabled(!media.matches);
-      if (media.matches) setEtherReady(true);
+      if (media.matches) {
+        openedRef.current = true;
+        copyReadyRef.current = true;
+        setCopyReady(true);
+        setEtherReady(true);
+        document.documentElement.classList.remove("is-hero-expanding");
+      }
     };
     sync();
     media.addEventListener("change", sync);
@@ -50,7 +58,7 @@ export function Hero() {
       <ScrollExpand
         src="/hero/expand-still.jpg"
         alt=""
-        title={hero.headline}
+        title={hero.expandTitle}
         scrollHint="Scroll"
         useWindowScroll
         enabled={expandEnabled}
@@ -58,48 +66,40 @@ export function Hero() {
         startHeight={58}
         startRadius={28}
         endRadius={0}
-        mediaZoom={1.28}
-        scrollDistance={1.15}
-        holdDistance={0.28}
-        smoothing={0.1}
-        overlayScrim={0.28}
+        mediaZoom={1.22}
+        scrollDistance={1.35}
+        holdDistance={0.22}
+        smoothing={0.045}
+        overlayScrim={0.22}
         onProgress={(progress) => {
           publishHeroProgress(progress);
-          const ready = progress >= 0.72;
-          setEtherReady((prev) => (prev === ready ? prev : ready));
+          if (progress >= 0.7 && !copyReadyRef.current) {
+            copyReadyRef.current = true;
+            setCopyReady(true);
+          }
+          if (progress >= 0.98 && !openedRef.current) {
+            openedRef.current = true;
+            document.documentElement.classList.remove("is-hero-expanding");
+            window.requestAnimationFrame(() => setEtherReady(true));
+          }
         }}
       >
         <div className="relative h-full w-full">
           <HeroAtmosphere active={etherReady && heroInView} />
 
-          <div className="relative z-10 mx-auto flex h-full min-h-0 max-w-[1440px] flex-col items-center justify-center px-5 py-16 text-center md:px-20 md:py-[7.5rem]">
+          <div
+            className={[
+              "relative z-10 mx-auto flex h-full min-h-0 max-w-[1440px] flex-col items-center justify-center px-5 py-16 text-center md:px-20 md:py-[7.5rem]",
+              copyReady ? "animate-hero-copy-fade" : "opacity-0",
+            ].join(" ")}
+          >
             <p className="mb-3 text-[13px] font-medium tracking-wide text-hero-kicker md:mb-4 md:text-[15px]">
               {hero.kicker}
             </p>
 
-            {etherReady ? (
-              <SplitText
-                tag="p"
-                text={hero.headline}
-                className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse md:max-w-[12ch] md:text-[56px]"
-                splitType="chars"
-                delay={35}
-                duration={0.55}
-                ease="power3.out"
-                from={{ opacity: 0, y: 28 }}
-                to={{ opacity: 1, y: 0 }}
-                threshold={0.01}
-                rootMargin="0px"
-                textAlign="center"
-              />
-            ) : (
-              <p
-                aria-hidden="true"
-                className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse opacity-0 md:max-w-[12ch] md:text-[56px]"
-              >
-                {hero.headline}
-              </p>
-            )}
+            <p className="max-w-[20ch] font-display text-[34px] font-bold leading-[1.08] tracking-tight text-inverse md:max-w-[18ch] md:text-[52px]">
+              {hero.headline}
+            </p>
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5 md:mt-9">
               <Button href={hero.primaryCta.href}>{hero.primaryCta.label}</Button>

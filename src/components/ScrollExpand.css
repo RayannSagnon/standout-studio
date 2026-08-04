@@ -33,8 +33,11 @@
 .scroll-expand__frame {
   position: absolute;
   inset: 0;
+  z-index: 2;
   clip-path: inset(21% 29% 21% 29% round 24px);
   will-change: clip-path;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .scroll-expand__media {
@@ -45,6 +48,8 @@
   object-fit: cover;
   will-change: transform;
   transform-origin: center;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -78,6 +83,7 @@
 .scroll-expand__title {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,6 +106,7 @@
   left: 0;
   right: 0;
   bottom: 1.25rem;
+  z-index: 3;
   text-align: center;
   font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.8125rem;

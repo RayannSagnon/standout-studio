@@ -19,7 +19,8 @@ export const nav = {
 
 export const hero = {
   kicker: "Design / Build / Care",
-  headline: "Own the first impression.",
+  expandTitle: "Own the first impression.",
+  headline: "Creating Beautiful Websites That Drive Revenue",
   primaryCta: { label: "Start a project", href: "#contact" },
   secondaryCta: { label: "See the packages", href: "#packages" },
   support: "We take time on the details that make a website feel finished.",
