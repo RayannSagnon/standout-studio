@@ -1,4 +1,5 @@
 import BlurText from "@/components/BlurText";
+import { AboutIllustration } from "@/components/sections/AboutIllustration";
 import { about } from "@/content/en";
 
 export function About() {
@@ -19,32 +20,33 @@ export function About() {
           direction="bottom"
           delay={45}
           stepDuration={0.28}
-          className="mt-3 max-w-[70ch] text-[15px] leading-relaxed text-ink md:mt-4 md:text-[22px] md:leading-snug"
+          className="mt-3 max-w-[70ch] text-[15px] leading-relaxed text-ink md:mt-4 md:max-w-none md:text-[22px] md:leading-snug"
         />
 
-        <div className="mt-8 grid items-center gap-8 md:mt-10 md:grid-cols-[560px_1fr] md:gap-9">
+        <div className="mt-8 grid items-center gap-6 md:mt-10 md:grid-cols-[560px_24px_1fr] md:gap-0">
+          <AboutIllustration />
+
           <div
-            className="relative h-40 overflow-hidden rounded-[20px] bg-[#e0f2f0] md:h-[380px] md:rounded-[28px]"
+            className="hidden justify-center md:flex"
             aria-hidden="true"
           >
-            <div className="absolute -left-6 top-4 h-20 w-20 rounded-full bg-[#b8e0db] md:left-10 md:top-12 md:h-[100px] md:w-[100px]" />
-            <div className="absolute right-4 top-2 h-16 w-16 rounded-full bg-[#fad6c7] md:right-16 md:top-10 md:h-20 md:w-20" />
-            <div className="absolute bottom-4 left-1/2 w-[58%] -translate-x-1/2 overflow-hidden rounded-xl border border-white/70 bg-white shadow-sm md:bottom-14 md:w-[52%]">
-              <div className="flex gap-1 border-b border-border px-2.5 py-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                <span className="h-1.5 w-1.5 rounded-full bg-border" />
-                <span className="h-1.5 w-1.5 rounded-full bg-border" />
-              </div>
-              <div className="space-y-2 p-3">
-                <div className="h-2 w-1/3 rounded bg-teal/25" />
-                <div className="h-3 w-2/3 rounded bg-ink/10" />
-                <div className="h-10 rounded-lg bg-gradient-to-br from-teal/15 to-hero/20 md:h-16" />
-              </div>
-            </div>
-            <div className="absolute right-6 bottom-8 h-8 w-8 rounded-xl bg-[#f2736b] md:right-14 md:bottom-24 md:h-10 md:w-10" />
+            <svg
+              width="24"
+              height="280"
+              viewBox="0 0 24 280"
+              fill="none"
+              className="animate-wave-drift"
+            >
+              <path
+                d="M12 0C16 24 6 48 12 72C18 96 6 120 12 144C18 168 6 192 12 216C18 240 8 260 12 280"
+                stroke="#0A4F4F"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
 
-          <div className="max-w-[624px]">
+          <div className="max-w-[624px] md:pl-6">
             <p className="text-sm leading-relaxed text-muted md:text-lg md:text-[#3a4a4e]">
               {about.body}
             </p>
