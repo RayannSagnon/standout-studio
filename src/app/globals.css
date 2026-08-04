@@ -36,6 +36,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 @keyframes marquee {
@@ -219,6 +220,7 @@ body {
   background: var(--bg-page);
   color: var(--ink-primary);
   font-family: var(--font-outfit), system-ui, sans-serif;
+  overflow-x: clip;
 }
 
 ::selection {
