@@ -8,7 +8,6 @@ import { Process } from "@/components/sections/Process";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Trust } from "@/components/sections/Trust";
-import { WaveFade } from "@/components/sections/WaveFade";
 import { WhatWeDo } from "@/components/sections/WhatWeDo";
 import { Why } from "@/components/sections/Why";
 
@@ -19,7 +18,6 @@ export default function HomePage() {
       <Trust />
       <WhatWeDo />
       <SelectedWork />
-      <WaveFade />
       <Packages />
       <Why />
       <Marquee />

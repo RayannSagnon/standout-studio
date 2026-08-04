@@ -56,7 +56,35 @@ export function Packages() {
 
   return (
     <section id="packages" className="bg-white">
-      <div className="mx-auto max-w-[1440px] px-5 py-7 md:px-20 md:py-[72px] md:pb-24">
+      {/* Wave is the top of this section: page shows above the crest, then fades into white. */}
+      <div className="bg-page" aria-hidden="true">
+        <svg
+          className="block h-[88px] w-full md:h-[140px]"
+          viewBox="0 -10 1440 170"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient
+              id="packagesWaveFade"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop offset="0%" stopColor="#c7e5e0" />
+              <stop offset="42%" stopColor="#ebf5f3" />
+              <stop offset="100%" stopColor="#ffffff" />
+            </linearGradient>
+          </defs>
+          <path
+            fill="url(#packagesWaveFade)"
+            d="M0 16.5C90-5.5 90-5.5 180 16.5C270 38.5 270 38.5 360 16.5C450-5.5 450-5.5 540 16.5C630 38.5 630 38.5 720 16.5C810-5.5 810-5.5 900 16.5C990 38.5 990 38.5 1080 16.5C1170-5.5 1170-5.5 1260 16.5C1350 38.5 1350 38.5 1440 16.5L1440 170H0Z"
+          />
+        </svg>
+      </div>
+
+      <div className="relative -mt-px bg-white">
+        <div className="mx-auto max-w-[1440px] px-5 pb-7 pt-2 md:px-20 md:pb-24 md:pt-4">
         <Reveal>
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {packages.kicker}
@@ -205,6 +233,7 @@ export function Packages() {
           <p className="mt-1 text-xs text-muted">
             {packages.siteCare.mobileDescription}
           </p>
+        </div>
         </div>
       </div>
     </section>
