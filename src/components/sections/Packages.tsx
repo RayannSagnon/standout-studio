@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Reveal } from "@/components/ui/Reveal";
 import { packages } from "@/content/en";
 
 function CheckIcon() {
@@ -56,7 +57,7 @@ export function Packages() {
   return (
     <section id="packages" className="bg-white">
       <div className="mx-auto max-w-[1440px] px-5 py-7 md:px-20 md:py-[72px] md:pb-24">
-        <div>
+        <Reveal>
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {packages.kicker}
           </p>
@@ -66,14 +67,14 @@ export function Packages() {
           <p className="mt-1.5 text-xs text-muted md:hidden">
             {packages.swipeHint}
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-9 hidden gap-6 md:grid md:grid-cols-3">
           {packages.plans.map((plan) => (
             <article
               key={plan.id}
               className={[
-                "flex h-full flex-col rounded-xl bg-page p-7",
+                "lift-card flex h-full flex-col rounded-xl bg-page p-7",
                 plan.featured
                   ? "border-2 border-teal"
                   : "border border-border",
@@ -103,7 +104,7 @@ export function Packages() {
               </div>
               <Link
                 href={plan.cta.href}
-                className="mt-8 inline-flex h-[42px] w-fit items-center justify-center rounded-full bg-teal px-4 text-sm font-semibold text-inverse transition-colors hover:bg-teal-deep"
+                className="pressable mt-8 inline-flex h-[42px] w-fit items-center justify-center rounded-full bg-teal px-4 text-sm font-semibold text-inverse transition-colors hover:bg-teal-deep"
               >
                 {plan.cta.label}
               </Link>

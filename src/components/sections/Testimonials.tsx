@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/ui/Reveal";
 import { testimonials } from "@/content/en";
 
 function Stars() {
@@ -12,7 +13,7 @@ export function Testimonials() {
   return (
     <section id="testimonials" className="bg-page px-5 py-10 md:px-20 md:py-24">
       <div className="mx-auto max-w-[1280px]">
-        <div className="max-w-[616px]">
+        <Reveal className="max-w-[616px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {testimonials.mobileKicker}
           </p>
@@ -26,23 +27,22 @@ export function Testimonials() {
           <p className="mt-1.5 text-xs text-muted md:hidden">
             {testimonials.swipeHint}
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-9 hidden gap-5 md:grid md:grid-cols-3">
-          {testimonials.items.map((item) => (
-            <article
-              key={item.id}
-              className="flex h-full flex-col rounded-xl bg-white p-7"
-            >
+          {testimonials.items.map((item, index) => (
+            <Reveal key={item.id} delayMs={index * 90} as="article">
+              <div className="lift-card flex h-full flex-col rounded-xl bg-white p-7">
               <Stars />
               <blockquote className="mt-4 flex-1 font-display text-[17px] leading-relaxed text-ink">
                 “{item.quote}”
               </blockquote>
               <div className="mt-6">
-                <p className="text-sm font-semibold text-ink">{item.name}</p>
-                <p className="mt-1 text-xs text-muted">{item.role}</p>
+                  <p className="text-sm font-semibold text-ink">{item.name}</p>
+                  <p className="mt-1 text-xs text-muted">{item.role}</p>
+                </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
 

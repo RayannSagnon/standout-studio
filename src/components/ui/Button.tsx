@@ -28,8 +28,9 @@ export function Button({
     <Link
       href={href}
       className={[
-        "inline-flex items-center justify-center rounded-full px-7 py-4 text-[15px] font-semibold tracking-tight transition-colors",
+        "inline-flex items-center justify-center rounded-full px-7 py-4 text-[15px] font-semibold tracking-tight pressable",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+        "transition-colors duration-200",
         variants[variant],
         className,
       ].join(" ")}

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/ui/Reveal";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { whatWeDo } from "@/content/en";
 
@@ -5,7 +6,7 @@ export function WhatWeDo() {
   return (
     <section id="what-we-do" className="bg-page px-5 py-10 md:px-20 md:py-[88px]">
       <div className="mx-auto max-w-[1280px]">
-        <div className="max-w-[720px]">
+        <Reveal className="max-w-[720px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {whatWeDo.kicker}
           </p>
@@ -21,24 +22,23 @@ export function WhatWeDo() {
           <p className="mt-2 text-[13px] text-muted md:hidden">
             {whatWeDo.swipeHint}
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-6 hidden gap-4 md:mt-9 md:grid md:grid-cols-2">
-          {whatWeDo.items.map((item) => (
-            <article
-              key={item.id}
-              className="flex gap-4 rounded-[14px] bg-surface px-5 py-[22px]"
-            >
-              <ServiceIcon name={item.icon} />
-              <div className="min-w-0">
-                <h3 className="font-display text-[20px] font-semibold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-[#3a4a4e]">
-                  {item.description}
-                </p>
+          {whatWeDo.items.map((item, index) => (
+            <Reveal key={item.id} delayMs={index * 60} as="article">
+              <div className="lift-card flex h-full gap-4 rounded-[14px] bg-surface px-5 py-[22px]">
+                <ServiceIcon name={item.icon} />
+                <div className="min-w-0">
+                  <h3 className="font-display text-[20px] font-semibold tracking-tight text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-[#3a4a4e]">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
 
