@@ -37,10 +37,7 @@ export function Reveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.16, rootMargin: "0px 0px -8% 0px" },
     );
@@ -52,11 +49,7 @@ export function Reveal({
   return (
     <Tag
       ref={ref as never}
-      className={[
-        "reveal",
-        visible ? "reveal-in" : "",
-        className,
-      ].join(" ")}
+      className={["reveal", visible ? "reveal-in" : "", className].join(" ")}
       style={{ transitionDelay: `${delayMs}ms` } as CSSProperties}
     >
       {children}
