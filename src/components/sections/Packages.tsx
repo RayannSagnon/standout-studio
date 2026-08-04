@@ -55,7 +55,7 @@ export function Packages() {
   }, []);
 
   return (
-    <section id="packages" className="bg-white">
+    <section id="packages" data-cursor="packages" className="bg-white">
       {/* Wave is the top of this section: page shows above the crest, then fades into white. */}
       <div className="bg-page" aria-hidden="true">
         <svg

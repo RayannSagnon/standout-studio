@@ -35,7 +35,7 @@ export function Contact() {
   }
 
   return (
-    <section className="px-4 py-6 md:px-10 md:py-10">
+    <section className="px-4 py-6 md:px-10 md:py-10" data-cursor="contact">
       <div
         id="contact"
         className="mx-auto flex max-w-[1360px] flex-col gap-6 rounded-3xl bg-hero px-4 py-8 text-inverse md:flex-row md:items-start md:gap-14 md:rounded-[48px] md:px-20 md:py-[72px]"

@@ -43,6 +43,7 @@ export function Marquee() {
   return (
     <section
       aria-hidden="true"
+      data-cursor="marquee"
       className="relative h-[88px] overflow-hidden bg-white md:h-[220px]"
     >
       <Band

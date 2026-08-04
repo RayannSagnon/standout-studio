@@ -4,7 +4,11 @@ import { whatWeDo } from "@/content/en";
 
 export function WhatWeDo() {
   return (
-    <section id="what-we-do" className="bg-page px-5 py-10 md:px-20 md:py-[88px]">
+    <section
+      id="what-we-do"
+      data-cursor="services"
+      className="bg-page px-5 py-10 md:px-20 md:py-[88px]"
+    >
       <div className="mx-auto max-w-[1280px]">
         <Reveal className="max-w-[720px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">

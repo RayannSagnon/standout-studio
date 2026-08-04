@@ -11,7 +11,11 @@ function Stars() {
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="bg-page px-5 py-10 md:px-20 md:py-24">
+    <section
+      id="testimonials"
+      data-cursor="testimonials"
+      className="bg-page px-5 py-10 md:px-20 md:py-24"
+    >
       <div className="mx-auto max-w-[1280px]">
         <Reveal className="max-w-[616px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">

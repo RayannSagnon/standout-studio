@@ -86,7 +86,11 @@ function StepIcon({ name }: { name: (typeof process.steps)[number]["icon"] }) {
 
 export function Process() {
   return (
-    <section id="process" className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]">
+    <section
+      id="process"
+      data-cursor="process"
+      className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]"
+    >
       <div className="mx-auto max-w-[1280px]">
         <div className="md:hidden">
           <h2 className="font-display text-[22px] font-bold tracking-tight text-ink">

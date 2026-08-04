@@ -7,7 +7,7 @@ export function Faq() {
   const [openId, setOpenId] = useState<string>(faq.items[0].id);
 
   return (
-    <section id="faq" className="bg-page px-5 py-10 md:px-20 md:py-[88px]">
+    <section id="faq" data-cursor="faq" className="bg-page px-5 py-10 md:px-20 md:py-[88px]">
       <div className="mx-auto max-w-[1280px]">
         <div className="max-w-[466px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">

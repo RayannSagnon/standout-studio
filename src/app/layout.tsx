@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SectionCursor } from "@/components/ui/SectionCursor";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-page text-ink">
+        <SectionCursor />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

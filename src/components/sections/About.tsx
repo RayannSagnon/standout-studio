@@ -2,7 +2,11 @@ import { about } from "@/content/en";
 
 export function About() {
   return (
-    <section id="about" className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]">
+    <section
+      id="about"
+      data-cursor="about"
+      className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]"
+    >
       <div className="mx-auto max-w-[1280px]">
         <p className="text-xs font-semibold tracking-[0.12em] text-teal md:text-[13px]">
           {about.kicker}

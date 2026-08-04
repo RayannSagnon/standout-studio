@@ -4,7 +4,11 @@ import { why } from "@/content/en";
 
 export function Why() {
   return (
-    <section id="why" className="bg-white px-5 py-10 md:px-12 md:py-[72px] lg:px-20">
+    <section
+      id="why"
+      data-cursor="why"
+      className="bg-white px-5 py-10 md:px-12 md:py-[72px] lg:px-20"
+    >
       <div className="mx-auto grid max-w-[1440px] items-center gap-10 lg:grid-cols-[minmax(0,632px)_minmax(0,1fr)] lg:gap-10">
         <Reveal>
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">

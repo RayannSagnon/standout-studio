@@ -4,6 +4,7 @@ export function Trust() {
   return (
     <section
       aria-label="Trust signals"
+      data-cursor="trust"
       className="border-b border-border/70 bg-surface"
     >
       <div className="mx-auto hidden max-w-[1440px] items-center justify-between gap-4 px-20 py-[18px] md:flex">

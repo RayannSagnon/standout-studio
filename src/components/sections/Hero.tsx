@@ -6,6 +6,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
+      data-cursor="hero"
       className="relative isolate overflow-hidden bg-hero text-inverse"
     >
       <div
