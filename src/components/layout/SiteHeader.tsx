@@ -1,36 +1,66 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { nav, site } from "@/content/en";
 
 const HERO_PROGRESS_EVENT = "standout:hero-progress";
 
 export function SiteHeader() {
   const [visible, setVisible] = useState(false);
+  const visibleRef = useRef(false);
+  const expandDoneRef = useRef(false);
+  const armScrollYRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const apply = (progress: number) => {
-      // Stay hidden through the resting ScrollExpand frame and the open-up scrub.
-      // Only show once the hero is fully expanded into the live stage.
-      setVisible(progress >= 0.98);
+    const setNav = (next: boolean) => {
+      if (visibleRef.current === next) return;
+      visibleRef.current = next;
+      setVisible(next);
     };
 
     const onHeroProgress = (event: Event) => {
       const progress = (event as CustomEvent<{ progress: number }>).detail
         ?.progress;
-      if (typeof progress === "number") apply(progress);
+      if (typeof progress !== "number") return;
+
+      if (progress >= 0.98) {
+        if (!expandDoneRef.current) {
+          expandDoneRef.current = true;
+          // Arm on the scroll position where expand finishes.
+          // The next scroll past this point reveals the nav.
+          armScrollYRef.current = window.scrollY;
+        }
+        return;
+      }
+
+      expandDoneRef.current = false;
+      armScrollYRef.current = null;
+      setNav(false);
+    };
+
+    const onScroll = () => {
+      if (!expandDoneRef.current || visibleRef.current) return;
+      const armed = armScrollYRef.current;
+      if (armed == null) return;
+      if (window.scrollY > armed + 16) setNav(true);
     };
 
     window.addEventListener(HERO_PROGRESS_EVENT, onHeroProgress);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     const existing = Number(
       document.documentElement.dataset.heroProgress ?? "0",
     );
-    if (!Number.isNaN(existing)) apply(existing);
+    if (!Number.isNaN(existing) && existing >= 0.98) {
+      expandDoneRef.current = true;
+      armScrollYRef.current = window.scrollY;
+      onScroll();
+    }
 
     return () => {
       window.removeEventListener(HERO_PROGRESS_EVENT, onHeroProgress);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
