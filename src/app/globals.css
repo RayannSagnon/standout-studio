@@ -13,6 +13,7 @@
   --border-subtle: #d5e0e2;
   --hero-kicker: #b8d9d4;
   --hero-support: #8fb5b0;
+  --wave-mint: #c7e5e0;
 }
 
 @theme inline {
@@ -28,6 +29,7 @@
   --color-border: var(--border-subtle);
   --color-hero-kicker: var(--hero-kicker);
   --color-hero-support: var(--hero-support);
+  --color-wave: var(--wave-mint);
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-outfit);
 }

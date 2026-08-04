@@ -141,6 +141,69 @@ export const selectedWork = {
   ],
 } as const;
 
+export const packages = {
+  kicker: "PACKAGES",
+  title: "Packages & pricing",
+  swipeHint: "Swipe to compare →",
+  plans: [
+    {
+      id: "digital-card",
+      name: "Digital Card",
+      price: "$250",
+      featured: false,
+      features: [
+        "One-screen mini page",
+        "Unique link + QR code",
+        "Savable contact (vCard)",
+        "3 revision rounds",
+      ],
+      mobileFeatures: ["One-screen page", "Link + QR", "3 revisions"],
+      cta: { label: "Get started", href: "#contact" },
+    },
+    {
+      id: "personal-brand",
+      name: "Personal Brand",
+      price: "$650",
+      featured: true,
+      badge: "Most popular",
+      mobileBadge: "MOST POPULAR",
+      features: [
+        "3 to 5 page website",
+        "Clear call to action",
+        "Basic SEO + analytics",
+        "3 revision rounds",
+      ],
+      mobileFeatures: ["3-5 pages", "Clear CTA", "SEO basics", "3 revisions"],
+      cta: { label: "Get started", href: "#contact" },
+    },
+    {
+      id: "business-starter",
+      name: "Business Starter",
+      price: "$999",
+      featured: false,
+      features: [
+        "5 to 8 page showcase",
+        "Contact / quote path",
+        "Local SEO basics",
+        "3 revision rounds",
+      ],
+      mobileFeatures: ["5-8 pages", "Quote path", "Local SEO", "3 revisions"],
+      cta: { label: "Get started", href: "#contact" },
+    },
+  ],
+  siteCareNote:
+    "Optional after launch: Site Care keeps hosting, updates, and backups handled.",
+  siteCare: {
+    kicker: "SITE CARE",
+    title: "Hosting & upkeep, $29 / month",
+    mobileTitle: "SITE CARE  ·  $29/mo",
+    description:
+      "Hosting, updates, backups, and small content fixes. Month to month. Cancel anytime.",
+    mobileDescription: "Hosting, updates, backups, small fixes.",
+    cta: { label: "Ask about Care", href: "#contact" },
+  },
+} as const;
+
 export const footer = {
   meta: "Ottawa · Remote · EN / FR",
 } as const;
