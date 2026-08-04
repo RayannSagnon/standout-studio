@@ -26,81 +26,43 @@ export function SiteApproach({ children }: SiteApproachProps) {
       const desktop = window.matchMedia("(min-width: 768px)").matches;
       if (reduce || !desktop) return;
 
-      if (work) {
-        ScrollTrigger.create({
-          trigger: work,
-          start: "bottom bottom",
-          endTrigger: root,
-          end: "top top",
-          pin: true,
-          pinSpacing: false,
-          anticipatePin: 1,
-        });
-      }
-
       const entrance = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: "top bottom",
-          end: "top top",
-          scrub: 0.45,
+          end: "top 18%",
+          scrub: 0.5,
           invalidateOnRefresh: true,
         },
       });
 
+      // Translate only — no pin, no scale (those were collapsing / shifting layout).
       entrance.fromTo(
         panel,
-        {
-          yPercent: 28,
-          scale: 0.86,
-          transformOrigin: "50% 0%",
-          filter: "brightness(0.96)",
-          force3D: true,
-        },
-        {
-          yPercent: 0,
-          scale: 1,
-          filter: "brightness(1)",
-          ease: "none",
-          force3D: true,
-        },
+        { y: 72, force3D: true },
+        { y: 0, ease: "none", force3D: true },
         0,
       );
 
       if (work) {
         entrance.fromTo(
           work,
-          {
-            scale: 1,
-            opacity: 1,
-            filter: "blur(0px)",
-            transformOrigin: "50% 70%",
-            force3D: true,
-          },
-          {
-            scale: 0.9,
-            opacity: 0.35,
-            filter: "blur(3px)",
-            ease: "none",
-            force3D: true,
-          },
+          { opacity: 1 },
+          { opacity: 0.5, ease: "none" },
           0,
         );
       }
 
       return () => {
-        if (work) gsap.set(work, { clearProps: "all" });
+        if (work) gsap.set(work, { clearProps: "opacity" });
       };
     },
     { scope: rootRef },
   );
 
   return (
-    <div ref={rootRef} className="relative z-20">
-      <div
-        ref={panelRef}
-        className="will-change-transform [transform-style:preserve-3d]"
-      >
+    <div ref={rootRef} className="relative z-10">
+      <div ref={panelRef} className="will-change-transform">
         {children}
       </div>
     </div>
