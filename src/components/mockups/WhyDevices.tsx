@@ -7,23 +7,23 @@ import { PhoneFrame } from "@/components/mockups/PhoneFrame";
 export function WhyDevices() {
   return (
     <div
-      className="relative mx-auto hidden h-[420px] w-full max-w-[640px] [perspective:1200px] lg:block"
+      className="relative mx-auto hidden h-[460px] w-full max-w-[680px] [perspective:1600px] lg:block"
       aria-hidden="true"
     >
-      <div className="pointer-events-none absolute inset-x-[14%] bottom-2 h-10 rounded-full bg-ink/10 blur-2xl" />
+      <div className="pointer-events-none absolute inset-x-[10%] bottom-0 h-14 rounded-full bg-ink/15 blur-3xl" />
 
       <PhoneFrame
-        className="left-[6%] top-[4%] h-[96%] w-[46%]"
-        baseRotateX={10}
-        baseRotateY={-18}
+        className="left-[4%] top-[2%] h-[98%] w-[48%]"
+        baseRotateX={12}
+        baseRotateY={-26}
       >
         <DigitalCardScreen />
       </PhoneFrame>
 
       <PhoneFrame
-        className="right-[4%] top-[10%] h-[90%] w-[44%]"
-        baseRotateX={8}
-        baseRotateY={16}
+        className="right-[2%] top-[8%] h-[92%] w-[46%]"
+        baseRotateX={10}
+        baseRotateY={24}
         floatDelay
       >
         <BusinessSiteScreen />

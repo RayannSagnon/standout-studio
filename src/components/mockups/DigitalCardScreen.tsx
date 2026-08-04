@@ -20,7 +20,7 @@ function Row({
 
 export function DigitalCardScreen() {
   return (
-    <div className="relative flex h-full flex-col bg-[#0b1c1f] px-3.5 pb-4 pt-8 text-white">
+    <div className="relative flex h-full flex-col bg-[#0b1c1f] px-3.5 pb-4 pt-11 text-white">
       <div
         className="pointer-events-none absolute inset-0 opacity-40"
         style={{

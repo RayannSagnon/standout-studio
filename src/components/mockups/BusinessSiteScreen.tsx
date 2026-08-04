@@ -3,7 +3,7 @@ import Image from "next/image";
 export function BusinessSiteScreen() {
   return (
     <div className="flex h-full flex-col bg-white text-ink">
-      <div className="flex items-center justify-between px-3 pb-2 pt-7">
+      <div className="flex items-center justify-between px-3 pb-2 pt-10">
         <p className="text-[8px] font-semibold tracking-[0.14em] text-ink">
           RIVERDALE INTERIORS
         </p>
