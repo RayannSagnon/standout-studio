@@ -10,6 +10,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Trust } from "@/components/sections/Trust";
 import { WhatWeDo } from "@/components/sections/WhatWeDo";
 import { Why } from "@/components/sections/Why";
+import { SiteApproach } from "@/components/layout/SiteApproach";
 
 export default function HomePage() {
   return (
@@ -18,14 +19,16 @@ export default function HomePage() {
       <Trust />
       <WhatWeDo />
       <SelectedWork />
-      <Packages />
-      <Why />
-      <Marquee />
-      <Process />
-      <Testimonials />
-      <About />
-      <Faq />
-      <Contact />
+      <SiteApproach>
+        <Packages />
+        <Why />
+        <Marquee />
+        <Process />
+        <Testimonials />
+        <About />
+        <Faq />
+        <Contact />
+      </SiteApproach>
     </>
   );
 }
