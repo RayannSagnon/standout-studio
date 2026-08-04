@@ -17,13 +17,6 @@ type CursorMode =
   | "faq"
   | "contact";
 
-const LABELS: Partial<Record<CursorMode, string>> = {
-  work: "View",
-  packages: "Pick",
-  contact: "Write",
-  faq: "Ask",
-};
-
 export function SectionCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -57,7 +50,9 @@ export function SectionCursor() {
 
       const target = event.target as HTMLElement | null;
       const interactive = Boolean(
-        target?.closest("a, button, input, textarea, select, label, [role='button']"),
+        target?.closest(
+          "a, button, input, textarea, select, label, [role='button']",
+        ),
       );
       setHoveringLink(interactive);
 
@@ -95,8 +90,6 @@ export function SectionCursor() {
 
   if (!enabled) return null;
 
-  const label = LABELS[mode];
-
   return (
     <div
       className={[
@@ -118,12 +111,9 @@ export function SectionCursor() {
         className={[
           "section-cursor-ring absolute left-0 top-0 will-change-transform",
           hoveringLink ? "is-hover" : "",
-          label ? "has-label" : "",
           `mode-${mode}`,
         ].join(" ")}
-      >
-        {label ? <span>{label}</span> : null}
-      </div>
+      />
     </div>
   );
 }
