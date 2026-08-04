@@ -86,6 +86,51 @@ html {
   }
 }
 
+@keyframes loader-mark-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loader-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+html.is-booting {
+  overflow: hidden;
+}
+
+.page-loader {
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.5s linear;
+}
+
+.page-loader--leave {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.page-loader__mark {
+  animation: loader-mark-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-loader__bar {
+  transform-origin: left center;
+  animation: loader-bar 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
 .animate-marquee {
   animation: marquee 40s linear infinite;
 }
