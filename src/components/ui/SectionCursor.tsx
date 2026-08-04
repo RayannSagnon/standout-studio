@@ -69,10 +69,49 @@ export function SectionCursor() {
     syncClasses(ringRef.current, modeRef.current, hoverRef.current);
 
     let frame = 0;
+    let running = false;
+    let idleTimer = 0;
+
+    const stop = () => {
+      running = false;
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const tick = () => {
+      ring.current.x += (pos.current.x - ring.current.x) * 0.45;
+      ring.current.y += (pos.current.y - ring.current.y) * 0.45;
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0)`;
+      }
+
+      const dx = pos.current.x - ring.current.x;
+      const dy = pos.current.y - ring.current.y;
+      if (dx * dx + dy * dy < 0.05) {
+        stop();
+        return;
+      }
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    const kick = () => {
+      if (running) return;
+      running = true;
+      frame = requestAnimationFrame(tick);
+    };
 
     const onMove = (event: MouseEvent) => {
       pos.current = { x: event.clientX, y: event.clientY };
       setVisible((prev) => (prev ? prev : true));
+      kick();
+
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(stop, 120);
 
       const target = event.target as HTMLElement | null;
       const interactive = Boolean(
@@ -99,31 +138,20 @@ export function SectionCursor() {
       }
     };
 
-    const onLeave = () => setVisible(false);
-
-    const tick = () => {
-      // Snappy follow — avoids the heavy "drag" feel.
-      ring.current.x += (pos.current.x - ring.current.x) * 0.42;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.42;
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
-      }
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0)`;
-      }
-      frame = requestAnimationFrame(tick);
+    const onLeave = () => {
+      setVisible(false);
+      stop();
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
-    frame = requestAnimationFrame(tick);
 
     return () => {
       document.documentElement.classList.remove("has-section-cursor");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
-      cancelAnimationFrame(frame);
+      window.clearTimeout(idleTimer);
+      stop();
     };
   }, [enabled]);
 

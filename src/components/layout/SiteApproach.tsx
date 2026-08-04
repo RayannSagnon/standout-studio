@@ -62,9 +62,7 @@ export function SiteApproach({ children }: SiteApproachProps) {
 
   return (
     <div ref={rootRef} className="relative z-10">
-      <div ref={panelRef} className="will-change-transform">
-        {children}
-      </div>
+      <div ref={panelRef}>{children}</div>
     </div>
   );
 }

@@ -45,17 +45,17 @@ const buildKeyframes = (
 
 export default function BlurText({
   text = "",
-  delay = 200,
+  delay = 120,
   className = "",
   animateBy = "words",
   direction = "top",
-  threshold = 0.1,
+  threshold = 0.2,
   rootMargin = "0px",
   animationFrom,
   animationTo,
   easing = (t: number) => t,
   onAnimationComplete,
-  stepDuration = 0.35,
+  stepDuration = 0.28,
   as: Tag = "p",
   style,
 }: BlurTextProps) {
@@ -75,31 +75,25 @@ export default function BlurText({
     return () => observer.disconnect();
   }, [threshold, rootMargin]);
 
+  // Opacity + translate only — CSS filter:blur is a major scroll jank source.
   const defaultFrom = useMemo(
     () =>
       direction === "top"
-        ? { filter: "blur(10px)", opacity: 0, y: -50 }
-        : { filter: "blur(10px)", opacity: 0, y: 50 },
+        ? { opacity: 0, y: -18 }
+        : { opacity: 0, y: 18 },
     [direction],
   );
 
   const defaultTo = useMemo(
-    () => [
-      {
-        filter: "blur(5px)",
-        opacity: 0.5,
-        y: direction === "top" ? 5 : -5,
-      },
-      { filter: "blur(0px)", opacity: 1, y: 0 },
-    ],
-    [direction],
+    () => [{ opacity: 1, y: 0 }],
+    [],
   );
 
   const fromSnapshot = animationFrom ?? defaultFrom;
   const toSnapshots = animationTo ?? defaultTo;
 
   const stepCount = toSnapshots.length + 1;
-  const totalDuration = stepDuration * (stepCount - 1);
+  const totalDuration = stepDuration * Math.max(1, stepCount - 1);
   const times = Array.from({ length: stepCount }, (_, i) =>
     stepCount === 1 ? 0 : i / (stepCount - 1),
   );
@@ -129,10 +123,7 @@ export default function BlurText({
             onAnimationComplete={
               index === elements.length - 1 ? onAnimationComplete : undefined
             }
-            style={{
-              display: "inline-block",
-              willChange: "transform, filter, opacity",
-            }}
+            style={{ display: "inline-block" }}
           >
             {segment === " " ? "\u00A0" : segment}
             {animateBy === "words" && index < elements.length - 1 && "\u00A0"}

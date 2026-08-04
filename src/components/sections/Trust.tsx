@@ -18,7 +18,7 @@ function TrustLoop({ items }: { items: readonly string[] }) {
 
   return (
     <div className="overflow-hidden py-[18px]">
-      <div className="flex w-max animate-marquee items-center gap-8 pr-8 will-change-transform">
+      <div className="flex w-max animate-marquee items-center gap-8 pr-8">
         {sequence.map((item, index) => (
           <span
             key={`${item}-${index}`}

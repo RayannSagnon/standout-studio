@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 const LiquidEther = dynamic(() => import("@/components/LiquidEther"), {
   ssr: false,
@@ -13,27 +14,39 @@ type HeroAtmosphereProps = {
 };
 
 export function HeroAtmosphere({ active = true }: HeroAtmosphereProps) {
+  const [canRun, setCanRun] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(
+      "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+    );
+    const sync = () => setCanRun(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   return (
     <div className="absolute inset-0 z-0" aria-hidden="true">
       <div className="absolute inset-0 bg-hero" />
-      {active ? (
-        <div className="absolute inset-0 opacity-90">
+      {active && canRun ? (
+        <div className="absolute inset-0 opacity-85">
           <LiquidEther
             colors={HERO_COLORS}
-            mouseForce={18}
-            cursorSize={90}
+            mouseForce={14}
+            cursorSize={80}
             isViscous={false}
-            viscous={30}
-            iterationsViscous={24}
-            iterationsPoisson={24}
-            resolution={0.45}
+            iterationsViscous={8}
+            iterationsPoisson={10}
+            resolution={0.22}
+            BFECC={false}
             isBounce={false}
             autoDemo
-            autoSpeed={0.45}
-            autoIntensity={2}
-            takeoverDuration={0.25}
-            autoResumeDelay={2500}
-            autoRampDuration={0.6}
+            autoSpeed={0.35}
+            autoIntensity={1.6}
+            takeoverDuration={0.2}
+            autoResumeDelay={4000}
+            autoRampDuration={0.5}
             style={{ width: "100%", height: "100%" }}
           />
         </div>

@@ -28,13 +28,13 @@ const SplitText: React.FC<SplitTextProps> = ({
   text,
   className = "",
   delay = 50,
-  duration = 1.25,
+  duration = 0.7,
   ease = "power3.out",
   splitType = "chars",
-  from = { opacity: 0, y: 40 },
+  from = { opacity: 0, y: 28 },
   to = { opacity: 1, y: 0 },
-  threshold = 0.1,
-  rootMargin = "-100px",
+  threshold = 0.2,
+  rootMargin = "-80px",
   textAlign = "center",
   tag = "p",
   onLetterAnimationComplete,
@@ -51,9 +51,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     if (document.fonts.status === "loaded") {
       setFontsLoaded(true);
     } else {
-      document.fonts.ready.then(() => {
-        setFontsLoaded(true);
-      });
+      document.fonts.ready.then(() => setFontsLoaded(true));
     }
   }, []);
 
@@ -85,6 +83,7 @@ const SplitText: React.FC<SplitTextProps> = ({
             ? `-=${Math.abs(marginValue)}${marginUnit}`
             : `+=${marginValue}${marginUnit}`;
       const start = `top ${startPct}%${sign}`;
+
       let targets: Element[] = [];
       const assignTargets = (self: GSAPSplitText) => {
         if (splitType.includes("chars") && self.chars.length) targets = self.chars;
@@ -96,6 +95,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       };
 
       let tween: gsap.core.Tween | null = null;
+      let armed = true;
 
       const splitInstance = new GSAPSplitText(el, {
         type: splitType,
@@ -116,10 +116,7 @@ const SplitText: React.FC<SplitTextProps> = ({
               ease,
               stagger: delay / 1000,
               paused: true,
-              onComplete: () => {
-                onCompleteRef.current?.();
-              },
-              willChange: "transform, opacity",
+              onComplete: () => onCompleteRef.current?.(),
               force3D: true,
             },
           );
@@ -127,25 +124,35 @@ const SplitText: React.FC<SplitTextProps> = ({
           ScrollTrigger.create({
             trigger: el,
             start,
-            onEnter: () => tween?.restart(true),
-            onEnterBack: () => tween?.restart(true),
+            // Replay on re-entry, but skip expensive mid-scroll thrash.
+            onEnter: () => {
+              if (!armed) return;
+              tween?.restart(true);
+            },
+            onEnterBack: () => {
+              if (!armed) return;
+              tween?.restart(true);
+            },
             onLeave: () => {
               tween?.pause(0);
-              gsap.set(targets, { ...from });
+              gsap.set(targets, { ...from, clearProps: "" });
             },
             onLeaveBack: () => {
               tween?.pause(0);
-              gsap.set(targets, { ...from });
+              gsap.set(targets, { ...from, clearProps: "" });
             },
+            // Keep triggers cheap while scrolling through long pages.
             fastScrollEnd: true,
-            anticipatePin: 0.4,
           });
 
           return tween;
         },
       });
+
       el._rbsplitInstance = splitInstance;
+
       return () => {
+        armed = false;
         ScrollTrigger.getAll().forEach((st) => {
           if (st.trigger === el) st.kill();
         });
@@ -181,7 +188,6 @@ const SplitText: React.FC<SplitTextProps> = ({
     display: "block",
     whiteSpace: "normal",
     wordWrap: "break-word",
-    willChange: "transform, opacity",
   };
   const classes = `split-parent ${className}`;
   const Tag = (tag || "p") as React.ElementType;

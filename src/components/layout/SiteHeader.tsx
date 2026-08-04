@@ -134,8 +134,11 @@ export function SiteHeader() {
 
 export function publishHeroProgress(progress: number) {
   if (typeof window === "undefined") return;
-  document.documentElement.dataset.heroProgress = String(progress);
+  const rounded = Math.round(progress * 100) / 100;
+  const prev = Number(document.documentElement.dataset.heroProgress ?? "-1");
+  if (Math.abs(prev - rounded) < 0.02) return;
+  document.documentElement.dataset.heroProgress = String(rounded);
   window.dispatchEvent(
-    new CustomEvent(HERO_PROGRESS_EVENT, { detail: { progress } }),
+    new CustomEvent(HERO_PROGRESS_EVENT, { detail: { progress: rounded } }),
   );
 }
