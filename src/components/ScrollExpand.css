@@ -33,7 +33,7 @@
 .scroll-expand__frame {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   clip-path: inset(21% 29% 21% 29% round 24px);
   will-change: clip-path;
   transform: translateZ(0);
@@ -83,7 +83,7 @@
 .scroll-expand__title {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,7 +106,7 @@
   left: 0;
   right: 0;
   bottom: 1.25rem;
-  z-index: 3;
+  z-index: 4;
   text-align: center;
   font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.8125rem;

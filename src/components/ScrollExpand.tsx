@@ -131,7 +131,12 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
       const opacity = 1 - out;
       titleRef.current.style.opacity = `${opacity}`;
       titleRef.current.style.transform = `translate3d(0, ${-24 * out}px, 0)`;
-      titleRef.current.style.visibility = opacity < 0.02 ? "hidden" : "visible";
+      // Fully remove from paint once gone so it cannot cover the final headline.
+      const gone = opacity < 0.02;
+      titleRef.current.style.visibility = gone ? "hidden" : "visible";
+      titleRef.current.style.pointerEvents = "none";
+      if (gone) titleRef.current.style.zIndex = "0";
+      else titleRef.current.style.zIndex = "3";
     }
 
     if (hintRef.current) {
@@ -296,11 +301,6 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     >
       <div ref={trackRef} className="scroll-expand__track">
         <div ref={stageRef} className="scroll-expand__stage">
-          {title ? (
-            <div ref={titleRef} className="scroll-expand__title">
-              {title}
-            </div>
-          ) : null}
           <div ref={frameRef} className="scroll-expand__frame">
             {media}
             <div ref={scrimRef} className="scroll-expand__scrim" />
@@ -310,6 +310,11 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
               </div>
             ) : null}
           </div>
+          {title ? (
+            <div ref={titleRef} className="scroll-expand__title" aria-hidden="true">
+              {title}
+            </div>
+          ) : null}
           {scrollHint ? (
             <div ref={hintRef} className="scroll-expand__hint">
               {scrollHint}
