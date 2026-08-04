@@ -238,24 +238,29 @@ html.has-section-cursor textarea {
 }
 
 .section-cursor {
-  transition: opacity 0.2s ease;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  contain: layout style;
+}
+
+.section-cursor.is-visible {
+  opacity: 1;
 }
 
 .section-cursor-dot,
 .section-cursor-ring {
   translate: -50% -50%;
   border-radius: 999px;
+  will-change: transform;
+  /* Never transition transform — it fights the RAF translate and leaves ghost trails. */
   transition:
-    width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.28s ease,
-    border-color 0.28s ease,
-    border-radius 0.28s ease,
-    border-style 0.28s ease,
-    opacity 0.28s ease,
-    transform 0.28s ease,
-    box-shadow 0.28s ease,
-    mix-blend-mode 0.28s ease;
+    width 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    border-radius 0.22s ease,
+    opacity 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .section-cursor-dot {
@@ -268,6 +273,7 @@ html.has-section-cursor textarea {
   width: 34px;
   height: 34px;
   border: 1.5px solid color-mix(in srgb, var(--brand-teal) 70%, transparent);
+  background: transparent;
 }
 
 .section-cursor-dot.is-hover {
@@ -287,8 +293,7 @@ html.has-section-cursor textarea {
   height: 5px;
 }
 .section-cursor-ring.mode-hero {
-  border-color: color-mix(in srgb, #f5f8f9 70%, transparent);
-  mix-blend-mode: difference;
+  border-color: color-mix(in srgb, #f5f8f9 75%, transparent);
   width: 46px;
   height: 46px;
 }
