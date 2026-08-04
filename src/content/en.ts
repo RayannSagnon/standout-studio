@@ -45,7 +45,6 @@ export const trust = {
 export const whatWeDo = {
   kicker: "WHAT WE DO",
   title: "Unlock the Full Potential of Your Online Presence",
-  mobileTitle: "What we ship",
   intro: "Websites, stores, care, and the extras that make a website hold up.",
   swipeHint: "Swipe →",
   items: [
