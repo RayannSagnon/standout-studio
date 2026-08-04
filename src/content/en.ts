@@ -267,6 +267,145 @@ export const process = {
   ],
 } as const;
 
+export const testimonials = {
+  title: "What clients say",
+  mobileKicker: "WHAT CLIENTS SAY",
+  mobileTitle: "Client notes",
+  intro:
+    "Notes from people who worked with us on personal brand and business starter projects.",
+  swipeHint: "Swipe →",
+  items: [
+    {
+      id: "maya",
+      quote:
+        "I needed something that felt like me, not a template. They helped me clarify the CTAs and the website actually helps me book calls.",
+      mobileQuote: "Felt like me, not a template. Helps me get hired.",
+      name: "Maya Chen",
+      role: "Freelance UX designer · Personal Brand",
+      mobileRole: "Personal Brand",
+    },
+    {
+      id: "noah",
+      quote:
+        "Transparent pricing, no surprises, and they picked up the phone. Our renovation website looks solid without looking expensive to build.",
+      mobileQuote: "Transparent pricing. They picked up the phone.",
+      name: "Noah Berger",
+      role: "Owner, Berger Builds · Business Starter",
+      mobileRole: "Business Starter",
+    },
+    {
+      id: "priya",
+      quote:
+        "Three revision rounds were enough. They kept us focused on speed, mobile, and a contact form that people use.",
+      mobileQuote: "3 rounds were enough. Focused on mobile.",
+      name: "Priya Nair",
+      role: "Job seeker · Personal Brand",
+      mobileRole: "Personal Brand",
+    },
+  ],
+} as const;
+
+export const about = {
+  kicker: "ABOUT US",
+  lead:
+    "Standout Studio is a boutique web studio driven by a genuine passion for seeing our clients succeed. For ambitious freelancers and growing local businesses, we act as dedicated partners, not just service providers.",
+  body: "We build clear websites one project at a time: personal brands, business showcases, and the care that keeps them live. Strategic craft, straight timelines, and a team that answers the phone.",
+  locale: "English and French. Ottawa or fully remote.",
+} as const;
+
+export const faq = {
+  kicker: "FAQs",
+  title: "Your Questions, Answered",
+  mobileTitle: "Quick answers",
+  hint: "Click a question to see the answer.",
+  items: [
+    {
+      id: "timeline",
+      question: "How long does a project take?",
+      answer:
+        "Usually a few weeks once we have your content and photos. We give a clear timeline after the kickoff call.",
+      mobile: true,
+    },
+    {
+      id: "conversion",
+      question: "How will you maximize the conversion rate of our website?",
+      answer:
+        "We keep the path clear: strong first impression, obvious next step, and layouts that work on mobile. Structure and CTAs come first; small tests come when useful.",
+      mobile: false,
+    },
+    {
+      id: "seo",
+      question:
+        "Can you optimize our website for search engines like Google and ChatGPT?",
+      answer:
+        "Yes. We set up the basics: clear titles, structure, speed, and analytics so search engines can understand and rank your pages.",
+      mobile: false,
+    },
+    {
+      id: "maintain",
+      question: "Will it be easy for us to maintain and edit the website ourselves?",
+      answer:
+        "Yes. We leave you with a website you can update, plus a short handoff. Site Care is optional if you want us to handle hosting and small fixes.",
+      mobile: false,
+    },
+    {
+      id: "shopify",
+      question: "Do you build Shopify stores?",
+      answer:
+        "Yes. Product pages, cart, and checkout that feel clear, so people can actually buy.",
+      mobile: true,
+    },
+    {
+      id: "host",
+      question: "Do you host and maintain the website?",
+      answer:
+        "Yes, through Site Care at $29/month: hosting, updates, backups, and small content fixes. Month to month.",
+      mobile: true,
+    },
+    {
+      id: "revisions",
+      question: "What if I am not happy with a draft?",
+      answer:
+        "Packages include 3 revision rounds. We lock the brief before build so revisions stay focused on polish, not rewrites.",
+      mobile: true,
+    },
+    {
+      id: "ads",
+      question: "Do you run ads?",
+      answer:
+        "No. We design and build websites. Paid ads and media buying are not part of what we offer.",
+      mobile: true,
+    },
+  ],
+} as const;
+
+export const contact = {
+  kicker: "/ get in touch /",
+  title: "We are always ready to help and answer your questions.",
+  intro:
+    "Send a short note about what you need. We reply with a suggested package, a realistic timeline, and a price range.",
+  mobileIntro: "A short note is enough. We reply in 1-2 business days.",
+  meta: "Ottawa · Remote  ·  hello@standoutstudio.ca",
+  formTitle: "Get in touch",
+  formSupport: "No spam. Just a clear next step.",
+  requiredHint: "* Required",
+  fields: {
+    name: { label: "Name *", placeholder: "Your name" },
+    email: { label: "Email *", placeholder: "you@email.com" },
+    phone: { label: "Phone (optional)", placeholder: "+1 ..." },
+    need: {
+      label: "What do you need? *",
+      placeholder: "Digital Card / Personal Brand / Business Starter / Not sure",
+      mobilePlaceholder: "Pack or not sure",
+    },
+    message: {
+      label: "Message *",
+      placeholder: "Tell us about the project...",
+    },
+  },
+  submit: "Send",
+} as const;
+
 export const footer = {
   meta: "Ottawa · Remote · EN / FR",
 } as const;
