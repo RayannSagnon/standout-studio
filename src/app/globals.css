@@ -152,7 +152,9 @@ html {
   .animate-marquee-reverse,
   .animate-float,
   .animate-float-delayed,
-  .animate-wave-drift {
+  .animate-wave-drift,
+  .page-loader__mark,
+  .page-loader__bar {
     animation: none;
   }
 
