@@ -19,43 +19,32 @@ export function SiteApproach({ children }: SiteApproachProps) {
     () => {
       const root = rootRef.current;
       const panel = panelRef.current;
-      const work = document.getElementById("work");
       if (!root || !panel) return;
+
+      const work = document.getElementById("work");
+      // Clear any stuck opacity from older approach builds.
+      if (work) gsap.set(work, { clearProps: "opacity,filter,transform" });
 
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const desktop = window.matchMedia("(min-width: 768px)").matches;
       if (reduce || !desktop) return;
 
-      const entrance = gsap.timeline({
-        scrollTrigger: {
-          trigger: root,
-          start: "top bottom",
-          end: "top 18%",
-          scrub: 0.5,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // Translate only — no pin, no scale (those were collapsing / shifting layout).
-      entrance.fromTo(
+      gsap.fromTo(
         panel,
         { y: 72, force3D: true },
-        { y: 0, ease: "none", force3D: true },
-        0,
+        {
+          y: 0,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: root,
+            start: "top bottom",
+            end: "top 18%",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        },
       );
-
-      if (work) {
-        entrance.fromTo(
-          work,
-          { opacity: 1 },
-          { opacity: 0.5, ease: "none" },
-          0,
-        );
-      }
-
-      return () => {
-        if (work) gsap.set(work, { clearProps: "opacity" });
-      };
     },
     { scope: rootRef },
   );
