@@ -24,6 +24,12 @@
 .DS_Store
 *.pem
 
+# editor / local tooling (keep out of the repo)
+.cursor/
+.vscode/
+AGENTS.md
+CLAUDE.md
+
 # debug
 npm-debug.log*
 yarn-debug.log*
