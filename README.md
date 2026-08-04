@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Standout Studio
 
-## Getting Started
+Marketing site for Standout Studio, a bilingual Ottawa web studio.
 
-First, run the development server:
+Live design source: [Figma mockup](https://www.figma.com/design/nLEk8UpVUfFg1SsvmXmjnG)
+
+## Stack
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS v4
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command        | Purpose              |
+| -------------- | -------------------- |
+| `npm run dev`  | Local development    |
+| `npm run build`| Production build     |
+| `npm run start`| Serve production     |
+| `npm run lint` | ESLint               |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/                 Routes and global styles
+  components/
+    layout/            Header, footer
+    sections/          Homepage sections
+    ui/                Shared UI primitives
+  content/             Copy and site content (EN first)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design system (initial tokens)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Token            | Value     |
+| ---------------- | --------- |
+| Page background  | `#F5F8F9` |
+| Hero background  | `#0B3D3D` |
+| Brand teal       | `#0F766E` |
+| Ink              | `#0F1C1F` |
+| Muted ink        | `#5A6B70` |
+| Display font     | Fraunces  |
+| Body font        | Outfit    |
 
-## Deploy on Vercel
+## Collaboration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+Private project. All rights reserved unless otherwise stated.

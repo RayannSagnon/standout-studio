@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-page: #f5f8f9;
+  --bg-surface: #ffffff;
+  --bg-teal-soft: #e7f3f3;
+  --bg-hero: #0b3d3d;
+  --ink-primary: #0f1c1f;
+  --ink-muted: #5a6b70;
+  --ink-inverse: #f5f8f9;
+  --brand-teal: #0f766e;
+  --brand-teal-deep: #0a4f4f;
+  --border-subtle: #d5e0e2;
+  --hero-kicker: #b8d9d4;
+  --hero-support: #8fb5b0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-page: var(--bg-page);
+  --color-surface: var(--bg-surface);
+  --color-teal-soft: var(--bg-teal-soft);
+  --color-hero: var(--bg-hero);
+  --color-ink: var(--ink-primary);
+  --color-muted: var(--ink-muted);
+  --color-inverse: var(--ink-inverse);
+  --color-teal: var(--brand-teal);
+  --color-teal-deep: var(--brand-teal-deep);
+  --color-border: var(--border-subtle);
+  --color-hero-kicker: var(--hero-kicker);
+  --color-hero-support: var(--hero-support);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-outfit);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-page);
+  color: var(--ink-primary);
+  font-family: var(--font-outfit), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand-teal) 28%, transparent);
+  color: var(--ink-primary);
 }
