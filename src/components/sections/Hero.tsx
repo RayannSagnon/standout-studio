@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ScrollExpand from "@/components/ScrollExpand";
 import SplitText from "@/components/SplitText";
+import { publishHeroProgress } from "@/components/layout/SiteHeader";
 import { HeroAtmosphere } from "@/components/sections/HeroAtmosphere";
 import { Button } from "@/components/ui/Button";
 import { hero } from "@/content/en";
@@ -49,6 +50,7 @@ export function Hero() {
         smoothing={0.1}
         overlayScrim={0.28}
         onProgress={(progress) => {
+          publishHeroProgress(progress);
           const ready = progress >= 0.72;
           setEtherReady((prev) => (prev === ready ? prev : ready));
         }}

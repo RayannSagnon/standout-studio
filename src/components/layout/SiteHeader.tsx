@@ -4,23 +4,34 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { nav, site } from "@/content/en";
 
+const HERO_PROGRESS_EVENT = "standout:hero-progress";
+
 export function SiteHeader() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (window.scrollY > 8) {
-      setVisible(true);
-      return;
-    }
-
-    const reveal = () => {
-      if (window.scrollY <= 8) return;
-      setVisible(true);
-      window.removeEventListener("scroll", reveal);
+    const apply = (progress: number) => {
+      // Stay hidden through the resting ScrollExpand frame and the open-up scrub.
+      // Only show once the hero is fully expanded into the live stage.
+      setVisible(progress >= 0.98);
     };
 
-    window.addEventListener("scroll", reveal, { passive: true });
-    return () => window.removeEventListener("scroll", reveal);
+    const onHeroProgress = (event: Event) => {
+      const progress = (event as CustomEvent<{ progress: number }>).detail
+        ?.progress;
+      if (typeof progress === "number") apply(progress);
+    };
+
+    window.addEventListener(HERO_PROGRESS_EVENT, onHeroProgress);
+
+    const existing = Number(
+      document.documentElement.dataset.heroProgress ?? "0",
+    );
+    if (!Number.isNaN(existing)) apply(existing);
+
+    return () => {
+      window.removeEventListener(HERO_PROGRESS_EVENT, onHeroProgress);
+    };
   }, []);
 
   return (
@@ -88,5 +99,13 @@ export function SiteHeader() {
         </Link>
       </div>
     </header>
+  );
+}
+
+export function publishHeroProgress(progress: number) {
+  if (typeof window === "undefined") return;
+  document.documentElement.dataset.heroProgress = String(progress);
+  window.dispatchEvent(
+    new CustomEvent(HERO_PROGRESS_EVENT, { detail: { progress } }),
   );
 }
