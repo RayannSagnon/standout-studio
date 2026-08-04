@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SectionCursor } from "@/components/ui/SectionCursor";
@@ -32,7 +33,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0);",
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-page text-ink">
+        <ScrollToTop />
         <SectionCursor />
         <SiteHeader />
         <main className="flex-1">{children}</main>
@@ -41,3 +51,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
+
