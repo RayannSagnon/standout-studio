@@ -10,6 +10,7 @@ import { hero } from "@/content/en";
 
 export function Hero() {
   const [etherReady, setEtherReady] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
   const [expandEnabled, setExpandEnabled] = useState(true);
 
   useEffect(() => {
@@ -21,6 +22,19 @@ export function Hero() {
     sync();
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const section = document.querySelector<HTMLElement>('[data-cursor="hero"]');
+    if (!section) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setHeroInView(entry.isIntersecting && entry.intersectionRatio > 0.05);
+      },
+      { threshold: [0, 0.05, 0.2] },
+    );
+    io.observe(section);
+    return () => io.disconnect();
   }, []);
 
   return (
@@ -56,7 +70,7 @@ export function Hero() {
         }}
       >
         <div className="relative h-full w-full">
-          <HeroAtmosphere active={etherReady} />
+          <HeroAtmosphere active={etherReady && heroInView} />
 
           <div className="relative z-10 mx-auto flex h-full min-h-0 max-w-[1440px] flex-col items-center justify-center px-5 py-16 text-center md:px-20 md:py-[7.5rem]">
             <p className="mb-3 text-[13px] font-medium tracking-wide text-hero-kicker md:mb-4 md:text-[15px]">
@@ -70,7 +84,7 @@ export function Hero() {
                 className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse md:max-w-[12ch] md:text-[56px]"
                 splitType="chars"
                 delay={35}
-                duration={0.65}
+                duration={0.55}
                 ease="power3.out"
                 from={{ opacity: 0, y: 28 }}
                 to={{ opacity: 1, y: 0 }}
