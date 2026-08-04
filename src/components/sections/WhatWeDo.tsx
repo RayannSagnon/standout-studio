@@ -1,0 +1,64 @@
+import { ServiceIcon } from "@/components/ui/ServiceIcon";
+import { whatWeDo } from "@/content/en";
+
+export function WhatWeDo() {
+  return (
+    <section id="what-we-do" className="bg-page px-5 py-10 md:px-20 md:py-[88px]">
+      <div className="mx-auto max-w-[1280px]">
+        <div className="max-w-[720px]">
+          <p className="text-xs font-semibold tracking-[0.12em] text-teal">
+            {whatWeDo.kicker}
+          </p>
+          <h2 className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:mt-2.5 md:text-[34px] md:leading-[1.15]">
+            <span className="md:hidden">{whatWeDo.mobileTitle}</span>
+            <span className="hidden md:inline whitespace-pre-line">
+              Unlock the Full Potential{"\n"}of Your Online Presence
+            </span>
+          </h2>
+          <p className="mt-3 hidden text-base text-[#3a4a4e] md:block">
+            {whatWeDo.intro}
+          </p>
+          <p className="mt-2 text-[13px] text-muted md:hidden">
+            {whatWeDo.swipeHint}
+          </p>
+        </div>
+
+        <div className="mt-6 hidden gap-4 md:mt-9 md:grid md:grid-cols-2">
+          {whatWeDo.items.map((item) => (
+            <article
+              key={item.id}
+              className="flex gap-4 rounded-[14px] bg-surface px-5 py-[22px]"
+            >
+              <ServiceIcon name={item.icon} />
+              <div className="min-w-0">
+                <h3 className="font-display text-[20px] font-semibold tracking-tight text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-[#3a4a4e]">
+                  {item.description}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {whatWeDo.items.map((item) => (
+            <article
+              key={item.id}
+              className="w-[200px] shrink-0 rounded-[20px] border border-border bg-surface p-4"
+            >
+              <ServiceIcon name={item.icon} className="h-9 w-9" />
+              <h3 className="mt-3 font-display text-[17px] font-semibold tracking-tight text-ink">
+                {item.mobileTitle}
+              </h3>
+              <p className="mt-1.5 text-[13px] leading-snug text-muted">
+                {item.mobileDescription}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

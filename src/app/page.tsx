@@ -1,4 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
+import { SelectedWork } from "@/components/sections/SelectedWork";
+import { Trust } from "@/components/sections/Trust";
+import { WhatWeDo } from "@/components/sections/WhatWeDo";
 
 function SectionPlaceholder({
   id,
@@ -31,9 +34,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <SectionPlaceholder id="trust" title="Trust" />
-      <SectionPlaceholder id="what-we-do" title="What we do" />
-      <SectionPlaceholder id="work" title="Selected Work" />
+      <Trust />
+      <WhatWeDo />
+      <SelectedWork />
       <SectionPlaceholder id="packages" title="Packages & pricing" />
       <SectionPlaceholder id="why" title="Why it matters" />
       <SectionPlaceholder id="process" title="Process" />
