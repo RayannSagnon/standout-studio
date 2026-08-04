@@ -204,6 +204,69 @@ export const packages = {
   },
 } as const;
 
+export const why = {
+  kicker: "WHY IT MATTERS",
+  title: "A clear website changes how people treat you.",
+  body: "Someone looks you up. In a few seconds they decide if you feel legit. That page should make it easy: who you are, what you do, how to reach you.",
+  points: [
+    "Easy to understand in a few seconds",
+    "Obvious path to call, book, or email",
+    "Looks like someone took it seriously",
+  ],
+  mobilePoints: [
+    "Clear in a few seconds",
+    "Obvious next step",
+    "Finished on mobile",
+  ],
+} as const;
+
+export const marquee = {
+  top: ["Own the first impression", "Websites that drive revenue", "Clear packages"],
+  bottom: ["Digital cards", "Shopify", "Hosting & Care", "Built to go live"],
+} as const;
+
+export const process = {
+  title: "Crafting your website from concept to launch.",
+  mobileTitle: "From concept to launch",
+  intro:
+    "A short call, a clear brief, then we build and revise until it is ready to publish.",
+  note: "Most packages ship in a few weeks once we have your content and photos.",
+  steps: [
+    {
+      id: "call",
+      icon: "phone" as const,
+      title: "A quick call",
+      mobileTitle: "Call",
+      description: "Goals, budget, and timeline. Zoom or phone.",
+      mobileDescription: "Goals & budget",
+    },
+    {
+      id: "brief",
+      icon: "brief" as const,
+      title: "Agree the brief",
+      mobileTitle: "Brief",
+      description: "Pages, content, and look locked before build.",
+      mobileDescription: "Scope locked",
+    },
+    {
+      id: "build",
+      icon: "build" as const,
+      title: "Design and build",
+      mobileTitle: "Build",
+      description: "Drafts shared. Your 3 revision rounds.",
+      mobileDescription: "3 revisions",
+    },
+    {
+      id: "launch",
+      icon: "launch" as const,
+      title: "Launch",
+      mobileTitle: "Launch",
+      description: "Go live, hand over access, basic analytics.",
+      mobileDescription: "Go live",
+    },
+  ],
+} as const;
+
 export const footer = {
   meta: "Ottawa · Remote · EN / FR",
 } as const;

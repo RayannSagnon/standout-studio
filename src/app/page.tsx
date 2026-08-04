@@ -1,9 +1,12 @@
 import { Hero } from "@/components/sections/Hero";
+import { Marquee } from "@/components/sections/Marquee";
 import { Packages } from "@/components/sections/Packages";
+import { Process } from "@/components/sections/Process";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 import { Trust } from "@/components/sections/Trust";
 import { WaveFade } from "@/components/sections/WaveFade";
 import { WhatWeDo } from "@/components/sections/WhatWeDo";
+import { Why } from "@/components/sections/Why";
 
 function SectionPlaceholder({
   id,
@@ -41,8 +44,9 @@ export default function HomePage() {
       <SelectedWork />
       <WaveFade />
       <Packages />
-      <SectionPlaceholder id="why" title="Why it matters" />
-      <SectionPlaceholder id="process" title="Process" />
+      <Why />
+      <Marquee />
+      <Process />
       <SectionPlaceholder id="testimonials" title="Testimonials" />
       <SectionPlaceholder id="about" title="About" />
       <SectionPlaceholder id="faq" title="FAQ" />
