@@ -85,7 +85,7 @@ export function Packages() {
       </div>
 
       <div className="relative -mt-px bg-white">
-        <div className="mx-auto max-w-[1440px] px-5 pb-7 pt-2 md:px-20 md:pb-24 md:pt-4">
+        <div className="mx-auto max-w-[1440px] px-5 pb-7 pt-1 md:px-20 md:pb-24 md:pt-2">
         <Reveal>
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {packages.kicker}

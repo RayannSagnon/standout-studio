@@ -22,8 +22,8 @@ export function SiteApproach({ children }: SiteApproachProps) {
       if (!root || !panel) return;
 
       const work = document.getElementById("work");
-      // Clear any stuck opacity from older approach builds.
       if (work) gsap.set(work, { clearProps: "opacity,filter,transform" });
+      gsap.set(panel, { clearProps: "transform,filter,opacity" });
 
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const desktop = window.matchMedia("(min-width: 768px)").matches;
@@ -31,16 +31,20 @@ export function SiteApproach({ children }: SiteApproachProps) {
 
       gsap.fromTo(
         panel,
-        { y: 72, force3D: true },
         {
-          y: 0,
+          yPercent: 28,
+          transformOrigin: "50% 0%",
+          force3D: true,
+        },
+        {
+          yPercent: 0,
           ease: "none",
           force3D: true,
           scrollTrigger: {
             trigger: root,
-            start: "top bottom",
-            end: "top 18%",
-            scrub: 0.5,
+            start: "top 95%",
+            end: "top 30%",
+            scrub: 0.4,
             invalidateOnRefresh: true,
           },
         },
@@ -50,8 +54,10 @@ export function SiteApproach({ children }: SiteApproachProps) {
   );
 
   return (
-    <div ref={rootRef} className="relative z-10">
-      <div ref={panelRef}>{children}</div>
+    <div ref={rootRef} className="relative z-20 overflow-x-clip">
+      <div ref={panelRef} className="will-change-transform">
+        {children}
+      </div>
     </div>
   );
 }

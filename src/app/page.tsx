@@ -21,14 +21,14 @@ export default function HomePage() {
       <SelectedWork />
       <SiteApproach>
         <Packages />
-        <Why />
-        <Marquee />
-        <Process />
-        <Testimonials />
-        <About />
-        <Faq />
-        <Contact />
       </SiteApproach>
+      <Why />
+      <Marquee />
+      <Process />
+      <Testimonials />
+      <About />
+      <Faq />
+      <Contact />
     </>
   );
 }
