@@ -1,3 +1,4 @@
+import BlurText from "@/components/BlurText";
 import { WhyDevices } from "@/components/mockups/WhyDevices";
 import { Reveal } from "@/components/ui/Reveal";
 import { why } from "@/content/en";
@@ -14,9 +15,15 @@ export function Why() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {why.kicker}
           </p>
-          <h2 className="mt-2.5 max-w-[16ch] font-display text-[20px] font-bold leading-tight tracking-tight text-ink md:text-[36px]">
-            {why.title}
-          </h2>
+          <BlurText
+            as="h2"
+            text={why.title}
+            animateBy="words"
+            direction="top"
+            delay={100}
+            stepDuration={0.3}
+            className="mt-2.5 max-w-[16ch] font-display text-[20px] font-bold leading-tight tracking-tight text-ink md:text-[36px]"
+          />
 
           <p className="mt-3.5 hidden max-w-[560px] text-base leading-relaxed text-[#3a4a4e] md:block">
             {why.body}

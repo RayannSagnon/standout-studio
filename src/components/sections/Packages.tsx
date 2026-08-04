@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import SplitText from "@/components/SplitText";
 import { Reveal } from "@/components/ui/Reveal";
 import { packages } from "@/content/en";
 
@@ -89,9 +90,15 @@ export function Packages() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {packages.kicker}
           </p>
-          <h2 className="mt-1.5 font-display text-[22px] font-bold tracking-tight text-ink md:mt-0 md:text-[40px]">
-            {packages.title}
-          </h2>
+          <SplitText
+            tag="h2"
+            text={packages.title}
+            splitType="words"
+            delay={70}
+            duration={0.7}
+            textAlign="left"
+            className="mt-1.5 font-display text-[22px] font-bold tracking-tight text-ink md:mt-0 md:text-[40px]"
+          />
           <p className="mt-1.5 text-xs text-muted md:hidden">
             {packages.swipeHint}
           </p>

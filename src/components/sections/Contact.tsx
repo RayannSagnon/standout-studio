@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import SplitText from "@/components/SplitText";
 import { contact, site } from "@/content/en";
 
 export function Contact() {
@@ -42,9 +43,17 @@ export function Contact() {
       >
         <div className="max-w-[624px] md:pt-2">
           <p className="text-[13px] text-[#b8d1cc] md:text-sm">{contact.kicker}</p>
-          <h2 className="mt-3 max-w-[18ch] font-display text-2xl font-bold leading-tight tracking-tight text-white md:text-[44px]">
-            {contact.title}
-          </h2>
+          <SplitText
+            tag="h2"
+            text={contact.title}
+            splitType="chars"
+            delay={28}
+            duration={0.6}
+            textAlign="left"
+            from={{ opacity: 0, y: 32 }}
+            to={{ opacity: 1, y: 0 }}
+            className="mt-3 max-w-[18ch] font-display text-2xl font-bold leading-tight tracking-tight text-white md:text-[44px]"
+          />
           <p className="mt-3 hidden text-base leading-relaxed text-[#b8d1cc] md:block">
             {contact.intro}
           </p>

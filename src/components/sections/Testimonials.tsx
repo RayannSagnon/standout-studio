@@ -1,3 +1,4 @@
+import BlurText from "@/components/BlurText";
 import { Reveal } from "@/components/ui/Reveal";
 import { testimonials } from "@/content/en";
 
@@ -21,10 +22,24 @@ export function Testimonials() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {testimonials.mobileKicker}
           </p>
-          <h2 className="mt-1.5 font-display text-[22px] font-bold tracking-tight text-ink md:mt-0 md:text-[40px]">
-            <span className="md:hidden">{testimonials.mobileTitle}</span>
-            <span className="hidden md:inline">{testimonials.title}</span>
-          </h2>
+          <BlurText
+            as="h2"
+            text={testimonials.mobileTitle}
+            animateBy="words"
+            direction="top"
+            delay={110}
+            stepDuration={0.28}
+            className="mt-1.5 font-display text-[22px] font-bold tracking-tight text-ink md:hidden"
+          />
+          <BlurText
+            as="h2"
+            text={testimonials.title}
+            animateBy="words"
+            direction="top"
+            delay={90}
+            stepDuration={0.3}
+            className="mt-1.5 hidden font-display text-[40px] font-bold tracking-tight text-ink md:mt-0 md:flex"
+          />
           <p className="mt-3 hidden text-base text-muted md:block">
             {testimonials.intro}
           </p>

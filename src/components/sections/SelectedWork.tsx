@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SplitText from "@/components/SplitText";
 import { Reveal } from "@/components/ui/Reveal";
 import { selectedWork } from "@/content/en";
 
@@ -10,10 +11,24 @@ export function SelectedWork() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {selectedWork.kicker}
           </p>
-          <h2 className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:text-4xl">
-            <span className="md:hidden">{selectedWork.mobileTitle}</span>
-            <span className="hidden md:inline">{selectedWork.title}</span>
-          </h2>
+          <SplitText
+            tag="h2"
+            text={selectedWork.mobileTitle}
+            splitType="words"
+            delay={80}
+            duration={0.7}
+            textAlign="left"
+            className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:hidden"
+          />
+          <SplitText
+            tag="h2"
+            text={selectedWork.title}
+            splitType="words"
+            delay={70}
+            duration={0.75}
+            textAlign="left"
+            className="mt-2.5 hidden font-display text-4xl font-bold tracking-tight text-ink md:block"
+          />
           <p className="mt-2.5 hidden text-base text-[#3a4a4e] md:block">
             {selectedWork.intro}
           </p>

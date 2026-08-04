@@ -1,3 +1,4 @@
+import SplitText from "@/components/SplitText";
 import { process } from "@/content/en";
 
 function StepIcon({ name }: { name: (typeof process.steps)[number]["icon"] }) {
@@ -93,9 +94,15 @@ export function Process() {
     >
       <div className="mx-auto max-w-[1280px]">
         <div className="md:hidden">
-          <h2 className="font-display text-[22px] font-bold tracking-tight text-ink">
-            {process.mobileTitle}
-          </h2>
+          <SplitText
+            tag="h2"
+            text={process.mobileTitle}
+            splitType="words"
+            delay={70}
+            duration={0.65}
+            textAlign="left"
+            className="font-display text-[22px] font-bold tracking-tight text-ink"
+          />
           <div className="mt-3 grid grid-cols-2 gap-2.5">
             {process.steps.map((step) => (
               <article
@@ -114,9 +121,15 @@ export function Process() {
         </div>
 
         <div className="hidden md:block">
-          <h2 className="max-w-[22ch] font-display text-[34px] font-bold tracking-tight text-ink">
-            {process.title}
-          </h2>
+          <SplitText
+            tag="h2"
+            text={process.title}
+            splitType="words"
+            delay={60}
+            duration={0.7}
+            textAlign="left"
+            className="max-w-[22ch] font-display text-[34px] font-bold tracking-tight text-ink"
+          />
           <p className="mt-2.5 max-w-[720px] text-base text-[#3a4a4e]">
             {process.intro}
           </p>

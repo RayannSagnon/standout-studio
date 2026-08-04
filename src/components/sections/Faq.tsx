@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SplitText from "@/components/SplitText";
 import { faq } from "@/content/en";
 
 export function Faq() {
@@ -13,10 +14,24 @@ export function Faq() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {faq.kicker}
           </p>
-          <h2 className="mt-2.5 font-display text-[22px] font-bold tracking-tight text-ink md:text-[36px]">
-            <span className="md:hidden">{faq.mobileTitle}</span>
-            <span className="hidden md:inline">{faq.title}</span>
-          </h2>
+          <SplitText
+            tag="h2"
+            text={faq.mobileTitle}
+            splitType="words"
+            delay={70}
+            duration={0.65}
+            textAlign="left"
+            className="mt-2.5 font-display text-[22px] font-bold tracking-tight text-ink md:hidden"
+          />
+          <SplitText
+            tag="h2"
+            text={faq.title}
+            splitType="words"
+            delay={65}
+            duration={0.7}
+            textAlign="left"
+            className="mt-2.5 hidden font-display text-[36px] font-bold tracking-tight text-ink md:block"
+          />
           <p className="mt-2.5 hidden text-[15px] text-[#3a4a4e] md:block">
             {faq.hint}
           </p>

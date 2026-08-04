@@ -1,3 +1,4 @@
+import BlurText from "@/components/BlurText";
 import { Reveal } from "@/components/ui/Reveal";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { whatWeDo } from "@/content/en";
@@ -14,12 +15,24 @@ export function WhatWeDo() {
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {whatWeDo.kicker}
           </p>
-          <h2 className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:mt-2.5 md:text-[34px] md:leading-[1.15]">
-            <span className="md:hidden">{whatWeDo.mobileTitle}</span>
-            <span className="hidden md:inline whitespace-pre-line">
-              Unlock the Full Potential{"\n"}of Your Online Presence
-            </span>
-          </h2>
+          <BlurText
+            as="h2"
+            text={whatWeDo.mobileTitle}
+            animateBy="words"
+            direction="top"
+            delay={120}
+            stepDuration={0.3}
+            className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:hidden"
+          />
+          <BlurText
+            as="h2"
+            text={whatWeDo.title}
+            animateBy="words"
+            direction="top"
+            delay={90}
+            stepDuration={0.32}
+            className="mt-2.5 hidden max-w-[18ch] font-display text-[34px] font-bold leading-[1.15] tracking-tight text-ink md:flex"
+          />
           <p className="mt-3 hidden text-base text-[#3a4a4e] md:block">
             {whatWeDo.intro}
           </p>

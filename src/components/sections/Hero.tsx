@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ScrollExpand from "@/components/ScrollExpand";
+import SplitText from "@/components/SplitText";
 import { HeroAtmosphere } from "@/components/sections/HeroAtmosphere";
 import { Button } from "@/components/ui/Button";
 import { hero } from "@/content/en";
@@ -60,12 +61,29 @@ export function Hero() {
               {hero.kicker}
             </p>
 
-            <p
-              aria-hidden="true"
-              className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse md:max-w-[12ch] md:text-[56px]"
-            >
-              {hero.headline}
-            </p>
+            {etherReady ? (
+              <SplitText
+                tag="p"
+                text={hero.headline}
+                className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse md:max-w-[12ch] md:text-[56px]"
+                splitType="chars"
+                delay={35}
+                duration={0.65}
+                ease="power3.out"
+                from={{ opacity: 0, y: 28 }}
+                to={{ opacity: 1, y: 0 }}
+                threshold={0.01}
+                rootMargin="0px"
+                textAlign="center"
+              />
+            ) : (
+              <p
+                aria-hidden="true"
+                className="max-w-[16ch] font-display text-[42px] font-bold leading-[1.05] tracking-tight text-inverse opacity-0 md:max-w-[12ch] md:text-[56px]"
+              >
+                {hero.headline}
+              </p>
+            )}
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5 md:mt-9">
               <Button href={hero.primaryCta.href}>{hero.primaryCta.label}</Button>

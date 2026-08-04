@@ -1,3 +1,4 @@
+import BlurText from "@/components/BlurText";
 import { about } from "@/content/en";
 
 export function About() {
@@ -11,9 +12,15 @@ export function About() {
         <p className="text-xs font-semibold tracking-[0.12em] text-teal md:text-[13px]">
           {about.kicker}
         </p>
-        <p className="mt-3 max-w-[70ch] text-[15px] leading-relaxed text-ink md:mt-4 md:text-[22px] md:leading-snug">
-          {about.lead}
-        </p>
+        <BlurText
+          as="p"
+          text={about.lead}
+          animateBy="words"
+          direction="bottom"
+          delay={45}
+          stepDuration={0.28}
+          className="mt-3 max-w-[70ch] text-[15px] leading-relaxed text-ink md:mt-4 md:text-[22px] md:leading-snug"
+        />
 
         <div className="mt-8 grid items-center gap-8 md:mt-10 md:grid-cols-[560px_1fr] md:gap-9">
           <div
