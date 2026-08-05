@@ -83,9 +83,6 @@ export function Contact() {
           <h3 className="font-display text-[22px] font-bold tracking-tight md:text-[28px]">
             {contact.formTitle}
           </h3>
-          <p className="mt-1 hidden text-sm text-muted md:block">
-            {contact.formSupport}
-          </p>
           <p className="mt-3 text-xs text-muted">{contact.requiredHint}</p>
 
           <label className="mt-4 block text-[13px] font-medium text-ink">

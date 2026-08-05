@@ -311,7 +311,7 @@ export const testimonials = {
     {
       id: "noah",
       quote:
-        "Tarifs transparents, aucune surprise, et ils répondent au téléphone. Notre site de rénovation a l'air solide sans avoir l'air hors de prix à produire.",
+        "Tarifs transparents, aucune surprise, et ils répondent au téléphone. Notre site web de rénovation a l'air solide sans avoir l'air hors de prix à produire.",
       mobileQuote: "Tarifs clairs. Ils répondent au téléphone.",
       name: "Noah Berger",
       role: "Propriétaire, Berger Builds · Vitrine entreprise",
@@ -333,7 +333,7 @@ export const about = {
   kicker: "À PROPOS",
   lead:
     "Standout Studio est un studio web boutique, porté par le désir de voir nos clients réussir. Pour freelances ambitieux et entreprises locales en croissance, on agit comme des partenaires, pas seulement comme un fournisseur.",
-  body: "On construit des sites clairs, un projet à la fois : marques personnelles, vitrines d'entreprise, et l'entretien qui les garde en ligne. Du travail stratégique, des échéanciers francs, et une équipe qui répond au téléphone.",
+  body: "On construit des sites web clairs, un projet à la fois : marques personnelles, vitrines d'entreprise, et l'entretien qui les garde en ligne. Du travail stratégique, des échéanciers francs, et une équipe qui répond au téléphone.",
   locale: "Français et anglais. Basés à Ottawa, Canada",
 };
 
@@ -352,7 +352,7 @@ export const faq = {
     },
     {
       id: "conversion",
-      question: "Comment allez-vous maximiser le taux de conversion de notre site ?",
+      question: "Comment allez-vous maximiser le taux de conversion de notre site web ?",
       answer:
         "On garde le parcours clair : une forte première impression, une prochaine étape évidente, et des mises en page qui fonctionnent sur mobile. Structure et appels à l'action d'abord ; de petits tests quand c'est utile.",
       mobile: false,
@@ -360,16 +360,16 @@ export const faq = {
     {
       id: "seo",
       question:
-        "Pouvez-vous optimiser notre site pour les moteurs comme Google et ChatGPT ?",
+        "Pouvez-vous optimiser notre site web pour les moteurs comme Google et ChatGPT ?",
       answer:
         "Oui. On met en place les bases : titres clairs, structure, vitesse et analytique pour que les moteurs comprennent et classent vos pages.",
       mobile: false,
     },
     {
       id: "maintain",
-      question: "Sera-t-il facile pour nous d'entretenir et modifier le site ?",
+      question: "Sera-t-il facile pour nous d'entretenir et modifier le site web ?",
       answer:
-        "Oui. On vous laisse un site que vous pouvez mettre à jour, plus une courte passation. Site Care est optionnel si vous voulez qu'on gère l'hébergement et les petits correctifs.",
+        "Oui. On vous laisse un site web que vous pouvez mettre à jour, plus une courte passation. Site Care est optionnel si vous voulez qu'on gère l'hébergement et les petits correctifs.",
       mobile: false,
     },
     {
@@ -381,7 +381,7 @@ export const faq = {
     },
     {
       id: "host",
-      question: "Est-ce que vous hébergez et entretenez le site ?",
+      question: "Est-ce que vous hébergez et entretenez le site web ?",
       answer:
         "Oui, via Site Care à 29 $/mois : hébergement, mises à jour, sauvegardes et petits changements de contenu. Mois par mois.",
       mobile: true,
@@ -397,7 +397,7 @@ export const faq = {
       id: "ads",
       question: "Est-ce que vous gérez de la publicité ?",
       answer:
-        "Non. On conçoit et on construit des sites. Les pubs payantes et l'achat média ne font pas partie de notre offre.",
+        "Non. On conçoit et on construit des sites web. Les pubs payantes et l'achat média ne font pas partie de notre offre.",
       mobile: true,
     },
   ],
@@ -412,7 +412,6 @@ export const contact = {
     "Un court message suffit. On répond en 1 à 2 jours ouvrables.",
   meta: "Ottawa · À distance  ·  hello@standoutstudio.ca",
   formTitle: "Écrivez-nous",
-  formSupport: "Pas de spam. Juste une prochaine étape claire.",
   requiredHint: "* Obligatoire",
   fields: {
     name: { label: "Nom *", placeholder: "Votre nom" },

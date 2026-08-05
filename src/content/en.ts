@@ -388,7 +388,6 @@ export const contact = {
   mobileIntro: "A short note is enough. We reply in 1-2 business days.",
   meta: "Ottawa · Remote  ·  hello@standoutstudio.ca",
   formTitle: "Get in touch",
-  formSupport: "No spam. Just a clear next step.",
   requiredHint: "* Required",
   fields: {
     name: { label: "Name *", placeholder: "Your name" },
