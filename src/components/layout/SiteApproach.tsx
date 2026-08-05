@@ -8,6 +8,8 @@ type SiteApproachProps = {
 
 /**
  * Sticky stack: Selected Work stays pinned while Packages rises over it.
+ * Packages only overlaps by the wave height so the cover starts at the
+ * end of Work, not halfway through the cards.
  * Desktop only — mobile keeps normal document flow.
  */
 export function SiteApproach({ children }: SiteApproachProps) {
@@ -25,7 +27,8 @@ export function SiteApproach({ children }: SiteApproachProps) {
       <div className="relative z-10 md:sticky md:top-0 md:z-10">
         {work}
       </div>
-      <div className="relative z-20 md:-mt-[min(52vh,420px)]">
+      {/* Match Packages wave height (md:h-[140px]) — not half the viewport. */}
+      <div className="relative z-20 md:-mt-[140px]">
         {overlay}
       </div>
     </div>
