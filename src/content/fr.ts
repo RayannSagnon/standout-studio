@@ -20,11 +20,11 @@ export const nav = {
 export const hero = {
   kicker: "Design / Build / Care",
   expandTitle: "Marquez dès le premier regard.",
-  headline: "Des sites soignés qui génèrent de vrais résultats",
+  headline: "Des sites web soignés qui génèrent de vrais résultats",
   primaryCta: { label: "Lancer un projet", href: "#contact" },
   secondaryCta: { label: "Voir les forfaits", href: "#packages" },
   support:
-    "On prend le temps des détails qui font qu'un site a l'air vraiment terminé.",
+    "On prend le temps des détails qui font qu'un site web a l'air vraiment terminé.",
   scrollHint: "Défiler",
 };
 
@@ -33,14 +33,14 @@ export const trust = {
     "Vous travaillez directement avec nous",
     "Réponse en 1 à 2 jours ouvrables",
     "Périmètre clair avant toute production",
-    "Des sites en ligne que vous pouvez juger vous-même",
+    "Des sites web en ligne que vous pouvez juger vous-même",
     "30 jours de suivi après la mise en ligne",
   ],
   mobileItems: [
     "En direct avec nous",
     "Réponse en 1-2 jours",
     "Périmètre clair",
-    "Sites en ligne",
+    "Sites web en ligne",
     "30 jours de suivi",
   ],
 };
@@ -49,12 +49,12 @@ export const whatWeDo = {
   kicker: "CE QU'ON FAIT",
   title: "Tirez le plein potentiel de votre présence en ligne",
   intro:
-    "Sites, boutiques, entretien, et les extras qui font tenir un site dans le temps.",
+    "Sites web, boutiques, entretien, et les extras qui font tenir un site web dans le temps.",
   swipeHint: "Glisser →",
   items: [
     {
       id: "personal-brand",
-      title: "Sites de marque personnelle",
+      title: "Sites web de marque personnelle",
       mobileTitle: "Marque personnelle",
       description:
         "Portfolios et pages de présence nets pour freelances et chercheurs d'emploi qui doivent paraître solides, vite.",
@@ -64,9 +64,9 @@ export const whatWeDo = {
     {
       id: "business",
       title: "Vitrines d'entreprise",
-      mobileTitle: "Sites d'affaires",
+      mobileTitle: "Sites web d'affaires",
       description:
-        "Sites pour commerces locaux et petites équipes : ce que vous offrez, qui vous êtes, et comment vous joindre.",
+        "Sites web pour commerces locaux et petites équipes : ce que vous offrez, qui vous êtes, et comment vous joindre.",
       mobileDescription: "Offre, histoire, contact",
       icon: "window" as const,
     },
@@ -93,7 +93,7 @@ export const whatWeDo = {
       title: "Accessibilité",
       mobileTitle: "Accessibilité",
       description:
-        "Conçu avec le WCAG 2.2 AA en tête pour que plus de gens puissent utiliser votre site, et réduire les risques inutiles.",
+        "Conçu avec le WCAG 2.2 AA en tête pour que plus de gens puissent utiliser votre site web, et réduire les risques inutiles.",
       mobileDescription: "Orienté WCAG 2.2 AA",
       icon: "access" as const,
     },
@@ -120,8 +120,8 @@ export const whatWeDo = {
 
 export const selectedWork = {
   kicker: "PROJETS SÉLECTIONNÉS",
-  title: "Quelques sites déjà en ligne.",
-  mobileTitle: "Sites en ligne",
+  title: "Quelques sites web déjà en ligne.",
+  mobileTitle: "Sites web en ligne",
   intro: "Ouvrez-les, naviguez, et jugez la qualité par vous-même.",
   swipeHint: "Glisser pour parcourir →",
   projects: [
@@ -171,7 +171,7 @@ export const packages = {
       badge: "Le plus populaire",
       mobileBadge: "LE PLUS POPULAIRE",
       features: [
-        "Site de 3 à 5 pages",
+        "Site web de 3 à 5 pages",
         "Appel à l'action clair",
         "SEO de base + analytique",
         "3 tours de révision",
@@ -220,7 +220,7 @@ export const packages = {
 
 export const why = {
   kicker: "POURQUOI ÇA COMPTE",
-  title: "Un site clair change la façon dont on vous perçoit.",
+  title: "Un site web clair change la façon dont on vous perçoit.",
   body: "Quelqu'un vous cherche. En quelques secondes, il décide si vous avez l'air crédible. Cette page doit rendre ça simple : qui vous êtes, ce que vous faites, comment vous joindre.",
   points: [
     "Compréhensible en quelques secondes",
@@ -237,7 +237,7 @@ export const why = {
 export const marquee = {
   top: [
     "Marquez dès le premier regard",
-    "Des sites qui génèrent des résultats",
+    "Des sites web qui génèrent des résultats",
     "Des forfaits clairs",
   ],
   bottom: [
@@ -301,7 +301,7 @@ export const testimonials = {
     {
       id: "maya",
       quote:
-        "J'avais besoin de quelque chose qui me ressemble, pas d'un gabarit. Ils m'ont aidée à clarifier les appels à l'action, et le site m'aide vraiment à décrocher des appels.",
+        "J'avais besoin de quelque chose qui me ressemble, pas d'un gabarit. Ils m'ont aidée à clarifier les appels à l'action, et le site web m'aide vraiment à décrocher des appels.",
       mobileQuote:
         "Ça me ressemble, pas un gabarit. Ça m'aide à décrocher des mandats.",
       name: "Maya Chen",
