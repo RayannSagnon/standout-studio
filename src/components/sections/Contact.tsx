@@ -1,10 +1,12 @@
 "use client";
 
 import { FormEvent, useId, useRef, useState } from "react";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import SplitText from "@/components/SplitText";
-import { contact, site } from "@/content/en";
 
 export function Contact() {
+  const { locale } = useLocale();
+  const { contact, site } = useContent();
   const [sent, setSent] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +38,7 @@ export function Contact() {
       .join("\n");
 
     const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
-      `Standout Studio inquiry from ${name}`,
+      `${contact.mailSubject} ${name}`,
     )}&body=${encodeURIComponent(body)}`;
 
     window.location.href = mailto;
@@ -52,6 +54,7 @@ export function Contact() {
         <div className="max-w-[624px] md:pt-2">
           <p className="text-[13px] text-[#b8d1cc] md:text-sm">{contact.kicker}</p>
           <SplitText
+            key={locale}
             tag="h2"
             text={contact.title}
             splitType="chars"
@@ -184,9 +187,7 @@ export function Contact() {
 
           {sent ? (
             <p className="mt-3 text-sm text-teal">
-              {fileNames.length
-                ? "Opening your email app. Attach the selected files before you send."
-                : "Opening your email app with the message ready to send."}
+              {fileNames.length ? contact.sentWithFiles : contact.sent}
             </p>
           ) : null}
         </form>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
+import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { PageLoader } from "@/components/layout/PageLoader";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -38,19 +39,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0);",
+              "if('scrollRestoration'in history)history.scrollRestoration='manual';window.scrollTo(0,0);try{var l=localStorage.getItem('standout-locale');if(l==='fr'||l==='en')document.documentElement.lang=l;}catch(e){}",
           }}
         />
       </head>
       <body className="flex min-h-full flex-col bg-page text-ink">
-        <PageLoader />
-        <ScrollToTop />
-        <SectionCursor />
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <LocaleProvider>
+          <PageLoader />
+          <ScrollToTop />
+          <SectionCursor />
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
+        </LocaleProvider>
       </body>
     </html>
   );
 }
-

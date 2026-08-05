@@ -24,6 +24,7 @@ export const hero = {
   primaryCta: { label: "Start a project", href: "#contact" },
   secondaryCta: { label: "See the packages", href: "#packages" },
   support: "We take time on the details that make a website feel finished.",
+  scrollHint: "Scroll",
 } as const;
 
 export const trust = {
@@ -412,8 +413,19 @@ export const contact = {
     },
   },
   submit: "Send",
+  mailSubject: "Standout Studio inquiry from",
+  sentWithFiles:
+    "Opening your email app. Attach the selected files before you send.",
+  sent: "Opening your email app with the message ready to send.",
 } as const;
 
 export const footer = {
   meta: "Ottawa · Remote · EN / FR",
+} as const;
+
+export const ui = {
+  primaryNav: "Primary",
+  language: "Language",
+  starsLabel: "5 out of 5 stars",
+  trustLabel: "Trust signals",
 } as const;

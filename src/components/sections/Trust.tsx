@@ -1,4 +1,6 @@
-import { trust } from "@/content/en";
+"use client";
+
+import { useContent } from "@/components/i18n/LocaleProvider";
 
 function Star() {
   return (
@@ -34,9 +36,11 @@ function TrustLoop({ items }: { items: readonly string[] }) {
 }
 
 export function Trust() {
+  const { trust, ui } = useContent();
+
   return (
     <section
-      aria-label="Trust signals"
+      aria-label={ui.trustLabel}
       data-cursor="trust"
       className="section-texture-soft border-b border-border/70"
     >

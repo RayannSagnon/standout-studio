@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import ScrollExpand from "@/components/ScrollExpand";
 import { publishHeroProgress } from "@/components/layout/SiteHeader";
 import { HeroAtmosphere } from "@/components/sections/HeroAtmosphere";
+import { useContent } from "@/components/i18n/LocaleProvider";
 import { Button } from "@/components/ui/Button";
-import { hero } from "@/content/en";
 
 export function Hero() {
+  const { hero } = useContent();
   const [etherReady, setEtherReady] = useState(false);
   const [heroInView, setHeroInView] = useState(true);
   const [expandEnabled, setExpandEnabled] = useState(true);
@@ -59,7 +60,7 @@ export function Hero() {
         src="/hero/expand-still.jpg"
         alt=""
         title={hero.expandTitle}
-        scrollHint="Scroll"
+        scrollHint={hero.scrollHint}
         useWindowScroll
         enabled={expandEnabled}
         startWidth={42}

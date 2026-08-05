@@ -1,7 +1,11 @@
-import SplitText from "@/components/SplitText";
-import { process } from "@/content/en";
+"use client";
 
-function StepIcon({ name }: { name: (typeof process.steps)[number]["icon"] }) {
+import SplitText from "@/components/SplitText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
+
+type StepIconName = "phone" | "brief" | "build" | "launch";
+
+function StepIcon({ name }: { name: StepIconName }) {
   const common = "h-8 w-8 text-teal";
   if (name === "phone") {
     return (
@@ -86,6 +90,9 @@ function StepIcon({ name }: { name: (typeof process.steps)[number]["icon"] }) {
 }
 
 export function Process() {
+  const { locale } = useLocale();
+  const { process } = useContent();
+
   return (
     <section
       id="process"
@@ -95,6 +102,7 @@ export function Process() {
       <div className="mx-auto max-w-[1280px]">
         <div className="md:hidden">
           <SplitText
+            key={`${locale}-mobile`}
             tag="h2"
             text={process.mobileTitle}
             splitType="words"
@@ -122,6 +130,7 @@ export function Process() {
 
         <div className="hidden md:block">
           <SplitText
+            key={`${locale}-desktop`}
             tag="h2"
             text={process.title}
             splitType="words"

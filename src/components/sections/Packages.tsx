@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SplitText from "@/components/SplitText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { Reveal } from "@/components/ui/Reveal";
-import { packages } from "@/content/en";
 
 function CheckIcon() {
   return (
@@ -46,6 +46,8 @@ function PopularBadge({ label }: { label: string }) {
 }
 
 export function Packages() {
+  const { locale } = useLocale();
+  const { packages } = useContent();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -106,11 +108,12 @@ export function Packages() {
 
       <div className="relative -mt-px bg-white">
         <div className="mx-auto max-w-[1440px] px-5 pb-7 pt-1 md:px-20 md:pb-24 md:pt-2">
-        <Reveal>
+        <Reveal key={locale}>
           <p className="text-xs font-semibold tracking-[0.12em] text-teal md:hidden">
             {packages.kicker}
           </p>
           <SplitText
+            key={locale}
             tag="h2"
             text={packages.title}
             splitType="words"

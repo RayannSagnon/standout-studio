@@ -1,9 +1,14 @@
+"use client";
+
 import BlurText from "@/components/BlurText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { WhyDevices } from "@/components/mockups/WhyDevices";
 import { Reveal } from "@/components/ui/Reveal";
-import { why } from "@/content/en";
 
 export function Why() {
+  const { locale } = useLocale();
+  const { why } = useContent();
+
   return (
     <section
       id="why"
@@ -16,6 +21,7 @@ export function Why() {
             {why.kicker}
           </p>
           <BlurText
+            key={locale}
             as="h2"
             text={why.title}
             animateBy="words"

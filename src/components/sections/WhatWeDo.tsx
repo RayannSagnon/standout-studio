@@ -1,9 +1,14 @@
+"use client";
+
 import BlurText from "@/components/BlurText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { Reveal } from "@/components/ui/Reveal";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
-import { whatWeDo } from "@/content/en";
 
 export function WhatWeDo() {
+  const { locale } = useLocale();
+  const { whatWeDo } = useContent();
+
   return (
     <section
       id="what-we-do"
@@ -16,6 +21,7 @@ export function WhatWeDo() {
             {whatWeDo.kicker}
           </p>
           <BlurText
+            key={locale}
             as="h2"
             text={whatWeDo.title}
             animateBy="words"

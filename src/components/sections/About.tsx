@@ -1,8 +1,13 @@
+"use client";
+
 import BlurText from "@/components/BlurText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { AboutIllustration } from "@/components/sections/AboutIllustration";
-import { about } from "@/content/en";
 
 export function About() {
+  const { locale } = useLocale();
+  const { about } = useContent();
+
   return (
     <section
       id="about"
@@ -14,6 +19,7 @@ export function About() {
           {about.kicker}
         </p>
         <BlurText
+          key={locale}
           as="p"
           text={about.lead}
           animateBy="words"

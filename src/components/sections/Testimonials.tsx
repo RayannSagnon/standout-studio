@@ -1,16 +1,21 @@
-import BlurText from "@/components/BlurText";
-import { Reveal } from "@/components/ui/Reveal";
-import { testimonials } from "@/content/en";
+"use client";
 
-function Stars() {
+import BlurText from "@/components/BlurText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
+import { Reveal } from "@/components/ui/Reveal";
+
+function Stars({ label }: { label: string }) {
   return (
-    <p className="text-sm tracking-wide text-teal" aria-label="5 out of 5 stars">
+    <p className="text-sm tracking-wide text-teal" aria-label={label}>
       ★★★★★
     </p>
   );
 }
 
 export function Testimonials() {
+  const { locale } = useLocale();
+  const { testimonials, ui } = useContent();
+
   return (
     <section
       id="testimonials"
@@ -23,6 +28,7 @@ export function Testimonials() {
             {testimonials.mobileKicker}
           </p>
           <BlurText
+            key={`${locale}-mobile`}
             as="h2"
             text={testimonials.mobileTitle}
             animateBy="words"
@@ -32,6 +38,7 @@ export function Testimonials() {
             className="mt-1.5 font-display text-[22px] font-bold tracking-tight text-ink md:hidden"
           />
           <BlurText
+            key={`${locale}-desktop`}
             as="h2"
             text={testimonials.title}
             animateBy="words"
@@ -52,7 +59,7 @@ export function Testimonials() {
           {testimonials.items.map((item, index) => (
             <Reveal key={item.id} delayMs={index * 90} as="article">
               <div className="lift-card flex h-full flex-col rounded-xl bg-white p-7">
-              <Stars />
+              <Stars label={ui.starsLabel} />
               <blockquote className="mt-4 flex-1 font-display text-[17px] leading-relaxed text-ink">
                 “{item.quote}”
               </blockquote>
@@ -71,7 +78,7 @@ export function Testimonials() {
               key={item.id}
               className="w-[260px] shrink-0 rounded-2xl border border-border bg-white p-4"
             >
-              <Stars />
+              <Stars label={ui.starsLabel} />
               <blockquote className="mt-3 font-display text-[13px] leading-relaxed text-ink">
                 “{item.mobileQuote}”
               </blockquote>

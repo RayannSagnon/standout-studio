@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { site } from "@/content/en";
+import { useContent } from "@/components/i18n/LocaleProvider";
 
 /** Keep the splash up long enough to see the bar fill. */
 const MIN_MS = 900;
@@ -9,6 +9,7 @@ const MAX_MS = 1600;
 const FADE_MS = 380;
 
 export function PageLoader() {
+  const { site } = useContent();
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 

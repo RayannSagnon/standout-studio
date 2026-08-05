@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import SplitText from "@/components/SplitText";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { Reveal } from "@/components/ui/Reveal";
-import { selectedWork } from "@/content/en";
 
 export function SelectedWork() {
+  const { locale } = useLocale();
+  const { selectedWork } = useContent();
+
   return (
     <section
       id="work"
@@ -16,6 +21,7 @@ export function SelectedWork() {
             {selectedWork.kicker}
           </p>
           <SplitText
+            key={`${locale}-mobile`}
             tag="h2"
             text={selectedWork.mobileTitle}
             splitType="words"
@@ -25,6 +31,7 @@ export function SelectedWork() {
             className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:hidden"
           />
           <SplitText
+            key={`${locale}-desktop`}
             tag="h2"
             text={selectedWork.title}
             splitType="words"

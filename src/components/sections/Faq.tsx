@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import SplitText from "@/components/SplitText";
-import { faq } from "@/content/en";
 
 export function Faq() {
+  const { locale } = useLocale();
+  const { faq } = useContent();
   const [openId, setOpenId] = useState<string>(faq.items[0].id);
 
   return (
@@ -15,6 +17,7 @@ export function Faq() {
             {faq.kicker}
           </p>
           <SplitText
+            key={`${locale}-mobile`}
             tag="h2"
             text={faq.mobileTitle}
             splitType="words"
@@ -24,6 +27,7 @@ export function Faq() {
             className="mt-2.5 font-display text-[22px] font-bold tracking-tight text-ink md:hidden"
           />
           <SplitText
+            key={`${locale}-desktop`}
             tag="h2"
             text={faq.title}
             splitType="words"

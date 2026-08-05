@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { nav, site } from "@/content/en";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 const HERO_PROGRESS_EVENT = "standout:hero-progress";
 
-const SECTION_IDS = nav.links.map((link) => link.href.replace(/^#/, ""));
+const SECTION_IDS = ["packages", "work", "faq", "contact"];
 
 export function SiteHeader() {
+  const { locale, setLocale, t } = useLocale();
   const [visible, setVisible] = useState(false);
   const [activeHref, setActiveHref] = useState<string>("");
   const visibleRef = useRef(false);
@@ -130,16 +131,16 @@ export function SiteHeader() {
           className="font-display text-[18px] font-semibold tracking-tight text-ink md:text-[22px]"
           tabIndex={visible ? undefined : -1}
         >
-          {site.name}
+          {t.site.name}
         </Link>
 
         <div className="flex-1" aria-hidden="true" />
 
         <nav
           className="hidden items-center gap-6 lg:flex"
-          aria-label="Primary"
+          aria-label={t.ui.primaryNav}
         >
-          {nav.links.map((link) => {
+          {t.nav.links.map((link) => {
             const active = activeHref === link.href;
             return (
               <Link
@@ -167,29 +168,43 @@ export function SiteHeader() {
 
         <div
           className="flex items-center gap-1.5 text-[13px]"
-          aria-label="Language"
+          aria-label={t.ui.language}
         >
-          <span className="font-semibold text-ink">{site.localeLabel.active}</span>
+          <button
+            type="button"
+            onClick={() => setLocale("en")}
+            className={
+              locale === "en"
+                ? "font-semibold text-ink"
+                : "font-medium text-muted transition-colors hover:text-ink"
+            }
+            tabIndex={visible ? undefined : -1}
+          >
+            EN
+          </button>
           <span className="text-muted" aria-hidden="true">
             |
           </span>
           <button
             type="button"
-            className="font-medium text-muted transition-colors hover:text-ink"
-            disabled
-            title="Coming soon"
+            onClick={() => setLocale("fr")}
+            className={
+              locale === "fr"
+                ? "font-semibold text-ink"
+                : "font-medium text-muted transition-colors hover:text-ink"
+            }
             tabIndex={visible ? undefined : -1}
           >
-            {site.localeLabel.inactive}
+            FR
           </button>
         </div>
 
         <Link
-          href={nav.cta.href}
+          href={t.nav.cta.href}
           tabIndex={visible ? undefined : -1}
           className="inline-flex h-9 items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep md:h-[38px] md:px-4"
         >
-          {nav.cta.label}
+          {t.nav.cta.label}
         </Link>
       </div>
     </header>

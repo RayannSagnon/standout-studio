@@ -1,4 +1,6 @@
-import { marquee } from "@/content/en";
+"use client";
+
+import { useContent } from "@/components/i18n/LocaleProvider";
 
 function Band({
   items,
@@ -40,6 +42,8 @@ function Band({
 }
 
 export function Marquee() {
+  const { marquee } = useContent();
+
   return (
     <section
       aria-hidden="true"
