@@ -77,8 +77,8 @@ export function Packages() {
 
   return (
     <section id="packages" data-cursor="packages" className="section-texture-mint">
-      {/* Wave is flush with the top — peaks at y=0 so no flat band above the crest. */}
-      <div className="relative -mt-6 md:-mt-8" aria-hidden="true">
+      {/* Soft gap above the wave so Selected Work does not sit on the crest. */}
+      <div className="relative mt-2 md:mt-4" aria-hidden="true">
         <svg
           className="block h-[88px] w-full md:h-[140px]"
           viewBox="0 0 1440 165"

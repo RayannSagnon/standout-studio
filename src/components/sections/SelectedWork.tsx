@@ -8,7 +8,7 @@ export function SelectedWork() {
     <section
       id="work"
       data-cursor="work"
-      className="px-5 pb-0 pt-8 md:px-10 md:pt-10"
+      className="px-5 pb-10 pt-8 md:px-10 md:pb-14 md:pt-10"
     >
       <div className="mx-auto max-w-[1360px] rounded-[28px] border border-[#b9d0cd] bg-[#e8f3f1] px-5 py-10 shadow-[0_20px_50px_rgba(11,61,61,0.1)] md:rounded-[48px] md:px-20 md:py-[5.5rem]">
         <Reveal className="mx-auto text-center">
