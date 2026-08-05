@@ -6,8 +6,11 @@ import { nav, site } from "@/content/en";
 
 const HERO_PROGRESS_EVENT = "standout:hero-progress";
 
+const SECTION_IDS = nav.links.map((link) => link.href.replace(/^#/, ""));
+
 export function SiteHeader() {
   const [visible, setVisible] = useState(false);
+  const [activeHref, setActiveHref] = useState<string>("");
   const visibleRef = useRef(false);
   const expandDoneRef = useRef(false);
   const armScrollYRef = useRef<number | null>(null);
@@ -64,6 +67,53 @@ export function SiteHeader() {
     };
   }, []);
 
+  useEffect(() => {
+    let raf = 0;
+
+    const updateActive = () => {
+      raf = 0;
+      const marker = Math.min(120, Math.round(window.innerHeight * 0.22));
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 48;
+
+      if (nearBottom) {
+        setActiveHref("#contact");
+        return;
+      }
+
+      let current = "";
+      let bestTop = Number.NEGATIVE_INFINITY;
+      for (const id of SECTION_IDS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        // Closest section whose top has crossed the marker (page order, not nav order).
+        if (top <= marker && top >= bestTop) {
+          bestTop = top;
+          current = id;
+        }
+      }
+
+      setActiveHref(current ? `#${current}` : "");
+    };
+
+    const onScrollOrResize = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(updateActive);
+    };
+
+    updateActive();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, []);
+
   return (
     <header
       className={[
@@ -89,16 +139,30 @@ export function SiteHeader() {
           className="hidden items-center gap-6 lg:flex"
           aria-label="Primary"
         >
-          {nav.links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              tabIndex={visible ? undefined : -1}
-              className="text-sm font-medium text-muted transition-colors hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {nav.links.map((link) => {
+            const active = activeHref === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                tabIndex={visible ? undefined : -1}
+                aria-current={active ? "true" : undefined}
+                className={[
+                  "relative text-sm font-medium transition-colors",
+                  active ? "text-teal" : "text-muted hover:text-ink",
+                ].join(" ")}
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  className={[
+                    "absolute -bottom-1 left-0 h-[2px] w-full origin-left rounded-full bg-teal transition-transform duration-300",
+                    active ? "scale-x-100" : "scale-x-0",
+                  ].join(" ")}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <div
