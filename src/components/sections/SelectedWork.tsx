@@ -10,7 +10,7 @@ export function SelectedWork() {
       data-cursor="work"
       className="px-5 pb-0 pt-8 md:px-10 md:pt-10"
     >
-      <div className="mx-auto max-w-[1360px] rounded-[28px] bg-surface px-5 py-10 md:rounded-[48px] md:px-20 md:py-[5.5rem]">
+      <div className="mx-auto max-w-[1360px] rounded-[28px] border border-[#b9d0cd] bg-[#e8f3f1] px-5 py-10 shadow-[0_20px_50px_rgba(11,61,61,0.1)] md:rounded-[48px] md:px-20 md:py-[5.5rem]">
         <Reveal className="max-w-[484px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {selectedWork.kicker}
@@ -50,7 +50,7 @@ export function SelectedWork() {
                 rel="noreferrer"
                 className="group block"
               >
-                <div className="overflow-hidden rounded-2xl border border-border bg-page shadow-sm transition-shadow duration-300 group-hover:shadow-[0_20px_50px_rgba(15,28,31,0.12)]">
+                <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow duration-300 group-hover:shadow-[0_20px_50px_rgba(15,28,31,0.12)]">
                   <Image
                     src={project.image}
                     alt={`${project.name} website preview`}
@@ -82,7 +82,7 @@ export function SelectedWork() {
               rel="noreferrer"
               className="w-[280px] shrink-0"
             >
-              <div className="overflow-hidden rounded-2xl border border-border bg-page">
+              <div className="overflow-hidden rounded-2xl border border-border bg-white">
                 <Image
                   src={project.image}
                   alt={`${project.name} website preview`}

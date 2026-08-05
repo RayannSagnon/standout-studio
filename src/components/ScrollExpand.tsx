@@ -181,7 +181,20 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
       track.style.height = `${stageH * (1 + Math.max(0, c.scrollDistance) + Math.max(0, c.holdDistance))}px`;
 
       const w = root.clientWidth || stageH;
-      stage.style.setProperty("--se-title-size", `${clamp(w * 0.075, 20, 84)}px`);
+      const avail = Math.max(160, w * 0.95);
+      // Start large, then shrink so the expand title always fits on one line.
+      let size = clamp(w * 0.055, 18, 72);
+      stage.style.setProperty("--se-title-size", `${size}px`);
+      const inner = titleRef.current?.querySelector<HTMLElement>(
+        ".scroll-expand__title-inner",
+      );
+      if (inner) {
+        void inner.offsetWidth;
+        if (inner.scrollWidth > avail) {
+          size = Math.max(12, size * (avail / inner.scrollWidth) * 0.98);
+          stage.style.setProperty("--se-title-size", `${size}px`);
+        }
+      }
     };
 
     const readProgress = () => {

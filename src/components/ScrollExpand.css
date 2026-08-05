@@ -89,39 +89,43 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0 6%;
+  padding: 0 2.5%;
   text-align: center;
   font-family: var(--font-fraunces), ui-serif, Georgia, serif;
   font-size: var(--se-title-size);
   font-weight: 700;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1;
   color: #f5f8f9;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
   pointer-events: none;
+  white-space: nowrap;
   will-change: opacity, transform;
 }
 
 .scroll-expand__title-inner {
-  display: flex;
-  max-width: 14ch;
-  flex-wrap: wrap;
-  justify-content: center;
-  column-gap: 0;
-  row-gap: 0.06em;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 .scroll-expand__space {
   display: inline-block;
   width: 0.28em;
+  white-space: nowrap;
 }
 
 .scroll-expand__char {
   display: inline-block;
+  white-space: nowrap;
   pointer-events: auto;
   cursor: none;
-  padding: 0.04em 0.045em;
-  margin: 0 -0.01em;
+  padding: 0.04em 0.015em;
+  margin: 0;
   border-radius: 0.18em;
   color: inherit;
   text-shadow: inherit;
