@@ -312,7 +312,19 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
           </div>
           {title ? (
             <div ref={titleRef} className="scroll-expand__title" aria-hidden="true">
-              {title}
+              <span className="scroll-expand__title-inner">
+                {Array.from(title).map((char, index) =>
+                  char === " " ? (
+                    <span key={`sp-${index}`} className="scroll-expand__space">
+                      {"\u00A0"}
+                    </span>
+                  ) : (
+                    <span key={`ch-${index}`} className="scroll-expand__char">
+                      {char}
+                    </span>
+                  ),
+                )}
+              </span>
             </div>
           ) : null}
           {scrollHint ? (
