@@ -25,6 +25,26 @@ function CheckIcon() {
   );
 }
 
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 16 16" className="h-3 w-3 shrink-0" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8 1.4l1.7 3.5 3.8.6-2.8 2.7.7 3.8L8 10.2l-3.4 1.8.7-3.8L2.5 5.5l3.8-.6L8 1.4z"
+      />
+    </svg>
+  );
+}
+
+function PopularBadge({ label }: { label: string }) {
+  return (
+    <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-teal">
+      <StarIcon />
+      {label}
+    </span>
+  );
+}
+
 export function Packages() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -117,9 +137,7 @@ export function Packages() {
             >
               <div className="flex-1">
                 {plan.featured && plan.badge ? (
-                  <p className="mb-2 text-[11px] font-semibold tracking-wide text-teal">
-                    {plan.badge}
-                  </p>
+                  <PopularBadge label={plan.badge} />
                 ) : null}
                 <p className="text-sm font-semibold text-teal">{plan.name}</p>
                 <p className="mt-2.5 font-display text-4xl font-bold tracking-tight text-ink">
@@ -163,9 +181,7 @@ export function Packages() {
               ].join(" ")}
             >
               {plan.featured && plan.mobileBadge ? (
-                <p className="text-[10px] font-semibold tracking-wide text-teal">
-                  {plan.mobileBadge}
-                </p>
+                <PopularBadge label={plan.mobileBadge} />
               ) : null}
               <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
                 {plan.name}
