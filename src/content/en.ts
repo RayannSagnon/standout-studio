@@ -310,7 +310,7 @@ export const about = {
   lead:
     "Standout Studio is a boutique web studio driven by a genuine passion for seeing our clients succeed. For ambitious freelancers and growing local businesses, we act as dedicated partners, not just service providers.",
   body: "We build clear websites one project at a time: personal brands, business showcases, and the care that keeps them live. Strategic craft, straight timelines, and a team that answers the phone.",
-  locale: "English and French. Ottawa or fully remote.",
+  locale: "English and French. Based in Ottawa, Canada",
 } as const;
 
 export const faq = {
