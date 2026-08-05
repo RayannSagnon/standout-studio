@@ -90,7 +90,7 @@ export function Process() {
     <section
       id="process"
       data-cursor="process"
-      className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]"
+      className="section-texture-mint px-5 py-7 md:px-20 md:py-[88px]"
     >
       <div className="mx-auto max-w-[1280px]">
         <div className="md:hidden">

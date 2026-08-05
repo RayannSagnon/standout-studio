@@ -268,7 +268,8 @@ html.has-section-cursor textarea {
 }
 
 .section-cursor-dot,
-.section-cursor-ring {
+.section-cursor-ring,
+.section-cursor-icon {
   translate: -50% -50%;
   border-radius: 999px;
   will-change: transform;
@@ -280,7 +281,9 @@ html.has-section-cursor textarea {
     border-color 0.22s ease,
     border-radius 0.22s ease,
     opacity 0.22s ease,
-    box-shadow 0.22s ease;
+    box-shadow 0.22s ease,
+    color 0.22s ease,
+    font-size 0.22s ease;
 }
 
 .section-cursor-dot {
@@ -296,17 +299,99 @@ html.has-section-cursor textarea {
   background: transparent;
 }
 
+.section-cursor-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--brand-teal);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.section-cursor-icon[data-has-icon="true"] {
+  opacity: 1;
+}
+
 .section-cursor-dot.is-hover {
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
 .section-cursor-ring.is-hover {
   width: 52px;
   height: 52px;
-  opacity: 0.45;
+  opacity: 0.9;
 }
 
-/* Per-section moods — shape / material only, no words */
+.section-cursor-icon.is-hover {
+  width: 52px;
+  height: 52px;
+  font-size: 14px;
+}
+
+.section-cursor-dot.is-press,
+.section-cursor-ring.is-press {
+  opacity: 1;
+}
+
+.section-cursor-ring.is-press {
+  background: color-mix(in srgb, var(--brand-teal) 18%, transparent);
+}
+
+.section-cursor-icon.is-press {
+  font-size: 13px;
+}
+
+/* Soft paper / grain textures for section variety */
+.section-texture-dots {
+  background-color: var(--bg-page);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--brand-teal) 14%, transparent) 0.7px,
+    transparent 0.8px
+  );
+  background-size: 14px 14px;
+}
+
+.section-texture-mint {
+  background-color: #eef6f5;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(15, 118, 110, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(11, 61, 61, 0.05), transparent);
+}
+
+.section-texture-soft {
+  background-color: #f7fafb;
+  background-image: linear-gradient(
+    165deg,
+    #f7fafb 0%,
+    #eef4f5 48%,
+    #f5f8f9 100%
+  );
+}
+
+.section-texture-inkwash {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 0% 50%, rgba(15, 118, 110, 0.06), transparent),
+    radial-gradient(ellipse 50% 40% at 100% 20%, rgba(11, 61, 61, 0.04), transparent);
+}
+
+.section-texture-warm {
+  background-color: #f3f7f7;
+  background-image: repeating-linear-gradient(
+    -12deg,
+    transparent,
+    transparent 11px,
+    color-mix(in srgb, var(--brand-teal) 4%, transparent) 11px,
+    color-mix(in srgb, var(--brand-teal) 4%, transparent) 12px
+  );
+}
+
+/* Per-section moods — shape, color, and icon */
 .section-cursor-dot.mode-hero {
   background: #f5f8f9;
   width: 5px;
@@ -316,33 +401,53 @@ html.has-section-cursor textarea {
   border-color: color-mix(in srgb, #f5f8f9 75%, transparent);
   width: 46px;
   height: 46px;
+  background: color-mix(in srgb, #f5f8f9 8%, transparent);
 }
 
 .section-cursor-dot.mode-trust {
-  width: 9px;
-  height: 9px;
-  background: var(--brand-teal);
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 .section-cursor-ring.mode-trust {
-  width: 16px;
-  height: 16px;
+  width: 34px;
+  height: 34px;
   border-color: transparent;
-  background: color-mix(in srgb, var(--brand-teal) 22%, transparent);
+  background: color-mix(in srgb, var(--brand-teal) 16%, white);
+}
+.section-cursor-icon.mode-trust {
+  color: var(--brand-teal);
+  font-size: 12px;
+  width: 34px;
+  height: 34px;
 }
 
 .section-cursor-dot.mode-services {
-  width: 4px;
-  height: 4px;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 .section-cursor-ring.mode-services {
   border-radius: 7px;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-width: 1.5px;
+  border-color: var(--brand-teal);
+  background: white;
   rotate: 0deg;
+}
+.section-cursor-icon.mode-services {
+  color: var(--brand-teal);
+  font-size: 11px;
 }
 .section-cursor-ring.mode-services.is-hover {
   rotate: 12deg;
+  width: 40px;
+  height: 40px;
+}
+.section-cursor-icon.mode-services.is-hover {
+  width: 40px;
+  height: 40px;
 }
 
 .section-cursor-dot.mode-work {
@@ -353,36 +458,44 @@ html.has-section-cursor textarea {
 .section-cursor-ring.mode-work {
   width: 42px;
   height: 42px;
-  border-color: transparent;
-  background:
-    linear-gradient(#0b3d3d, #0b3d3d) 50% 58% / 2px 12px no-repeat,
-    linear-gradient(#0b3d3d, #0b3d3d) 50% 42% / 12px 2px no-repeat,
-    linear-gradient(#0b3d3d, #0b3d3d) 50% 42% / 2px 12px no-repeat;
   border: 1.5px solid #0b3d3d;
+  background: color-mix(in srgb, white 88%, transparent);
   border-radius: 999px;
 }
+.section-cursor-icon.mode-work {
+  color: #0b3d3d;
+  font-size: 16px;
+  font-weight: 500;
+}
 .section-cursor-ring.mode-work.is-hover {
-  background:
-    linear-gradient(#0f766e, #0f766e) 50% 58% / 2px 14px no-repeat,
-    linear-gradient(#0f766e, #0f766e) 50% 40% / 14px 2px no-repeat,
-    linear-gradient(#0f766e, #0f766e) 50% 40% / 2px 14px no-repeat;
   border-color: #0f766e;
   width: 48px;
   height: 48px;
-  opacity: 1;
+  background: color-mix(in srgb, #0f766e 12%, white);
+}
+.section-cursor-icon.mode-work.is-hover {
+  color: #0f766e;
+  width: 48px;
+  height: 48px;
 }
 
 .section-cursor-dot.mode-packages {
-  width: 5px;
-  height: 5px;
-  background: var(--brand-teal);
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 .section-cursor-ring.mode-packages {
   border-radius: 999px;
-  width: 54px;
-  height: 26px;
+  width: 48px;
+  height: 28px;
   border-color: var(--brand-teal);
-  background: color-mix(in srgb, var(--brand-teal) 8%, transparent);
+  background: color-mix(in srgb, var(--brand-teal) 10%, white);
+}
+.section-cursor-icon.mode-packages {
+  color: var(--brand-teal);
+  font-size: 12px;
+  width: 48px;
+  height: 28px;
 }
 
 .section-cursor-dot.mode-why {
@@ -391,14 +504,14 @@ html.has-section-cursor textarea {
   opacity: 0;
 }
 .section-cursor-ring.mode-why {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-color: var(--brand-teal);
-  background:
-    linear-gradient(var(--brand-teal), var(--brand-teal)) center / 12px 1.5px
-      no-repeat,
-    linear-gradient(var(--brand-teal), var(--brand-teal)) center / 1.5px 12px
-      no-repeat;
+  background: color-mix(in srgb, var(--brand-teal) 8%, white);
+}
+.section-cursor-icon.mode-why {
+  color: var(--brand-teal);
+  font-size: 13px;
 }
 
 .section-cursor-dot.mode-marquee {
@@ -416,14 +529,20 @@ html.has-section-cursor textarea {
 }
 
 .section-cursor-dot.mode-process {
-  width: 3px;
-  height: 3px;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 .section-cursor-ring.mode-process {
-  border-radius: 3px;
-  width: 22px;
-  height: 22px;
+  border-radius: 4px;
+  width: 34px;
+  height: 34px;
   border-color: var(--brand-teal);
+  background: white;
+}
+.section-cursor-icon.mode-process {
+  color: var(--brand-teal);
+  font-size: 13px;
 }
 
 .section-cursor-dot.mode-testimonials {
@@ -432,16 +551,15 @@ html.has-section-cursor textarea {
   opacity: 0;
 }
 .section-cursor-ring.mode-testimonials {
-  width: 40px;
-  height: 40px;
-  border-color: transparent;
-  background: radial-gradient(
-    circle at center,
-    color-mix(in srgb, var(--brand-teal) 35%, transparent) 0 22%,
-    transparent 24% 55%,
-    color-mix(in srgb, var(--brand-teal) 40%, transparent) 57% 58%,
-    transparent 60%
-  );
+  width: 42px;
+  height: 42px;
+  border-color: var(--brand-teal);
+  background: color-mix(in srgb, var(--brand-teal) 12%, white);
+}
+.section-cursor-icon.mode-testimonials {
+  color: var(--brand-teal);
+  font-size: 16px;
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
 .section-cursor-dot.mode-about {
@@ -464,18 +582,27 @@ html.has-section-cursor textarea {
   opacity: 0;
 }
 .section-cursor-ring.mode-faq {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  rotate: 45deg;
-  border-color: var(--border-subtle);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border-color: var(--brand-teal);
   background: white;
   box-shadow: 0 6px 18px rgba(15, 28, 31, 0.1);
 }
+.section-cursor-icon.mode-faq {
+  color: var(--brand-teal);
+  font-size: 14px;
+}
 .section-cursor-ring.mode-faq.is-hover {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   opacity: 1;
+  background: var(--brand-teal);
+}
+.section-cursor-icon.mode-faq.is-hover {
+  color: white;
+  width: 42px;
+  height: 42px;
 }
 
 .section-cursor-dot.mode-contact {
@@ -486,19 +613,21 @@ html.has-section-cursor textarea {
 .section-cursor-ring.mode-contact {
   width: 44px;
   height: 44px;
-  border-color: transparent;
-  background: radial-gradient(
-    circle at 50% 50%,
-    transparent 0 38%,
-    color-mix(in srgb, #f5f8f9 55%, transparent) 40% 42%,
-    transparent 44%
-  );
-  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, #f5f8f9 65%, transparent);
+  border-color: color-mix(in srgb, #f5f8f9 70%, transparent);
+  background: color-mix(in srgb, #0b3d3d 35%, transparent);
+}
+.section-cursor-icon.mode-contact {
+  color: #f5f8f9;
+  font-size: 13px;
 }
 .section-cursor-ring.mode-contact.is-hover {
-  width: 56px;
-  height: 56px;
-  background: color-mix(in srgb, #0f766e 70%, transparent);
-  box-shadow: none;
-  opacity: 0.85;
+  width: 54px;
+  height: 54px;
+  background: color-mix(in srgb, #0f766e 80%, transparent);
+  border-color: transparent;
+  opacity: 0.95;
+}
+.section-cursor-icon.mode-contact.is-hover {
+  width: 54px;
+  height: 54px;
 }

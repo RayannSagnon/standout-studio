@@ -7,7 +7,7 @@ export function About() {
     <section
       id="about"
       data-cursor="about"
-      className="bg-page px-5 py-7 md:bg-white md:px-20 md:py-[88px]"
+      className="section-texture-soft px-5 py-7 md:px-20 md:py-[88px]"
     >
       <div className="mx-auto max-w-[1280px]">
         <p className="text-xs font-semibold tracking-[0.12em] text-teal md:text-[13px]">

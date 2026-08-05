@@ -38,7 +38,7 @@ export function Trust() {
     <section
       aria-label="Trust signals"
       data-cursor="trust"
-      className="border-b border-border/70 bg-surface"
+      className="section-texture-soft border-b border-border/70"
     >
       <div className="sr-only">
         <ul>

@@ -15,7 +15,7 @@ export function Testimonials() {
     <section
       id="testimonials"
       data-cursor="testimonials"
-      className="bg-page px-5 py-10 md:px-20 md:py-24"
+      className="section-texture-warm px-5 py-10 md:px-20 md:py-24"
     >
       <div className="mx-auto max-w-[1280px]">
         <Reveal className="max-w-[616px]">
