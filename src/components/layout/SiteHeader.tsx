@@ -173,9 +173,9 @@ export function SiteHeader() {
       className="flex items-center gap-0.5 text-[13px]"
       aria-label={t.ui.language}
     >
-      <button
-        type="button"
-        onClick={() => setLocale("en")}
+      <Link
+        href="/"
+        hrefLang="en"
         className={[
           "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg",
           locale === "en"
@@ -183,15 +183,16 @@ export function SiteHeader() {
             : "font-medium text-muted transition-colors hover:text-ink",
         ].join(" ")}
         tabIndex={visible ? undefined : -1}
+        onClick={() => setLocale("en")}
       >
         EN
-      </button>
+      </Link>
       <span className="text-muted" aria-hidden="true">
         |
       </span>
-      <button
-        type="button"
-        onClick={() => setLocale("fr")}
+      <Link
+        href="/fr"
+        hrefLang="fr"
         className={[
           "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg",
           locale === "fr"
@@ -199,9 +200,10 @@ export function SiteHeader() {
             : "font-medium text-muted transition-colors hover:text-ink",
         ].join(" ")}
         tabIndex={visible ? undefined : -1}
+        onClick={() => setLocale("fr")}
       >
         FR
-      </button>
+      </Link>
     </div>
   );
 

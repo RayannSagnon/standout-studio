@@ -7,6 +7,20 @@ export const site = {
   },
 };
 
+export const seo = {
+  title: "Standout Studio | Conception et développement web à Ottawa",
+  description:
+    "Studio web bilingue à Ottawa. Sites web sur mesure, cartes numériques et boutiques Shopify pour freelances et PME. Forfaits clairs dès 250 $.",
+  ogLocale: "fr_CA",
+  keywords: [
+    "conception web Ottawa",
+    "développement site web Ottawa",
+    "site web PME Ottawa",
+    "portfolio freelance Ottawa",
+    "studio web bilingue Ottawa",
+  ],
+};
+
 export const nav = {
   links: [
     { label: "Forfaits", href: "#packages" },
@@ -21,6 +35,7 @@ export const hero = {
   kicker: "Design / Build / Care",
   expandTitle: "Marquez dès le premier regard.",
   headline: "Des sites web soignés qui génèrent de vrais résultats",
+  heroImageAlt: "Arrière-plan abstrait teal pour le hero Standout Studio",
   primaryCta: { label: "Lancer un projet", href: "#contact" },
   secondaryCta: { label: "Voir les forfaits", href: "#packages" },
   support:
@@ -416,14 +431,23 @@ export const contact = {
   formTitle: "Écrivez-nous",
   requiredHint: "* Obligatoire",
   fields: {
-    name: { label: "Nom *", placeholder: "Votre nom" },
-    email: { label: "Courriel *", placeholder: "vous@courriel.com" },
-    phone: { label: "Téléphone (optionnel)", placeholder: "+1 ..." },
+    name: { label: "Nom *", placeholder: "Votre nom", mailLabel: "Nom" },
+    email: {
+      label: "Courriel *",
+      placeholder: "vous@courriel.com",
+      mailLabel: "Courriel",
+    },
+    phone: {
+      label: "Téléphone (optionnel)",
+      placeholder: "+1 ...",
+      mailLabel: "Téléphone",
+    },
     need: {
       label: "De quoi avez-vous besoin ? *",
       placeholder:
         "Carte numérique / Marque personnelle / Vitrine entreprise / Pas sûr",
       mobilePlaceholder: "Forfait ou pas sûr",
+      mailLabel: "Besoin",
     },
     message: {
       label: "Message *",
@@ -433,13 +457,16 @@ export const contact = {
       label: "Joindre des fichiers (optionnel)",
       button: "Choisir des fichiers",
       empty: "Aucun fichier choisi",
-      hint: "Briefs, références, logos — PDF, PNG, JPG, DOC, quelques Mo max.",
+      hint: "Briefs, références, logos — PDF, PNG, JPG, DOC, 5 Mo max chacun.",
       mailNote:
         "Veuillez joindre ces fichiers à ce courriel avant l'envoi :",
+      tooLarge: "Chaque fichier doit faire moins de 5 Mo.",
     },
   },
   submit: "Envoyer",
   mailSubject: "Demande Standout Studio de",
+  previewAltSuffix: "aperçu du site web",
+  newTabHint: "(s'ouvre dans un nouvel onglet)",
   sentWithFiles:
     "Ouverture de votre application courriel. Joignez les fichiers choisis avant d'envoyer.",
   sent: "Ouverture de votre application courriel avec le message prêt à envoyer.",
@@ -456,4 +483,5 @@ export const ui = {
   trustLabel: "Signaux de confiance",
   menuOpen: "Ouvrir le menu",
   menuClose: "Fermer le menu",
+  skipToContent: "Aller au contenu",
 };

@@ -9,9 +9,11 @@ export function Contact() {
   const { contact, site } = useContent();
   const [sent, setSent] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
+  const [fileError, setFileError] = useState("");
   const [mdUp, setMdUp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileInputId = useId();
+  const MAX_FILE_BYTES = 5 * 1024 * 1024;
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -31,10 +33,10 @@ export function Contact() {
     const message = String(form.get("message") || "").trim();
 
     const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      phone ? `Phone: ${phone}` : null,
-      `Need: ${need}`,
+      `${contact.fields.name.mailLabel}: ${name}`,
+      `${contact.fields.email.mailLabel}: ${email}`,
+      phone ? `${contact.fields.phone.mailLabel}: ${phone}` : null,
+      `${contact.fields.need.mailLabel}: ${need}`,
       "",
       message,
       fileNames.length
@@ -168,6 +170,16 @@ export function Contact() {
                 className="sr-only"
                 onChange={(event) => {
                   const files = Array.from(event.target.files ?? []);
+                  const oversized = files.some(
+                    (file) => file.size > MAX_FILE_BYTES,
+                  );
+                  if (oversized) {
+                    setFileError(contact.fields.files.tooLarge);
+                    setFileNames([]);
+                    event.target.value = "";
+                    return;
+                  }
+                  setFileError("");
                   setFileNames(files.map((file) => file.name));
                 }}
               />
@@ -175,6 +187,11 @@ export function Contact() {
             <p className="mt-1.5 text-[12px] text-muted">
               {contact.fields.files.hint}
             </p>
+            {fileError ? (
+              <p className="mt-1.5 text-[12px] text-teal-deep" role="alert">
+                {fileError}
+              </p>
+            ) : null}
           </div>
 
           <label className="mt-3 block text-[13px] font-medium text-ink">
@@ -196,7 +213,7 @@ export function Contact() {
           </button>
 
           {sent ? (
-            <p className="mt-3 text-sm text-teal">
+            <p className="mt-3 text-sm text-teal" aria-live="polite">
               {fileNames.length ? contact.sentWithFiles : contact.sent}
             </p>
           ) : null}

@@ -7,6 +7,20 @@ export const site = {
   },
 } as const;
 
+export const seo = {
+  title: "Standout Studio | Web Design & Development in Ottawa",
+  description:
+    "Bilingual web studio in Ottawa. Custom websites, digital cards, and Shopify stores for freelancers and small businesses. Clear packages from $250.",
+  ogLocale: "en_CA",
+  keywords: [
+    "Ottawa web design",
+    "Ottawa website development",
+    "small business websites Ottawa",
+    "freelance portfolio website",
+    "bilingual web studio Ottawa",
+  ],
+} as const;
+
 export const nav = {
   links: [
     { label: "Packages", href: "#packages" },
@@ -21,6 +35,7 @@ export const hero = {
   kicker: "Design / Build / Care",
   expandTitle: "Own the first impression.",
   headline: "Creating Beautiful Websites That Drive Revenue",
+  heroImageAlt: "Teal abstract backdrop for the Standout Studio homepage hero",
   primaryCta: { label: "Start a project", href: "#contact" },
   secondaryCta: { label: "See the packages", href: "#packages" },
   support: "We take time on the details that make a website feel finished.",
@@ -392,13 +407,18 @@ export const contact = {
   formTitle: "Get in touch",
   requiredHint: "* Required",
   fields: {
-    name: { label: "Name *", placeholder: "Your name" },
-    email: { label: "Email *", placeholder: "you@email.com" },
-    phone: { label: "Phone (optional)", placeholder: "+1 ..." },
+    name: { label: "Name *", placeholder: "Your name", mailLabel: "Name" },
+    email: { label: "Email *", placeholder: "you@email.com", mailLabel: "Email" },
+    phone: {
+      label: "Phone (optional)",
+      placeholder: "+1 ...",
+      mailLabel: "Phone",
+    },
     need: {
       label: "What do you need? *",
       placeholder: "Digital Card / Personal Brand / Business Starter / Not sure",
       mobilePlaceholder: "Pack or not sure",
+      mailLabel: "Need",
     },
     message: {
       label: "Message *",
@@ -408,13 +428,16 @@ export const contact = {
       label: "Upload project files (optional)",
       button: "Choose Files",
       empty: "No file chosen",
-      hint: "Briefs, refs, logos — PDF, PNG, JPG, DOC up to a few MB each.",
+      hint: "Briefs, refs, logos — PDF, PNG, JPG, DOC up to 5 MB each.",
       mailNote:
         "Please attach these files to this email before sending:",
+      tooLarge: "Each file must be under 5 MB.",
     },
   },
   submit: "Send",
   mailSubject: "Standout Studio inquiry from",
+  previewAltSuffix: "website preview",
+  newTabHint: "(opens in a new tab)",
   sentWithFiles:
     "Opening your email app. Attach the selected files before you send.",
   sent: "Opening your email app with the message ready to send.",
@@ -431,4 +454,5 @@ export const ui = {
   trustLabel: "Trust signals",
   menuOpen: "Open menu",
   menuClose: "Close menu",
+  skipToContent: "Skip to content",
 } as const;

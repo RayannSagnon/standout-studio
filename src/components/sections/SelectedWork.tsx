@@ -7,7 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 
 export function SelectedWork() {
   const { locale } = useLocale();
-  const { selectedWork } = useContent();
+  const { selectedWork, contact } = useContent();
 
   return (
     <section
@@ -54,13 +54,14 @@ export function SelectedWork() {
               <a
                 href={project.href}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label={`${project.name} ${contact.newTabHint}`}
                 className="group block"
               >
                 <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow duration-300 group-hover:shadow-[0_20px_50px_rgba(15,28,31,0.12)]">
                   <Image
                     src={project.image}
-                    alt={`${project.name} website preview`}
+                    alt={`${project.name} ${contact.previewAltSuffix}`}
                     width={1172}
                     height={680}
                     sizes="(max-width: 768px) 100vw, 560px"
@@ -88,13 +89,14 @@ export function SelectedWork() {
               key={project.id}
               href={project.href}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label={`${project.name} ${contact.newTabHint}`}
               className="w-[280px] shrink-0 snap-start"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-white">
                 <Image
                   src={project.imageMobile}
-                  alt={`${project.name} website preview`}
+                  alt={`${project.name} ${contact.previewAltSuffix}`}
                   width={560}
                   height={360}
                   sizes="280px"

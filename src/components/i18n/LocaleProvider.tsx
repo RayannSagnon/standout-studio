@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import {
   getDictionary,
   type Dictionary,
@@ -33,14 +34,37 @@ function readStoredLocale(): Locale {
   return stored === "fr" || stored === "en" ? stored : "en";
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+type LocaleProviderProps = {
+  children: ReactNode;
+  initialLocale?: Locale;
+};
+
+export function LocaleProvider({
+  children,
+  initialLocale,
+}: LocaleProviderProps) {
+  const pathname = usePathname();
+  const pathLocale: Locale | null = pathname?.startsWith("/fr")
+    ? "fr"
+    : pathname === "/"
+      ? "en"
+      : null;
+
+  const [locale, setLocaleState] = useState<Locale>(
+    () => initialLocale ?? pathLocale ?? "en",
+  );
 
   useEffect(() => {
-    const initial = readStoredLocale();
-    setLocaleState(initial);
-    document.documentElement.lang = initial;
-  }, []);
+    if (pathLocale) {
+      setLocaleState(pathLocale);
+      document.documentElement.lang = pathLocale;
+      window.localStorage.setItem(STORAGE_KEY, pathLocale);
+      return;
+    }
+    const stored = readStoredLocale();
+    setLocaleState(stored);
+    document.documentElement.lang = stored;
+  }, [pathLocale]);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);

@@ -58,7 +58,7 @@ export function Hero() {
 
       <ScrollExpand
         src="/hero/expand-still.webp"
-        alt=""
+        alt={hero.heroImageAlt}
         title={hero.expandTitle}
         scrollHint={hero.scrollHint}
         useWindowScroll

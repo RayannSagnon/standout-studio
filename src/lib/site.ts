@@ -1,0 +1,16 @@
+export const siteConfig = {
+  name: "Standout Studio",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://standout-studio-seven.vercel.app",
+  email: "hello@standoutstudio.ca",
+  locales: ["en", "fr"] as const,
+  defaultLocale: "en" as const,
+  geo: {
+    locality: "Ottawa",
+    region: "ON",
+    country: "CA",
+    latitude: 45.4215,
+    longitude: -75.6972,
+  },
+} as const;
+
+export type SiteLocale = (typeof siteConfig.locales)[number];

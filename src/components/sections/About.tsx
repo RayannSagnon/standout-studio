@@ -20,7 +20,7 @@ export function About() {
         </p>
         <BlurText
           key={locale}
-          as="p"
+          as="h2"
           text={about.lead}
           animateBy="words"
           direction="bottom"
