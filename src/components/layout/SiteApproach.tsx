@@ -12,12 +12,11 @@ type SiteApproachProps = {
 };
 
 /**
- * Selected Work scrolls fully, then pins as Packages enters from the bottom
- * and rises over it. Desktop only.
+ * Packages rises gently as it enters. No pin — pinning Work was pulling it
+ * into the hero expand viewport.
  */
 export function SiteApproach({ children }: SiteApproachProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const workWrapRef = useRef<HTMLDivElement>(null);
   const packWrapRef = useRef<HTMLDivElement>(null);
   const items = Children.toArray(children);
   const work = items[0];
@@ -25,42 +24,27 @@ export function SiteApproach({ children }: SiteApproachProps) {
 
   useGSAP(
     () => {
-      const root = rootRef.current;
-      const workWrap = workWrapRef.current;
       const packWrap = packWrapRef.current;
-      if (!root || !workWrap || !packWrap) return;
+      if (!packWrap) return;
 
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const desktop = window.matchMedia("(min-width: 768px)").matches;
       if (reduce || !desktop) return;
 
-      const workEl = workWrap.querySelector<HTMLElement>("#work") ?? workWrap;
       const packEl =
         packWrap.querySelector<HTMLElement>("#packages") ?? packWrap;
 
-      // Pin Work only once Packages starts entering the viewport —
-      // so the cover begins at the end of Work, not mid-cards.
-      ScrollTrigger.create({
-        trigger: packEl,
-        start: "top bottom",
-        end: "top top",
-        pin: workEl,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
-
       gsap.fromTo(
         packWrap,
-        { y: 56 },
+        { y: 72 },
         {
           y: 0,
           ease: "none",
           scrollTrigger: {
             trigger: packEl,
             start: "top bottom",
-            end: "top 35%",
-            scrub: 0.45,
+            end: "top 40%",
+            scrub: 0.5,
             invalidateOnRefresh: true,
           },
         },
@@ -75,9 +59,7 @@ export function SiteApproach({ children }: SiteApproachProps) {
 
   return (
     <div ref={rootRef} className="relative">
-      <div ref={workWrapRef} className="relative z-10">
-        {work}
-      </div>
+      <div className="relative z-10">{work}</div>
       <div ref={packWrapRef} className="relative z-20 will-change-transform">
         {overlay}
       </div>

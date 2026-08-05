@@ -49,7 +49,7 @@ export function Hero() {
     <section
       aria-labelledby="hero-heading"
       data-cursor="hero"
-      className="relative isolate bg-hero text-inverse"
+      className="relative isolate z-30 bg-hero text-inverse"
     >
       <h1 id="hero-heading" className="sr-only">
         {hero.headline}

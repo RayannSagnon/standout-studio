@@ -125,8 +125,8 @@ html.allow-smooth-scroll {
   }
 }
 
-html.is-booting {
-  overflow: hidden;
+html.is-hero-expanding .scroll-expand__stage {
+  z-index: 50;
 }
 
 .page-loader {
