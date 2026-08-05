@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type CursorMode =
   | "default"
@@ -34,15 +35,27 @@ function syncClasses(
     .join(" ");
 }
 
+function place(node: HTMLDivElement | null, x: number, y: number, scale: number) {
+  if (!node) return;
+  // left/top = hotspot; transform only centers + press scale (no second translate of coords)
+  node.style.left = `${x}px`;
+  node.style.top = `${y}px`;
+  node.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+
 export function SectionCursor() {
   const coreRef = useRef<HTMLDivElement>(null);
   const accentRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: -100, y: -100 });
   const modeRef = useRef<CursorMode>("default");
   const hoverRef = useRef(false);
   const pressRef = useRef(false);
   const [enabled, setEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia(
@@ -60,45 +73,18 @@ export function SectionCursor() {
     document.documentElement.classList.add("has-section-cursor");
 
     if (coreRef.current) {
-      coreRef.current.dataset.baseClass =
-        "section-cursor-core absolute left-0 top-0";
+      coreRef.current.dataset.baseClass = "section-cursor-core";
     }
     if (accentRef.current) {
-      accentRef.current.dataset.baseClass =
-        "section-cursor-accent absolute left-0 top-0";
+      accentRef.current.dataset.baseClass = "section-cursor-accent";
     }
     syncClasses(coreRef.current, modeRef.current, hoverRef.current, pressRef.current);
     syncClasses(accentRef.current, modeRef.current, hoverRef.current, pressRef.current);
 
-    let frame = 0;
-    let running = false;
-    let idleTimer = 0;
-
-    const paint = () => {
-      const { x, y } = pos.current;
-      const pressScale = pressRef.current ? 0.82 : 1;
-      // Center hotspot in the same transform as the move — avoids CSS translate drift.
-      const t = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${pressScale})`;
-      if (coreRef.current) coreRef.current.style.transform = t;
-      if (accentRef.current) accentRef.current.style.transform = t;
-    };
-
-    const stop = () => {
-      running = false;
-      if (frame) cancelAnimationFrame(frame);
-      frame = 0;
-    };
-
-    const tick = () => {
-      paint();
-      stop();
-    };
-
-    const kick = () => {
-      paint();
-      if (running) return;
-      running = true;
-      frame = requestAnimationFrame(tick);
+    const paint = (x: number, y: number) => {
+      const scale = pressRef.current ? 0.82 : 1;
+      place(coreRef.current, x, y, scale);
+      place(accentRef.current, x, y, scale);
     };
 
     const applyState = () => {
@@ -107,12 +93,8 @@ export function SectionCursor() {
     };
 
     const onMove = (event: MouseEvent) => {
-      pos.current = { x: event.clientX, y: event.clientY };
-      setVisible((prev) => (prev ? prev : true));
-      kick();
-
-      window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(stop, 160);
+      setVisible(true);
+      paint(event.clientX, event.clientY);
 
       const target = event.target as HTMLElement | null;
       const interactive = Boolean(
@@ -136,52 +118,49 @@ export function SectionCursor() {
       if (dirty) applyState();
     };
 
-    const onDown = () => {
+    const onDown = (event: MouseEvent) => {
       pressRef.current = true;
       applyState();
-      kick();
+      paint(event.clientX, event.clientY);
     };
 
-    const onUp = () => {
+    const onUp = (event: MouseEvent) => {
       pressRef.current = false;
       applyState();
-      kick();
+      paint(event.clientX, event.clientY);
     };
 
     const onLeave = () => {
       setVisible(false);
       pressRef.current = false;
-      stop();
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("mouseup", onUp);
-    window.addEventListener("mouseleave", onLeave);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointerleave", onLeave);
+    document.addEventListener("mouseleave", onLeave);
 
     return () => {
       document.documentElement.classList.remove("has-section-cursor");
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("mouseup", onUp);
-      window.removeEventListener("mouseleave", onLeave);
-      window.clearTimeout(idleTimer);
-      stop();
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointerleave", onLeave);
+      document.removeEventListener("mouseleave", onLeave);
     };
   }, [enabled]);
 
-  if (!enabled) return null;
+  if (!enabled || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
-      className={[
-        "section-cursor pointer-events-none fixed inset-0 z-[100] hidden md:block",
-        visible ? "is-visible" : "",
-      ].join(" ")}
+      className={["section-cursor", visible ? "is-visible" : ""].join(" ")}
       aria-hidden="true"
     >
-      <div ref={accentRef} className="section-cursor-accent absolute left-0 top-0" />
-      <div ref={coreRef} className="section-cursor-core absolute left-0 top-0" />
-    </div>
+      <div ref={accentRef} className="section-cursor-accent" />
+      <div ref={coreRef} className="section-cursor-core" />
+    </div>,
+    document.body,
   );
 }

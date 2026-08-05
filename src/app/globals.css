@@ -254,9 +254,12 @@ html.has-section-cursor * {
 }
 
 .section-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
   opacity: 0;
-  transition: opacity 0.18s ease;
-  contain: layout style;
+  transition: opacity 0.15s ease;
 }
 
 .section-cursor.is-visible {
@@ -266,11 +269,11 @@ html.has-section-cursor * {
 /* Two-layer custom cursors: core (tip) + accent (style body) */
 .section-cursor-core,
 .section-cursor-accent {
+  position: fixed;
   top: 0;
   left: 0;
-  will-change: transform;
   pointer-events: none;
-  /* Hotspot centered via JS translate(-50%, -50%) — do not also set CSS translate. */
+  will-change: left, top, transform;
   transition:
     width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
