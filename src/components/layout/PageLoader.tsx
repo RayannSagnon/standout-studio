@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { site } from "@/content/en";
 
-const MIN_MS = 900;
-const MAX_MS = 2200;
+const MIN_MS = 450;
+const MAX_MS = 1100;
 
 export function PageLoader() {
   const [leaving, setLeaving] = useState(false);
@@ -33,7 +33,7 @@ export function PageLoader() {
         exitTimer = window.setTimeout(() => {
           setGone(true);
           document.documentElement.classList.remove("is-booting");
-        }, 520);
+        }, 320);
       }, wait);
     };
 
