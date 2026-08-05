@@ -299,6 +299,8 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
         className="scroll-expand__media"
         src={src}
         alt={alt}
+        width={1536}
+        height={1024}
         draggable={false}
         decoding="async"
         fetchPriority="high"
@@ -309,7 +311,13 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     <div
       ref={rootRef}
       className={`scroll-expand ${useWindowScroll ? "" : "scroll-expand--scroller"} ${className}`.trim()}
-      style={style}
+      style={
+        {
+          ...style,
+          ["--se-scroll-distance" as string]: scrollDistance,
+          ["--se-hold-distance" as string]: holdDistance,
+        } as CSSProperties
+      }
       {...rest}
     >
       <div ref={trackRef} className="scroll-expand__track">

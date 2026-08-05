@@ -263,7 +263,7 @@ export function SiteHeader() {
           href={t.nav.cta.href}
           tabIndex={visible ? undefined : -1}
           onClick={() => setMenuOpen(false)}
-          className="inline-flex h-9 items-center justify-center rounded-full bg-teal px-3 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep sm:px-4 md:h-[38px]"
+          className="inline-flex h-11 min-h-11 items-center justify-center rounded-full bg-teal px-3 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep sm:px-4 md:h-[38px] md:min-h-[38px]"
         >
           <span className="sm:hidden">{t.nav.cta.shortLabel}</span>
           <span className="hidden sm:inline">{t.nav.cta.label}</span>

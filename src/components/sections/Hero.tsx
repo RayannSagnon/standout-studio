@@ -57,7 +57,7 @@ export function Hero() {
       </h1>
 
       <ScrollExpand
-        src="/hero/expand-still.jpg"
+        src="/hero/expand-still.webp"
         alt=""
         title={hero.expandTitle}
         scrollHint={hero.scrollHint}

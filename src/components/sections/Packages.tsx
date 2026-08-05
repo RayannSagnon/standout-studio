@@ -38,7 +38,7 @@ function StarIcon() {
 
 function PopularBadge({ label }: { label: string }) {
   return (
-    <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-teal">
+    <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-teal/15 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-teal-deep">
       <StarIcon />
       {label}
     </span>
@@ -213,17 +213,14 @@ export function Packages() {
           ))}
         </div>
 
-        <div className="mt-3 flex items-center justify-center gap-2 md:hidden">
+        <div className="mt-3 flex items-center justify-center gap-1 md:hidden">
           {packages.plans.map((plan, index) => (
             <button
               key={plan.id}
               type="button"
               aria-label={`${plan.name}`}
               aria-current={index === active ? "true" : undefined}
-              className={[
-                "h-2.5 rounded-full transition-all",
-                index === active ? "w-[18px] bg-teal" : "w-2.5 bg-[#c7d1d1]",
-              ].join(" ")}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center"
               onClick={() => {
                 const el = scrollerRef.current;
                 if (!el) return;
@@ -236,7 +233,14 @@ export function Packages() {
                   block: "nearest",
                 });
               }}
-            />
+            >
+              <span
+                className={[
+                  "h-2.5 rounded-full transition-all",
+                  index === active ? "w-[18px] bg-teal" : "w-2.5 bg-[#7f9a98]",
+                ].join(" ")}
+              />
+            </button>
           ))}
         </div>
 

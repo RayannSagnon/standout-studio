@@ -11,13 +11,17 @@ import "./globals.css";
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
+  weight: ["600", "700"],
   display: "swap",
+  adjustFontFallback: true,
 });
 
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {

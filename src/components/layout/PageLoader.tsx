@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useContent } from "@/components/i18n/LocaleProvider";
 
-/** Keep the splash up long enough to see the bar fill. */
-const MIN_MS = 900;
-const MAX_MS = 1600;
-const FADE_MS = 380;
+const MIN_MS = 480;
+const MAX_MS = 900;
+const FADE_MS = 280;
+const SEEN_KEY = "standout-loader-seen";
 
 export function PageLoader() {
   const { site } = useContent();
@@ -15,7 +15,8 @@ export function PageLoader() {
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    const seen = sessionStorage.getItem(SEEN_KEY) === "1";
+    if (reduce || seen) {
       setGone(true);
       return;
     }
@@ -31,6 +32,7 @@ export function PageLoader() {
     const exit = () => {
       if (finished) return;
       finished = true;
+      sessionStorage.setItem(SEEN_KEY, "1");
       const wait = Math.max(0, MIN_MS - (performance.now() - started));
       leaveTimer = window.setTimeout(() => {
         setLeaving(true);
@@ -41,18 +43,10 @@ export function PageLoader() {
       }, wait);
     };
 
-    const onReady = () => exit();
-
     if (document.readyState === "complete") {
-      void document.fonts.ready.then(onReady);
+      exit();
     } else {
-      window.addEventListener(
-        "load",
-        () => {
-          void document.fonts.ready.then(onReady);
-        },
-        { once: true },
-      );
+      window.addEventListener("load", exit, { once: true });
     }
 
     maxTimer = window.setTimeout(exit, MAX_MS);

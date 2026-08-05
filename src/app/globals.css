@@ -6,13 +6,13 @@
   --bg-teal-soft: #e7f3f3;
   --bg-hero: #0b3d3d;
   --ink-primary: #0f1c1f;
-  --ink-muted: #5a6b70;
+  --ink-muted: #4a5b60;
   --ink-inverse: #f5f8f9;
   --brand-teal: #0f766e;
   --brand-teal-deep: #0a4f4f;
   --border-subtle: #d5e0e2;
   --hero-kicker: #b8d9d4;
-  --hero-support: #8fb5b0;
+  --hero-support: #a8cdc8;
   --wave-mint: #c7e5e0;
 }
 
@@ -174,7 +174,7 @@ html.is-hero-expanding .scroll-expand__stage {
 .page-loader__bar {
   transform-origin: left center;
   transform: scaleX(0);
-  animation: loader-bar 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+  animation: loader-bar 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
 }
 
 .animate-marquee {

@@ -63,6 +63,8 @@ export function SelectedWork() {
                     alt={`${project.name} website preview`}
                     width={1172}
                     height={680}
+                    sizes="(max-width: 768px) 100vw, 560px"
+                    quality={75}
                     className="h-[340px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.035]"
                   />
                 </div>
@@ -91,10 +93,12 @@ export function SelectedWork() {
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-white">
                 <Image
-                  src={project.image}
+                  src={project.imageMobile}
                   alt={`${project.name} website preview`}
                   width={560}
                   height={360}
+                  sizes="280px"
+                  quality={75}
                   className="h-[180px] w-full object-cover object-top"
                 />
               </div>

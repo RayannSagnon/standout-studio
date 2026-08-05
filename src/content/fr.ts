@@ -131,7 +131,8 @@ export const selectedWork = {
       name: "Rayann Sagnon",
       domain: "rayannsagnon.com",
       href: "https://rayannsagnon.com",
-      image: "/work/rayann-desktop.png",
+      image: "/work/rayann-desktop.webp",
+      imageMobile: "/work/rayann-mobile.webp",
     },
     {
       id: "steven",
@@ -139,7 +140,8 @@ export const selectedWork = {
       name: "Steven Atchall",
       domain: "stevenatchall.com",
       href: "https://stevenatchall.com",
-      image: "/work/steven-desktop.png",
+      image: "/work/steven-desktop.webp",
+      imageMobile: "/work/steven-mobile.webp",
     },
   ],
 };

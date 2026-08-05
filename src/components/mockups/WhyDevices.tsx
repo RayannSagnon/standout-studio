@@ -12,22 +12,24 @@ export function WhyDevices() {
 
       <div className="absolute left-[14%] top-[2%] h-[98%] w-[46%] animate-float">
         <Image
-          src="/mockups/phones/alex-morgan-3d.png"
+          src="/mockups/phones/alex-morgan-3d.webp"
           alt=""
           width={614}
           height={1024}
-          unoptimized
+          sizes="(max-width: 1023px) 0px, 280px"
+          quality={75}
           className="h-full w-full object-contain [filter:drop-shadow(0_18px_28px_rgba(15,28,31,0.28))_drop-shadow(0_6px_10px_rgba(15,28,31,0.18))]"
         />
       </div>
 
       <div className="absolute right-[12%] top-[8%] h-[92%] w-[46%] animate-float-delayed">
         <Image
-          src="/mockups/phones/riverdale-3d.png"
+          src="/mockups/phones/riverdale-3d.webp"
           alt=""
           width={614}
           height={1024}
-          unoptimized
+          sizes="(max-width: 1023px) 0px, 280px"
+          quality={75}
           className="h-full w-full object-contain [filter:drop-shadow(0_18px_28px_rgba(15,28,31,0.28))_drop-shadow(0_6px_10px_rgba(15,28,31,0.18))]"
         />
       </div>
