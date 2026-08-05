@@ -17,22 +17,6 @@ type CursorMode =
   | "faq"
   | "contact";
 
-const ICONS: Record<CursorMode, string> = {
-  default: "",
-  hero: "",
-  trust: "★",
-  services: "◆",
-  work: "+",
-  packages: "$",
-  why: "◎",
-  marquee: "",
-  process: "→",
-  testimonials: "“",
-  about: "",
-  faq: "?",
-  contact: "✉",
-};
-
 function syncClasses(
   node: HTMLDivElement | null,
   mode: CursorMode,
@@ -51,17 +35,15 @@ function syncClasses(
 }
 
 export function SectionCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<HTMLDivElement>(null);
+  const coreRef = useRef<HTMLDivElement>(null);
+  const accentRef = useRef<HTMLDivElement>(null);
   const pos = useRef({ x: -100, y: -100 });
-  const ring = useRef({ x: -100, y: -100 });
+  const lag = useRef({ x: -100, y: -100 });
   const modeRef = useRef<CursorMode>("default");
   const hoverRef = useRef(false);
   const pressRef = useRef(false);
   const [enabled, setEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [icon, setIcon] = useState("");
 
   useEffect(() => {
     const mq = window.matchMedia(
@@ -78,21 +60,16 @@ export function SectionCursor() {
 
     document.documentElement.classList.add("has-section-cursor");
 
-    if (dotRef.current) {
-      dotRef.current.dataset.baseClass =
-        "section-cursor-dot absolute left-0 top-0";
+    if (coreRef.current) {
+      coreRef.current.dataset.baseClass =
+        "section-cursor-core absolute left-0 top-0";
     }
-    if (ringRef.current) {
-      ringRef.current.dataset.baseClass =
-        "section-cursor-ring absolute left-0 top-0";
+    if (accentRef.current) {
+      accentRef.current.dataset.baseClass =
+        "section-cursor-accent absolute left-0 top-0";
     }
-    if (iconRef.current) {
-      iconRef.current.dataset.baseClass =
-        "section-cursor-icon absolute left-0 top-0";
-    }
-    syncClasses(dotRef.current, modeRef.current, hoverRef.current, pressRef.current);
-    syncClasses(ringRef.current, modeRef.current, hoverRef.current, pressRef.current);
-    syncClasses(iconRef.current, modeRef.current, hoverRef.current, pressRef.current);
+    syncClasses(coreRef.current, modeRef.current, hoverRef.current, pressRef.current);
+    syncClasses(accentRef.current, modeRef.current, hoverRef.current, pressRef.current);
 
     let frame = 0;
     let running = false;
@@ -105,22 +82,19 @@ export function SectionCursor() {
     };
 
     const tick = () => {
-      ring.current.x += (pos.current.x - ring.current.x) * 0.45;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.45;
+      lag.current.x += (pos.current.x - lag.current.x) * 0.42;
+      lag.current.y += (pos.current.y - lag.current.y) * 0.42;
 
-      const pressScale = pressRef.current ? 0.82 : 1;
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) scale(${pressScale})`;
+      const pressScale = pressRef.current ? 0.78 : 1;
+      if (coreRef.current) {
+        coreRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) scale(${pressScale})`;
       }
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) scale(${pressScale})`;
-      }
-      if (iconRef.current) {
-        iconRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) scale(${pressScale})`;
+      if (accentRef.current) {
+        accentRef.current.style.transform = `translate3d(${lag.current.x}px, ${lag.current.y}px, 0) scale(${pressScale})`;
       }
 
-      const dx = pos.current.x - ring.current.x;
-      const dy = pos.current.y - ring.current.y;
+      const dx = pos.current.x - lag.current.x;
+      const dy = pos.current.y - lag.current.y;
       if (dx * dx + dy * dy < 0.05 && !pressRef.current) {
         stop();
         return;
@@ -136,10 +110,8 @@ export function SectionCursor() {
     };
 
     const applyState = () => {
-      syncClasses(dotRef.current, modeRef.current, hoverRef.current, pressRef.current);
-      syncClasses(ringRef.current, modeRef.current, hoverRef.current, pressRef.current);
-      syncClasses(iconRef.current, modeRef.current, hoverRef.current, pressRef.current);
-      setIcon(ICONS[modeRef.current] ?? "");
+      syncClasses(coreRef.current, modeRef.current, hoverRef.current, pressRef.current);
+      syncClasses(accentRef.current, modeRef.current, hoverRef.current, pressRef.current);
     };
 
     const onMove = (event: MouseEvent) => {
@@ -216,15 +188,8 @@ export function SectionCursor() {
       ].join(" ")}
       aria-hidden="true"
     >
-      <div ref={ringRef} className="section-cursor-ring absolute left-0 top-0" />
-      <div
-        ref={iconRef}
-        className="section-cursor-icon absolute left-0 top-0"
-        data-has-icon={icon ? "true" : "false"}
-      >
-        {icon}
-      </div>
-      <div ref={dotRef} className="section-cursor-dot absolute left-0 top-0" />
+      <div ref={accentRef} className="section-cursor-accent absolute left-0 top-0" />
+      <div ref={coreRef} className="section-cursor-core absolute left-0 top-0" />
     </div>
   );
 }
