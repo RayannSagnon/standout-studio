@@ -11,7 +11,7 @@ export function SelectedWork() {
       className="px-5 pb-0 pt-8 md:px-10 md:pt-10"
     >
       <div className="mx-auto max-w-[1360px] rounded-[28px] border border-[#b9d0cd] bg-[#e8f3f1] px-5 py-10 shadow-[0_20px_50px_rgba(11,61,61,0.1)] md:rounded-[48px] md:px-20 md:py-[5.5rem]">
-        <Reveal className="max-w-[484px]">
+        <Reveal className="mx-auto text-center">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {selectedWork.kicker}
           </p>
@@ -21,7 +21,7 @@ export function SelectedWork() {
             splitType="words"
             delay={80}
             duration={0.7}
-            textAlign="left"
+            textAlign="center"
             className="mt-2.5 font-display text-[28px] font-bold tracking-tight text-ink md:hidden"
           />
           <SplitText
@@ -30,7 +30,7 @@ export function SelectedWork() {
             splitType="words"
             delay={70}
             duration={0.75}
-            textAlign="left"
+            textAlign="center"
             className="mt-2.5 hidden font-display text-4xl font-bold tracking-tight text-ink md:block"
           />
           <p className="mt-2.5 hidden text-base text-[#3a4a4e] md:block">
