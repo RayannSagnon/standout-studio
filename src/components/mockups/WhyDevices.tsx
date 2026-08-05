@@ -1,36 +1,34 @@
 "use client";
 
-import Image from "next/image";
+import { BusinessSiteScreen } from "@/components/mockups/BusinessSiteScreen";
+import { DigitalCardScreen } from "@/components/mockups/DigitalCardScreen";
+import { PhoneFrame } from "@/components/mockups/PhoneFrame";
 
 export function WhyDevices() {
   return (
     <div
-      className="relative mx-auto hidden h-[460px] w-full max-w-[680px] lg:block"
+      className="relative mx-auto hidden h-[460px] w-full max-w-[680px] [perspective:1600px] lg:block"
       aria-hidden="true"
     >
-      <div className="pointer-events-none absolute inset-x-[12%] bottom-2 h-12 rounded-full bg-ink/12 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-[8%] bottom-1 h-20 rounded-full bg-ink/25 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-[18%] bottom-0 h-8 rounded-full bg-ink/15 blur-xl" />
 
-      <div className="absolute left-[2%] top-[4%] h-[96%] w-[52%] animate-float">
-        <Image
-          src="/mockups/phones/alex-morgan-3d.png"
-          alt=""
-          width={614}
-          height={1024}
-          className="h-full w-full object-contain drop-shadow-[0_28px_40px_rgba(15,28,31,0.28)]"
-          priority={false}
-        />
-      </div>
+      <PhoneFrame
+        className="left-[4%] top-[2%] h-[98%] w-[48%]"
+        baseRotateX={12}
+        baseRotateY={-26}
+      >
+        <DigitalCardScreen />
+      </PhoneFrame>
 
-      <div className="absolute right-[0%] top-[10%] h-[90%] w-[50%] animate-float-delayed">
-        <Image
-          src="/mockups/phones/riverdale-3d.png"
-          alt=""
-          width={614}
-          height={1024}
-          className="h-full w-full object-contain drop-shadow-[0_28px_40px_rgba(15,28,31,0.28)]"
-          priority={false}
-        />
-      </div>
+      <PhoneFrame
+        className="right-[2%] top-[8%] h-[92%] w-[46%]"
+        baseRotateX={10}
+        baseRotateY={24}
+        floatDelay
+      >
+        <BusinessSiteScreen />
+      </PhoneFrame>
     </div>
   );
 }
