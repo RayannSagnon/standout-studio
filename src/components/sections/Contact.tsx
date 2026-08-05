@@ -1,11 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useId, useRef, useState } from "react";
 import SplitText from "@/components/SplitText";
 import { contact, site } from "@/content/en";
 
 export function Contact() {
   const [sent, setSent] = useState(false);
+  const [fileNames, setFileNames] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputId = useId();
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,6 +26,11 @@ export function Contact() {
       `Need: ${need}`,
       "",
       message,
+      fileNames.length
+        ? `\n${contact.fields.files.mailNote}\n${fileNames
+            .map((file) => `- ${file}`)
+            .join("\n")}`
+        : null,
     ]
       .filter(Boolean)
       .join("\n");
@@ -117,6 +125,45 @@ export function Contact() {
             />
           </label>
 
+          <div className="mt-3">
+            <label
+              htmlFor={fileInputId}
+              className="block text-[13px] font-medium text-ink"
+            >
+              {contact.fields.files.label}
+            </label>
+            <div className="mt-2 flex items-center gap-3 rounded-xl border border-border bg-page px-3 py-2.5">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="pressable inline-flex h-9 shrink-0 items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep"
+              >
+                {contact.fields.files.button}
+              </button>
+              <p className="min-w-0 flex-1 truncate text-sm text-muted">
+                {fileNames.length
+                  ? fileNames.join(", ")
+                  : contact.fields.files.empty}
+              </p>
+              <input
+                ref={fileInputRef}
+                id={fileInputId}
+                type="file"
+                name="files"
+                multiple
+                accept=".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.zip,.fig"
+                className="sr-only"
+                onChange={(event) => {
+                  const files = Array.from(event.target.files ?? []);
+                  setFileNames(files.map((file) => file.name));
+                }}
+              />
+            </div>
+            <p className="mt-1.5 text-[12px] text-muted">
+              {contact.fields.files.hint}
+            </p>
+          </div>
+
           <label className="mt-3 block text-[13px] font-medium text-ink">
             {contact.fields.message.label}
             <textarea
@@ -137,7 +184,9 @@ export function Contact() {
 
           {sent ? (
             <p className="mt-3 text-sm text-teal">
-              Opening your email app with the message ready to send.
+              {fileNames.length
+                ? "Opening your email app. Attach the selected files before you send."
+                : "Opening your email app with the message ready to send."}
             </p>
           ) : null}
         </form>

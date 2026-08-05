@@ -402,6 +402,14 @@ export const contact = {
       label: "Message *",
       placeholder: "Tell us about the project...",
     },
+    files: {
+      label: "Upload project files (optional)",
+      button: "Choose Files",
+      empty: "No file chosen",
+      hint: "Briefs, refs, logos — PDF, PNG, JPG, DOC up to a few MB each.",
+      mailNote:
+        "Please attach these files to this email before sending:",
+    },
   },
   submit: "Send",
 } as const;
