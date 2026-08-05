@@ -1,5 +1,9 @@
 # Standout Studio
 
+<p align="center">
+  <img src="docs/readme-banner.png" alt="Standout Studio hero — Own the first impression." width="100%" />
+</p>
+
 Marketing site for Standout Studio, a bilingual Ottawa web studio.
 
 Live design source: [Figma mockup](https://www.figma.com/design/nLEk8UpVUfFg1SsvmXmjnG)
