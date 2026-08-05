@@ -5,7 +5,11 @@ import { selectedWork } from "@/content/en";
 
 export function SelectedWork() {
   return (
-    <section id="work" data-cursor="work" className="px-5 py-8 md:px-10 md:py-10">
+    <section
+      id="work"
+      data-cursor="work"
+      className="px-5 pb-0 pt-8 md:px-10 md:pt-10"
+    >
       <div className="mx-auto max-w-[1360px] rounded-[28px] bg-surface px-5 py-10 md:rounded-[48px] md:px-20 md:py-[5.5rem]">
         <Reveal className="max-w-[484px]">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">

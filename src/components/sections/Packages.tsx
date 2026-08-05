@@ -57,11 +57,11 @@ export function Packages() {
 
   return (
     <section id="packages" data-cursor="packages" className="bg-white">
-      {/* Wave is the top of this section: page shows above the crest, then fades into white. */}
-      <div className="bg-page" aria-hidden="true">
+      {/* Wave is flush with the top — peaks at y=0 so no flat band above the crest. */}
+      <div className="relative -mt-6 bg-page md:-mt-8" aria-hidden="true">
         <svg
           className="block h-[88px] w-full md:h-[140px]"
-          viewBox="0 -10 1440 170"
+          viewBox="0 0 1440 165"
           preserveAspectRatio="none"
         >
           <defs>
@@ -79,7 +79,7 @@ export function Packages() {
           </defs>
           <path
             fill="url(#packagesWaveFade)"
-            d="M0 16.5C90-5.5 90-5.5 180 16.5C270 38.5 270 38.5 360 16.5C450-5.5 450-5.5 540 16.5C630 38.5 630 38.5 720 16.5C810-5.5 810-5.5 900 16.5C990 38.5 990 38.5 1080 16.5C1170-5.5 1170-5.5 1260 16.5C1350 38.5 1350 38.5 1440 16.5L1440 170H0Z"
+            d="M0 22C90 0 90 0 180 22C270 44 270 44 360 22C450 0 450 0 540 22C630 44 630 44 720 22C810 0 810 0 900 22C990 44 990 44 1080 22C1170 0 1170 0 1260 22C1350 44 1350 44 1440 22L1440 165H0Z"
           />
         </svg>
       </div>
