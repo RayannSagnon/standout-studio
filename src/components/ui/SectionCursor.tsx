@@ -38,7 +38,6 @@ export function SectionCursor() {
   const coreRef = useRef<HTMLDivElement>(null);
   const accentRef = useRef<HTMLDivElement>(null);
   const pos = useRef({ x: -100, y: -100 });
-  const lag = useRef({ x: -100, y: -100 });
   const modeRef = useRef<CursorMode>("default");
   const hoverRef = useRef(false);
   const pressRef = useRef(false);
@@ -75,6 +74,15 @@ export function SectionCursor() {
     let running = false;
     let idleTimer = 0;
 
+    const paint = () => {
+      const { x, y } = pos.current;
+      const pressScale = pressRef.current ? 0.82 : 1;
+      // Center hotspot in the same transform as the move — avoids CSS translate drift.
+      const t = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${pressScale})`;
+      if (coreRef.current) coreRef.current.style.transform = t;
+      if (accentRef.current) accentRef.current.style.transform = t;
+    };
+
     const stop = () => {
       running = false;
       if (frame) cancelAnimationFrame(frame);
@@ -82,28 +90,12 @@ export function SectionCursor() {
     };
 
     const tick = () => {
-      lag.current.x += (pos.current.x - lag.current.x) * 0.42;
-      lag.current.y += (pos.current.y - lag.current.y) * 0.42;
-
-      const pressScale = pressRef.current ? 0.78 : 1;
-      if (coreRef.current) {
-        coreRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) scale(${pressScale})`;
-      }
-      if (accentRef.current) {
-        accentRef.current.style.transform = `translate3d(${lag.current.x}px, ${lag.current.y}px, 0) scale(${pressScale})`;
-      }
-
-      const dx = pos.current.x - lag.current.x;
-      const dy = pos.current.y - lag.current.y;
-      if (dx * dx + dy * dy < 0.05 && !pressRef.current) {
-        stop();
-        return;
-      }
-
-      frame = requestAnimationFrame(tick);
+      paint();
+      stop();
     };
 
     const kick = () => {
+      paint();
       if (running) return;
       running = true;
       frame = requestAnimationFrame(tick);
@@ -120,7 +112,7 @@ export function SectionCursor() {
       kick();
 
       window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(stop, 120);
+      idleTimer = window.setTimeout(stop, 160);
 
       const target = event.target as HTMLElement | null;
       const interactive = Boolean(

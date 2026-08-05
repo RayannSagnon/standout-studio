@@ -249,11 +249,7 @@ body {
 }
 
 html.has-section-cursor,
-html.has-section-cursor body,
-html.has-section-cursor a,
-html.has-section-cursor button,
-html.has-section-cursor input,
-html.has-section-cursor textarea {
+html.has-section-cursor * {
   cursor: none !important;
 }
 
@@ -270,9 +266,11 @@ html.has-section-cursor textarea {
 /* Two-layer custom cursors: core (tip) + accent (style body) */
 .section-cursor-core,
 .section-cursor-accent {
-  translate: -50% -50%;
+  top: 0;
+  left: 0;
   will-change: transform;
   pointer-events: none;
+  /* Hotspot centered via JS translate(-50%, -50%) — do not also set CSS translate. */
   transition:
     width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
@@ -322,18 +320,15 @@ html.has-section-cursor textarea {
   opacity: 0.55;
 }
 
-/* Hero: bright spear tip on dark */
+/* Hero: bright spear tip on dark — fixed box + clip so hotspot stays centered */
 .section-cursor-core.mode-hero {
-  width: 0;
-  height: 0;
+  width: 18px;
+  height: 18px;
   border-radius: 0;
-  background: transparent;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 16px solid #f5f8f9;
-  rotate: -28deg;
+  background: #f5f8f9;
   box-shadow: none;
-  translate: -40% -20%;
+  rotate: -28deg;
+  clip-path: polygon(50% 0%, 100% 100%, 50% 78%, 0% 100%);
 }
 .section-cursor-accent.mode-hero {
   width: 22px;
@@ -343,16 +338,15 @@ html.has-section-cursor textarea {
   background: color-mix(in srgb, #f5f8f9 6%, transparent);
 }
 .section-cursor-core.mode-hero.is-hover {
-  border-left-width: 8px;
-  border-right-width: 8px;
-  border-bottom-width: 20px;
+  width: 22px;
+  height: 22px;
 }
 .section-cursor-accent.mode-hero.is-hover {
   width: 42px;
   height: 42px;
 }
 .section-cursor-core.mode-hero.is-press {
-  border-bottom-color: #2bb3a5;
+  background: #2bb3a5;
 }
 
 /* Trust: solid chip, no orbit noise */
@@ -516,16 +510,14 @@ html.has-section-cursor textarea {
   border-style: solid;
 }
 
-/* Process: step chevron */
+/* Process: step chevron — fixed box + clip */
 .section-cursor-core.mode-process {
-  width: 0;
-  height: 0;
+  width: 14px;
+  height: 14px;
   border-radius: 0;
-  background: transparent;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 10px solid var(--brand-teal);
+  background: var(--brand-teal);
   box-shadow: none;
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 28% 50%);
 }
 .section-cursor-accent.mode-process {
   width: 30px;
@@ -541,7 +533,7 @@ html.has-section-cursor textarea {
   background: color-mix(in srgb, var(--brand-teal) 10%, white);
 }
 .section-cursor-core.mode-process.is-press {
-  border-left-color: var(--brand-teal-deep);
+  background: var(--brand-teal-deep);
 }
 
 /* Testimonials: soft speech bubble */

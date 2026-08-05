@@ -119,6 +119,7 @@
 .scroll-expand__char {
   display: inline-block;
   pointer-events: auto;
+  cursor: none;
   padding: 0.04em 0.045em;
   margin: 0 -0.01em;
   border-radius: 0.18em;
