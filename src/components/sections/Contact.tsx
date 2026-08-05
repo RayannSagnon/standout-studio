@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useId, useRef, useState } from "react";
+import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import SplitText from "@/components/SplitText";
 
@@ -9,8 +9,17 @@ export function Contact() {
   const { contact, site } = useContent();
   const [sent, setSent] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
+  const [mdUp, setMdUp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileInputId = useId();
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const sync = () => setMdUp(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -106,7 +115,7 @@ export function Contact() {
             />
           </label>
 
-          <label className="mt-3 hidden text-[13px] font-medium text-ink md:block">
+          <label className="mt-3 block text-[13px] font-medium text-ink">
             {contact.fields.phone.label}
             <input
               name="phone"
@@ -120,7 +129,11 @@ export function Contact() {
             <input
               required
               name="need"
-              placeholder={contact.fields.need.placeholder}
+              placeholder={
+                mdUp
+                  ? contact.fields.need.placeholder
+                  : contact.fields.need.mobilePlaceholder
+              }
               className="mt-2 w-full rounded-xl border border-border bg-page px-3.5 py-3 text-sm outline-none transition focus:border-teal"
             />
           </label>
@@ -136,7 +149,7 @@ export function Contact() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="pressable inline-flex h-9 shrink-0 items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep"
+                className="pressable inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep"
               >
                 {contact.fields.files.button}
               </button>

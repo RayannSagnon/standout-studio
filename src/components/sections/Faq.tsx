@@ -47,10 +47,7 @@ export function Faq() {
             return (
               <div
                 key={item.id}
-                className={[
-                  "overflow-hidden rounded-xl bg-white",
-                  item.mobile ? "" : "hidden md:block",
-                ].join(" ")}
+                className="overflow-hidden rounded-xl bg-white"
               >
                 <button
                   type="button"

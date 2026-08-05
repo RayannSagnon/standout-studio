@@ -80,14 +80,14 @@ export function SelectedWork() {
           ))}
         </div>
 
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-pl-5 pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {selectedWork.projects.map((project) => (
             <a
               key={project.id}
               href={project.href}
               target="_blank"
               rel="noreferrer"
-              className="w-[280px] shrink-0"
+              className="w-[280px] shrink-0 snap-start"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-white">
                 <Image
@@ -101,7 +101,10 @@ export function SelectedWork() {
               <p className="mt-3 text-[11px] font-semibold tracking-[0.08em] text-teal">
                 {project.label}
               </p>
-              <p className="mt-1 text-sm text-muted">{project.domain}</p>
+              <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
+                {project.name}
+              </h3>
+              <p className="mt-0.5 text-sm text-muted">{project.domain}</p>
             </a>
           ))}
         </div>

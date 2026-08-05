@@ -53,8 +53,8 @@ export function Why() {
             ))}
           </ul>
 
-          <div className="mt-4 flex gap-3.5 md:hidden">
-            <ul className="flex w-[171px] shrink-0 flex-col gap-2">
+          <div className="mt-4 flex flex-col gap-3.5 md:hidden">
+            <ul className="flex flex-col gap-2">
               {why.mobilePoints.map((point) => (
                 <li
                   key={point}
@@ -67,7 +67,9 @@ export function Why() {
                 </li>
               ))}
             </ul>
-            <p className="text-xs leading-relaxed text-[#3a4a4e]">{why.body}</p>
+            <p className="text-[13px] leading-relaxed text-[#3a4a4e]">
+              {why.body}
+            </p>
           </div>
         </Reveal>
 

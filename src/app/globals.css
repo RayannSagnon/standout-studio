@@ -40,6 +40,32 @@ html {
   overflow-x: clip;
 }
 
+#work,
+#packages,
+#faq,
+#contact,
+#what-we-do,
+#why,
+#process,
+#testimonials,
+#about {
+  scroll-margin-top: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  #work,
+  #packages,
+  #faq,
+  #contact,
+  #what-we-do,
+  #why,
+  #process,
+  #testimonials,
+  #about {
+    scroll-margin-top: 5.5rem;
+  }
+}
+
 html.allow-smooth-scroll {
   scroll-behavior: smooth;
 }

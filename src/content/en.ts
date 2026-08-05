@@ -14,7 +14,7 @@ export const nav = {
     { label: "FAQ", href: "#faq" },
     { label: "Contact", href: "#contact" },
   ],
-  cta: { label: "Book a call", href: "#contact" },
+  cta: { label: "Book a call", href: "#contact", shortLabel: "Contact" },
 } as const;
 
 export const hero = {
@@ -427,4 +427,6 @@ export const ui = {
   language: "Language",
   starsLabel: "5 out of 5 stars",
   trustLabel: "Trust signals",
+  menuOpen: "Open menu",
+  menuClose: "Close menu",
 } as const;

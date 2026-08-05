@@ -126,6 +126,9 @@ export function Process() {
               </article>
             ))}
           </div>
+          <p className="mt-4 text-xs leading-relaxed text-muted">
+            {process.note}
+          </p>
         </div>
 
         <div className="hidden md:block">

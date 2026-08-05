@@ -28,8 +28,13 @@ export function WhatWeDo() {
             direction="top"
             delay={90}
             stepDuration={0.32}
-            className="mt-2.5 font-display text-[clamp(0.95rem,2.55vw,2.125rem)] font-bold leading-none tracking-tight text-ink"
-            style={{ display: "flex", flexWrap: "nowrap", justifyContent: "center" }}
+            className="mt-2.5 font-display text-[clamp(1.15rem,4.2vw,2.125rem)] font-bold leading-[1.15] tracking-tight text-ink"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              rowGap: "0.08em",
+            }}
           />
           <p className="mt-3 hidden text-base text-[#3a4a4e] md:block">
             {whatWeDo.intro}
@@ -57,11 +62,11 @@ export function WhatWeDo() {
           ))}
         </div>
 
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-pl-5 pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {whatWeDo.items.map((item) => (
             <article
               key={item.id}
-              className="w-[200px] shrink-0 rounded-[20px] border border-border bg-surface p-4"
+              className="w-[200px] shrink-0 snap-start rounded-[20px] border border-border bg-surface p-4"
             >
               <ServiceIcon name={item.icon} className="h-9 w-9" />
               <h3 className="mt-3 font-display text-[17px] font-semibold tracking-tight text-ink">

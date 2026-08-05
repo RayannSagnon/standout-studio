@@ -72,11 +72,11 @@ export function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-pl-5 pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {testimonials.items.map((item) => (
             <article
               key={item.id}
-              className="w-[260px] shrink-0 rounded-2xl border border-border bg-white p-4"
+              className="w-[260px] shrink-0 snap-start rounded-2xl border border-border bg-white p-4"
             >
               <Stars label={ui.starsLabel} />
               <blockquote className="mt-3 font-display text-[13px] leading-relaxed text-ink">

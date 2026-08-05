@@ -170,14 +170,14 @@ export function Packages() {
 
         <div
           ref={scrollerRef}
-          className="mt-5 flex gap-3 overflow-x-auto pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-pl-5 pb-1 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {packages.plans.map((plan) => (
             <article
               key={plan.id}
               data-plan={plan.id}
               className={[
-                "flex w-[280px] shrink-0 flex-col rounded-2xl bg-page p-4",
+                "flex w-[280px] shrink-0 snap-start flex-col rounded-2xl bg-page p-4",
                 plan.featured
                   ? "border-2 border-teal"
                   : "border border-border",
@@ -213,17 +213,29 @@ export function Packages() {
           ))}
         </div>
 
-        <div
-          className="mt-3 flex items-center justify-center gap-2 md:hidden"
-          aria-hidden="true"
-        >
+        <div className="mt-3 flex items-center justify-center gap-2 md:hidden">
           {packages.plans.map((plan, index) => (
-            <span
+            <button
               key={plan.id}
+              type="button"
+              aria-label={`${plan.name}`}
+              aria-current={index === active ? "true" : undefined}
               className={[
-                "h-1.5 rounded-full transition-all",
-                index === active ? "w-[18px] bg-teal" : "w-1.5 bg-[#c7d1d1]",
+                "h-2.5 rounded-full transition-all",
+                index === active ? "w-[18px] bg-teal" : "w-2.5 bg-[#c7d1d1]",
               ].join(" ")}
+              onClick={() => {
+                const el = scrollerRef.current;
+                if (!el) return;
+                const card = el.querySelectorAll<HTMLElement>("[data-plan]")[
+                  index
+                ];
+                card?.scrollIntoView({
+                  behavior: "smooth",
+                  inline: "center",
+                  block: "nearest",
+                });
+              }}
             />
           ))}
         </div>
@@ -259,6 +271,12 @@ export function Packages() {
           <p className="mt-1 text-xs text-muted">
             {packages.siteCare.mobileDescription}
           </p>
+          <Link
+            href={packages.siteCare.cta.href}
+            className="mt-3 inline-flex h-11 w-full items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse"
+          >
+            {packages.siteCare.cta.label}
+          </Link>
         </div>
         </div>
       </div>
