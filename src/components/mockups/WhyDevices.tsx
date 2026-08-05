@@ -10,7 +10,7 @@ export function WhyDevices() {
     >
       <div className="pointer-events-none absolute inset-x-[10%] bottom-0 h-16 rounded-full bg-ink/20 blur-3xl" />
 
-      <div className="absolute left-[2%] top-[2%] h-[98%] w-[52%] animate-float">
+      <div className="absolute left-[14%] top-[2%] h-[98%] w-[46%] animate-float">
         <Image
           src="/mockups/phones/alex-morgan-3d.png"
           alt=""
@@ -21,7 +21,7 @@ export function WhyDevices() {
         />
       </div>
 
-      <div className="absolute right-[0%] top-[8%] h-[92%] w-[50%] animate-float-delayed">
+      <div className="absolute right-[12%] top-[8%] h-[92%] w-[46%] animate-float-delayed">
         <Image
           src="/mockups/phones/riverdale-3d.png"
           alt=""
