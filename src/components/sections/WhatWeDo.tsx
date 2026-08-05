@@ -11,7 +11,7 @@ export function WhatWeDo() {
       className="section-texture-dots px-5 py-10 md:px-20 md:py-[88px]"
     >
       <div className="mx-auto max-w-[1280px]">
-        <Reveal className="max-w-[720px]">
+        <Reveal className="mx-auto text-center">
           <p className="text-xs font-semibold tracking-[0.12em] text-teal">
             {whatWeDo.kicker}
           </p>
@@ -22,7 +22,8 @@ export function WhatWeDo() {
             direction="top"
             delay={90}
             stepDuration={0.32}
-            className="mt-2.5 max-w-[18ch] font-display text-[28px] font-bold leading-[1.15] tracking-tight text-ink md:text-[34px]"
+            className="mt-2.5 font-display text-[clamp(0.95rem,2.55vw,2.125rem)] font-bold leading-none tracking-tight text-ink"
+            style={{ display: "flex", flexWrap: "nowrap", justifyContent: "center" }}
           />
           <p className="mt-3 hidden text-base text-[#3a4a4e] md:block">
             {whatWeDo.intro}
