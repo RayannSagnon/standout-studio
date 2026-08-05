@@ -131,8 +131,8 @@ html.is-booting {
 
 .page-loader {
   transition:
-    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0.32s linear;
+    opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.38s linear;
 }
 
 .page-loader--leave {
@@ -142,12 +142,13 @@ html.is-booting {
 }
 
 .page-loader__mark {
-  animation: loader-mark-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: loader-mark-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page-loader__bar {
   transform-origin: left center;
-  animation: loader-bar 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+  transform: scaleX(0);
+  animation: loader-bar 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 
 .animate-marquee {

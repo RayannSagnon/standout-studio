@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { site } from "@/content/en";
 
-const MIN_MS = 450;
-const MAX_MS = 1100;
+/** Keep the splash up long enough to see the bar fill. */
+const MIN_MS = 900;
+const MAX_MS = 1600;
+const FADE_MS = 380;
 
 export function PageLoader() {
   const [leaving, setLeaving] = useState(false);
@@ -23,17 +25,18 @@ export function PageLoader() {
     let finished = false;
     let maxTimer = 0;
     let exitTimer = 0;
+    let leaveTimer = 0;
 
     const exit = () => {
       if (finished) return;
       finished = true;
       const wait = Math.max(0, MIN_MS - (performance.now() - started));
-      window.setTimeout(() => {
+      leaveTimer = window.setTimeout(() => {
         setLeaving(true);
         exitTimer = window.setTimeout(() => {
           setGone(true);
           document.documentElement.classList.remove("is-booting");
-        }, 320);
+        }, FADE_MS);
       }, wait);
     };
 
@@ -56,6 +59,7 @@ export function PageLoader() {
     return () => {
       window.clearTimeout(maxTimer);
       window.clearTimeout(exitTimer);
+      window.clearTimeout(leaveTimer);
       document.documentElement.classList.remove("is-booting");
     };
   }, []);
@@ -74,8 +78,8 @@ export function PageLoader() {
         <p className="page-loader__mark font-display text-[22px] font-semibold tracking-tight md:text-[26px]">
           {site.name}
         </p>
-        <div className="page-loader__track h-px w-full overflow-hidden bg-white/15">
-          <span className="page-loader__bar block h-full w-full origin-left bg-teal" />
+        <div className="page-loader__track h-[2px] w-full overflow-hidden rounded-full bg-white/20">
+          <span className="page-loader__bar block h-full w-full origin-left rounded-full bg-white" />
         </div>
       </div>
     </div>
