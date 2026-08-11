@@ -99,8 +99,8 @@ export const whatWeDo = {
       title: "Boutiques Shopify",
       mobileTitle: "Shopify",
       description:
-        "Fiches produits, panier et paiement clairs. Une boutique depuis laquelle on peut vraiment acheter.",
-      mobileDescription: "Boutiques prêtes à vendre",
+        "Si vous vendez en ligne, on intègre Shopify dans Business Starter ou un build sur mesure : fiches produits, panier et paiement clairs.",
+      mobileDescription: "Shopify dans votre site",
       icon: "bag" as const,
     },
     {
@@ -394,7 +394,7 @@ export const faq = {
       id: "shopify",
       question: "Est-ce que vous créez des boutiques Shopify ?",
       answer:
-        "Oui. Fiches produits, panier et paiement clairs, pour que les gens puissent vraiment acheter.",
+        "Oui, quand vous devez vendre en ligne. Ce n'est pas un forfait à part : on l'intègre dans Business Starter ou un build sur mesure (fiches produits, panier, paiement).",
       mobile: true,
     },
     {
@@ -453,13 +453,6 @@ export const contact = {
     message: {
       label: "Message *",
       placeholder: "Parlez-nous du projet...",
-    },
-    files: {
-      label: "Fichiers du projet (optionnel)",
-      button: "Choisir des fichiers",
-      empty: "Aucun fichier choisi",
-      hint: "Les noms de fichiers sont inclus dans votre message. On pourra vous demander de les envoyer en réponse. PDF, PNG, JPG, DOC, 5 Mo max chacun.",
-      tooLarge: "Chaque fichier doit faire moins de 5 Mo.",
     },
   },
   submit: "Envoyer",

@@ -177,7 +177,7 @@ html.is-hero-expanding .scroll-expand__stage {
 }
 
 .page-loader__bar--run {
-  animation: loader-bar-fill 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: loader-bar-fill 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Hold the hero expand title until the boot loader finishes. */

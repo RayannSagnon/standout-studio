@@ -6,10 +6,10 @@ import { Logo } from "@/components/brand/Logo";
 export const BOOT_DONE_EVENT = "standout:boot-done";
 
 /** Must match `@keyframes loader-bar-fill` duration in CSS. */
-const BAR_MS = 2400;
+const BAR_MS = 1600;
 /** Brief beat at 100% before the loader fades. */
-const HOLD_FULL_MS = 120;
-const FADE_MS = 380;
+const HOLD_FULL_MS = 100;
+const FADE_MS = 320;
 
 function markBootDone() {
   document.documentElement.classList.remove("is-booting");

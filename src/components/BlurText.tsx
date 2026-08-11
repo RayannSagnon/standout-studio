@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ElementType,
   type CSSProperties,
 } from "react";
@@ -43,6 +44,20 @@ const buildKeyframes = (
   return keyframes;
 };
 
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function getReducedMotionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getReducedMotionServerSnapshot() {
+  return false;
+}
+
 export default function BlurText({
   text = "",
   delay = 120,
@@ -61,10 +76,15 @@ export default function BlurText({
 }: BlurTextProps) {
   const elements = animateBy === "words" ? text.split(" ") : text.split("");
   const [inView, setInView] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot,
+  );
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || reducedMotion) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setInView(entry.isIntersecting);
@@ -73,7 +93,7 @@ export default function BlurText({
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, reducedMotion]);
 
   // Opacity + translate only — CSS filter:blur is a major scroll jank source.
   const defaultFrom = useMemo(
@@ -84,10 +104,7 @@ export default function BlurText({
     [direction],
   );
 
-  const defaultTo = useMemo(
-    () => [{ opacity: 1, y: 0 }],
-    [],
-  );
+  const defaultTo = useMemo(() => [{ opacity: 1, y: 0 }], []);
 
   const fromSnapshot = animationFrom ?? defaultFrom;
   const toSnapshots = animationTo ?? defaultTo;
@@ -97,6 +114,14 @@ export default function BlurText({
   const times = Array.from({ length: stepCount }, (_, i) =>
     stepCount === 1 ? 0 : i / (stepCount - 1),
   );
+
+  if (reducedMotion) {
+    return (
+      <Tag className={className} style={style}>
+        {text}
+      </Tag>
+    );
+  }
 
   return (
     <Tag

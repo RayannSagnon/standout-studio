@@ -97,8 +97,8 @@ export const whatWeDo = {
       title: "Shopify stores",
       mobileTitle: "Shopify",
       description:
-        "Product pages, cart, and checkout that feel clear. A store people can actually buy from.",
-      mobileDescription: "Storefronts when you sell",
+        "When you sell online, we build Shopify into Business Starter or a custom build: product pages, cart, and checkout people can actually buy from.",
+      mobileDescription: "Shopify inside your site build",
       icon: "bag" as const,
     },
     {
@@ -371,7 +371,7 @@ export const faq = {
       id: "shopify",
       question: "Do you build Shopify stores?",
       answer:
-        "Yes. Product pages, cart, and checkout that feel clear, so people can actually buy.",
+        "Yes, when you need to sell online. Shopify is not a separate package: we fold it into Business Starter or a custom build (product pages, cart, and checkout).",
       mobile: true,
     },
     {
@@ -424,13 +424,6 @@ export const contact = {
     message: {
       label: "Message *",
       placeholder: "Tell us about the project...",
-    },
-    files: {
-      label: "Project files (optional)",
-      button: "Choose Files",
-      empty: "No file chosen",
-      hint: "File names are included in your message. We may ask you to send the files by reply. PDF, PNG, JPG, DOC up to 5 MB each.",
-      tooLarge: "Each file must be under 5 MB.",
     },
   },
   submit: "Send",

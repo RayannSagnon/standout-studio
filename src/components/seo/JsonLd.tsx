@@ -7,6 +7,9 @@ type JsonLdProps = {
 };
 
 export function JsonLd({ locale, description, faqItems = [] }: JsonLdProps) {
+  const pageUrl = locale === "fr" ? `${siteConfig.url}/fr` : siteConfig.url;
+  const logoUrl = `${siteConfig.url}/icon`;
+
   const graph: Record<string, unknown>[] = [
     {
       "@type": ["Organization", "ProfessionalService", "LocalBusiness"],
@@ -14,6 +17,8 @@ export function JsonLd({ locale, description, faqItems = [] }: JsonLdProps) {
       name: siteConfig.name,
       url: siteConfig.url,
       email: siteConfig.email,
+      logo: logoUrl,
+      image: logoUrl,
       description,
       areaServed: {
         "@type": "City",
@@ -45,8 +50,8 @@ export function JsonLd({ locale, description, faqItems = [] }: JsonLdProps) {
     },
     {
       "@type": "WebSite",
-      "@id": `${siteConfig.url}/#website`,
-      url: locale === "fr" ? `${siteConfig.url}/fr` : siteConfig.url,
+      "@id": `${pageUrl}/#website`,
+      url: pageUrl,
       name: siteConfig.name,
       inLanguage: locale === "fr" ? "fr-CA" : "en-CA",
       publisher: { "@id": `${siteConfig.url}/#organization` },
@@ -56,7 +61,8 @@ export function JsonLd({ locale, description, faqItems = [] }: JsonLdProps) {
   if (faqItems.length) {
     graph.push({
       "@type": "FAQPage",
-      "@id": `${siteConfig.url}/#faq`,
+      "@id": `${pageUrl}/#faq`,
+      inLanguage: locale === "fr" ? "fr-CA" : "en-CA",
       mainEntity: faqItems.map((item) => ({
         "@type": "Question",
         name: item.question,

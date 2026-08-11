@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import SplitText from "@/components/SplitText";
 
@@ -12,12 +12,7 @@ export function Contact() {
   const { locale } = useLocale();
   const { contact } = useContent();
   const [status, setStatus] = useState<SubmitState>("idle");
-  const [fileNames, setFileNames] = useState<string[]>([]);
-  const [fileError, setFileError] = useState("");
   const [mdUp, setMdUp] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const fileInputId = useId();
-  const MAX_FILE_BYTES = 5 * 1024 * 1024;
   const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   useEffect(() => {
@@ -55,11 +50,6 @@ export function Contact() {
       `Locale: ${locale}`,
       "",
       message,
-      fileNames.length
-        ? `\nSelected files (names only; ask the client to send them by reply):\n${fileNames
-            .map((fileName) => `- ${fileName}`)
-            .join("\n")}`
-        : null,
     ]
       .filter(Boolean)
       .join("\n");
@@ -97,8 +87,6 @@ export function Contact() {
       }
 
       form.reset();
-      setFileNames([]);
-      setFileError("");
       setStatus("success");
     } catch {
       setStatus("error");
@@ -197,60 +185,6 @@ export function Contact() {
               className="mt-2 w-full rounded-xl border border-border bg-page px-3.5 py-3 text-sm outline-none transition focus:border-teal"
             />
           </label>
-
-          <div className="mt-3">
-            <label
-              htmlFor={fileInputId}
-              className="block text-[13px] font-medium text-ink"
-            >
-              {contact.fields.files.label}
-            </label>
-            <div className="mt-2 flex items-center gap-3 rounded-xl border border-border bg-page px-3 py-2.5">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="pressable inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-teal px-4 text-[13px] font-semibold text-inverse transition-colors hover:bg-teal-deep"
-              >
-                {contact.fields.files.button}
-              </button>
-              <p className="min-w-0 flex-1 truncate text-sm text-muted">
-                {fileNames.length
-                  ? fileNames.join(", ")
-                  : contact.fields.files.empty}
-              </p>
-              <input
-                ref={fileInputRef}
-                id={fileInputId}
-                type="file"
-                name="files"
-                multiple
-                accept=".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.zip,.fig"
-                className="sr-only"
-                onChange={(event) => {
-                  const files = Array.from(event.target.files ?? []);
-                  const oversized = files.some(
-                    (file) => file.size > MAX_FILE_BYTES,
-                  );
-                  if (oversized) {
-                    setFileError(contact.fields.files.tooLarge);
-                    setFileNames([]);
-                    event.target.value = "";
-                    return;
-                  }
-                  setFileError("");
-                  setFileNames(files.map((file) => file.name));
-                }}
-              />
-            </div>
-            <p className="mt-1.5 text-[12px] text-muted">
-              {contact.fields.files.hint}
-            </p>
-            {fileError ? (
-              <p className="mt-1.5 text-[12px] text-teal-deep" role="alert">
-                {fileError}
-              </p>
-            ) : null}
-          </div>
 
           <label className="mt-3 block text-[13px] font-medium text-ink">
             {contact.fields.message.label}

@@ -31,6 +31,8 @@ Copy `.env.example` to `.env.local` and fill in:
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical site URL |
 | `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Contact form delivery ([Web3Forms](https://web3forms.com), free). Create a key with `standout.studio.ottawa@gmail.com` as the destination. The key is public by design (client-side submit). |
+| `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` | [PostHog](https://posthog.com) project token (client-safe). Live dashboard + session replay. |
+| `NEXT_PUBLIC_POSTHOG_HOST` | PostHog API host, usually `https://us.i.posthog.com` (or `https://eu.i.posthog.com` for EU). |
 
 On Vercel, add the same variables in Project Settings → Environment Variables.
 

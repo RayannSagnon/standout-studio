@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Outfit } from "next/font/google";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { PageLoader } from "@/components/layout/PageLoader";
@@ -7,7 +8,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { SectionCursor } from "@/components/ui/SectionCursor";
-import { getDictionary } from "@/content";
+import { getDictionary, type Locale } from "@/content";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -70,10 +71,13 @@ export const metadata: Metadata = {
   category: "Web design",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const headerList = await headers();
+  const lang: Locale = headerList.get("x-locale") === "fr" ? "fr" : "en";
+
   return (
     <html
-      lang="en"
+      lang={lang}
       suppressHydrationWarning
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
@@ -81,12 +85,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if('scrollRestoration'in history)history.scrollRestoration='manual';try{var p=location.pathname;var l=p.indexOf('/fr')===0?'fr':(localStorage.getItem('standout-locale')||'en');if(l==='fr'||l==='en')document.documentElement.lang=l;document.documentElement.classList.add('is-booting');}catch(e){}",
+              "if('scrollRestoration'in history)history.scrollRestoration='manual';try{var l=location.pathname.indexOf('/fr')===0?'fr':'en';document.documentElement.lang=l;document.documentElement.classList.add('is-booting');}catch(e){}",
           }}
         />
       </head>
       <body className="flex min-h-full flex-col bg-page text-ink">
-        <LocaleProvider>
+        <LocaleProvider initialLocale={lang}>
           <SkipLink />
           <PageLoader />
           <ScrollToTop />

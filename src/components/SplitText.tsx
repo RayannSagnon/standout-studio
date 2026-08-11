@@ -72,6 +72,10 @@ const SplitText: React.FC<SplitTextProps> = ({
         el._rbsplitInstance = undefined;
       }
 
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
       const startPct = (1 - threshold) * 100;
       const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
       const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
@@ -134,12 +138,12 @@ const SplitText: React.FC<SplitTextProps> = ({
               tween?.restart(true);
             },
             onLeave: () => {
-              tween?.pause(0);
-              gsap.set(targets, { ...from, clearProps: "" });
+              tween?.pause();
+              gsap.set(targets, { ...to });
             },
             onLeaveBack: () => {
-              tween?.pause(0);
-              gsap.set(targets, { ...from, clearProps: "" });
+              tween?.pause();
+              gsap.set(targets, { ...to });
             },
             // Keep triggers cheap while scrolling through long pages.
             fastScrollEnd: true,
