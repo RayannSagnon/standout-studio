@@ -3,6 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
+/** Browser favicon: Standout S mark on hero teal. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -14,17 +15,18 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           background: "#0B3D3D",
-          borderRadius: 8,
+          borderRadius: 7,
         }}
       >
         <div
           style={{
             color: "#F5F8F9",
-            fontSize: 20,
+            fontSize: 19,
             fontWeight: 700,
             fontFamily: "Georgia, ui-serif, serif",
             lineHeight: 1,
             marginTop: -1,
+            letterSpacing: "-0.04em",
           }}
         >
           S

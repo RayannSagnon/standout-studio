@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import { Logo } from "@/components/brand/Logo";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 
 const HERO_PROGRESS_EVENT = "standout:hero-progress";
@@ -219,12 +220,13 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-3 px-5 md:h-20 md:gap-6 md:px-20">
         <Link
-          href="/"
-          className="min-w-0 truncate font-display text-[18px] font-semibold tracking-tight text-ink md:text-[22px]"
+          href={locale === "fr" ? "/fr" : "/"}
+          className="min-w-0 shrink-0"
+          aria-label={t.site.name}
           tabIndex={visible ? undefined : -1}
           onClick={() => setMenuOpen(false)}
         >
-          {t.site.name}
+          <Logo theme="color" markSize={30} decorative />
         </Link>
 
         <div className="flex-1" aria-hidden="true" />

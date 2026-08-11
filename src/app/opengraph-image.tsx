@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Standout Studio — Web design & development in Ottawa";
+export const alt = "Standout Studio: Web design & development in Ottawa";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -24,30 +24,52 @@ export default function OpenGraphImage() {
             display: "flex",
             alignItems: "center",
             gap: 16,
-            color: "#F5F8F9",
-            fontSize: 28,
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
           }}
         >
           <div
             style={{
-              width: 48,
-              height: 48,
+              width: 52,
+              height: 52,
               borderRadius: 12,
-              background: "#0F766E",
+              background: "#F5F8F9",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#F5F8F9",
-              fontSize: 28,
+              color: "#0F1C1F",
+              fontSize: 30,
               fontFamily: "Georgia, serif",
               fontWeight: 700,
+              lineHeight: 1,
             }}
           >
             S
           </div>
-          Standout Studio
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div
+              style={{
+                color: "#F5F8F9",
+                fontSize: 30,
+                fontWeight: 700,
+                fontFamily: "Georgia, serif",
+                letterSpacing: "-0.02em",
+                lineHeight: 1,
+              }}
+            >
+              Standout
+            </div>
+            <div
+              style={{
+                color: "#A8CDC8",
+                fontSize: 14,
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                lineHeight: 1,
+              }}
+            >
+              Studio
+            </div>
+          </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div
