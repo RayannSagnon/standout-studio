@@ -12,6 +12,13 @@ function scrollToId(id: string, behavior: ScrollBehavior = "smooth") {
   return true;
 }
 
+function isReloadNavigation() {
+  const entry = performance.getEntriesByType(
+    "navigation",
+  )[0] as PerformanceNavigationTiming | undefined;
+  return entry?.type === "reload";
+}
+
 export function ScrollToTop() {
   useEffect(() => {
     if ("scrollRestoration" in history) {
@@ -19,8 +26,17 @@ export function ScrollToTop() {
     }
 
     const hash = window.location.hash.slice(1);
-    if (hash) {
-      // Wait for layout / page loader, then land on the deep link.
+
+    // Reloads should always start at the top. Keep hash deep-links for
+    // first visits / shared URLs like /#contact.
+    if (hash && isReloadNavigation()) {
+      history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`,
+      );
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } else if (hash) {
       const go = () => scrollToId(hash, "instant");
       requestAnimationFrame(() => {
         go();
