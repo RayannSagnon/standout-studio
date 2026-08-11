@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 
 export const BOOT_DONE_EVENT = "standout:boot-done";
-const SEEN_KEY = "standout-loader-seen";
+/** Bump when loader UX changes so returning visitors see it once again. */
+const SEEN_KEY = "standout-loader-seen-v3";
 
-/** Must match `--loader-bar-ms` / `@keyframes loader-bar-fill` in CSS. */
+/** Must match `@keyframes loader-bar-fill` duration in CSS. */
 const BAR_MS = 2400;
 /** Brief beat at 100% before the loader fades. */
 const HOLD_FULL_MS = 120;

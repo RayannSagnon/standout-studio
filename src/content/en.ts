@@ -10,7 +10,7 @@ export const site = {
 export const seo = {
   title: "Standout Studio | Web Design & Development in Ottawa",
   description:
-    "Bilingual web studio in Ottawa. Custom websites, digital cards, and Shopify stores for freelancers and small businesses. Clear packages from $250.",
+    "Bilingual web studio in Ottawa. Custom websites, digital cards, and Shopify stores for freelancers and small businesses. Clear packages from $299.",
   ogLocale: "en_CA",
   keywords: [
     "Ottawa web design",
@@ -88,8 +88,8 @@ export const whatWeDo = {
       title: "Hosting & Care",
       mobileTitle: "Hosting & Care",
       description:
-        "Optional $29/month for hosting, updates, backups, and small fixes. Month to month.",
-      mobileDescription: "$29/mo upkeep",
+        "Optional $39/month for hosting, updates, backups, and small fixes. Month to month.",
+      mobileDescription: "$39/mo upkeep",
       icon: "shield" as const,
     },
     {
@@ -163,11 +163,12 @@ export const packages = {
   kicker: "PACKAGES",
   title: "Packages & pricing",
   swipeHint: "Swipe to compare →",
+  priceFrom: "From",
   plans: [
     {
       id: "digital-card",
       name: "Digital Card",
-      price: "$250",
+      price: "$299",
       featured: false,
       features: [
         "One-screen mini page",
@@ -181,7 +182,7 @@ export const packages = {
     {
       id: "personal-brand",
       name: "Personal Brand",
-      price: "$650",
+      price: "$799",
       featured: true,
       badge: "Most popular",
       mobileBadge: "MOST POPULAR",
@@ -197,7 +198,7 @@ export const packages = {
     {
       id: "business-starter",
       name: "Business Starter",
-      price: "$999",
+      price: "$1,299",
       featured: false,
       features: [
         "5 to 8 page showcase",
@@ -213,8 +214,8 @@ export const packages = {
     "Optional after launch: Site Care keeps hosting, updates, and backups handled.",
   siteCare: {
     kicker: "SITE CARE",
-    title: "Hosting & upkeep, $29 / month",
-    mobileTitle: "SITE CARE  ·  $29/mo",
+    title: "Hosting & upkeep, $39 / month",
+    mobileTitle: "SITE CARE  ·  $39/mo",
     description:
       "Hosting, updates, backups, and small content fixes. Month to month. Cancel anytime.",
     mobileDescription: "Hosting, updates, backups, small fixes.",
@@ -377,7 +378,7 @@ export const faq = {
       id: "host",
       question: "Do you host and maintain the website?",
       answer:
-        "Yes, through Site Care at $29/month: hosting, updates, backups, and small content fixes. Month to month.",
+        "Yes, through Site Care at $39/month: hosting, updates, backups, and small content fixes. Month to month.",
       mobile: true,
     },
     {

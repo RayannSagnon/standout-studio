@@ -87,7 +87,7 @@ export default function OpenGraphImage() {
           </div>
           <div style={{ color: "#A8CDC8", fontSize: 28, maxWidth: 760 }}>
             Clear websites for freelancers and small businesses. Bilingual. From
-            $250.
+            $299.
           </div>
         </div>
       </div>

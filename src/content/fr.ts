@@ -10,7 +10,7 @@ export const site = {
 export const seo = {
   title: "Standout Studio | Conception et développement web à Ottawa",
   description:
-    "Studio web bilingue à Ottawa. Sites web sur mesure, cartes numériques et boutiques Shopify pour freelances et PME. Forfaits clairs dès 250 $.",
+    "Studio web bilingue à Ottawa. Sites web sur mesure, cartes numériques et boutiques Shopify pour freelances et PME. Forfaits clairs dès 299 $.",
   ogLocale: "fr_CA",
   keywords: [
     "conception web Ottawa",
@@ -90,8 +90,8 @@ export const whatWeDo = {
       title: "Hébergement et entretien",
       mobileTitle: "Hébergement",
       description:
-        "Option à 29 $/mois : hébergement, mises à jour, sauvegardes et petits correctifs. Mois par mois.",
-      mobileDescription: "29 $/mois d'entretien",
+        "Option à 39 $/mois : hébergement, mises à jour, sauvegardes et petits correctifs. Mois par mois.",
+      mobileDescription: "39 $/mois d'entretien",
       icon: "shield" as const,
     },
     {
@@ -165,11 +165,12 @@ export const packages = {
   kicker: "FORFAITS",
   title: "Forfaits et tarifs",
   swipeHint: "Glisser pour comparer →",
+  priceFrom: "À partir de",
   plans: [
     {
       id: "digital-card",
       name: "Carte numérique",
-      price: "250 $",
+      price: "299 $",
       featured: false,
       features: [
         "Mini page sur un écran",
@@ -183,7 +184,7 @@ export const packages = {
     {
       id: "personal-brand",
       name: "Marque personnelle",
-      price: "650 $",
+      price: "799 $",
       featured: true,
       badge: "Le plus populaire",
       mobileBadge: "LE PLUS POPULAIRE",
@@ -204,7 +205,7 @@ export const packages = {
     {
       id: "business-starter",
       name: "Vitrine entreprise",
-      price: "999 $",
+      price: "1 299 $",
       featured: false,
       features: [
         "Vitrine de 5 à 8 pages",
@@ -225,8 +226,8 @@ export const packages = {
     "En option après la mise en ligne : Site Care s'occupe de l'hébergement, des mises à jour et des sauvegardes.",
   siteCare: {
     kicker: "SITE CARE",
-    title: "Hébergement et entretien, 29 $ / mois",
-    mobileTitle: "SITE CARE  ·  29 $/mois",
+    title: "Hébergement et entretien, 39 $ / mois",
+    mobileTitle: "SITE CARE  ·  39 $/mois",
     description:
       "Hébergement, mises à jour, sauvegardes et petits changements de contenu. Mois par mois. Annulable en tout temps.",
     mobileDescription:
@@ -400,7 +401,7 @@ export const faq = {
       id: "host",
       question: "Est-ce que vous hébergez et entretenez le site web ?",
       answer:
-        "Oui, via Site Care à 29 $/mois : hébergement, mises à jour, sauvegardes et petits changements de contenu. Mois par mois.",
+        "Oui, via Site Care à 39 $/mois : hébergement, mises à jour, sauvegardes et petits changements de contenu. Mois par mois.",
       mobile: true,
     },
     {

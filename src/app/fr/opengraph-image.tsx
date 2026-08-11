@@ -86,7 +86,7 @@ export default function OpenGraphImage() {
             Conception et développement web à Ottawa
           </div>
           <div style={{ color: "#A8CDC8", fontSize: 28, maxWidth: 760 }}>
-            Sites web clairs pour freelances et PME. Bilingue. Dès 250 $.
+            Sites web clairs pour freelances et PME. Bilingue. Dès 299 $.
           </div>
         </div>
       </div>

@@ -143,8 +143,13 @@ export function Packages() {
                   <PopularBadge label={plan.badge} />
                 ) : null}
                 <p className="text-sm font-semibold text-teal">{plan.name}</p>
-                <p className="mt-2.5 font-display text-4xl font-bold tracking-tight text-ink">
-                  {plan.price}
+                <p className="mt-2.5">
+                  <span className="block text-[12px] font-medium uppercase tracking-[0.08em] text-muted">
+                    {packages.priceFrom}
+                  </span>
+                  <span className="mt-0.5 block font-display text-4xl font-bold tracking-tight text-ink">
+                    {plan.price}
+                  </span>
                 </p>
                 <ul className="mt-5 space-y-2.5">
                   {plan.features.map((feature) => (
@@ -189,8 +194,13 @@ export function Packages() {
               <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
                 {plan.name}
               </h3>
-              <p className="mt-1 font-display text-[28px] font-bold text-teal">
-                {plan.price}
+              <p className="mt-1">
+                <span className="block text-[11px] font-medium uppercase tracking-[0.08em] text-muted">
+                  {packages.priceFrom}
+                </span>
+                <span className="mt-0.5 block font-display text-[28px] font-bold text-teal">
+                  {plan.price}
+                </span>
               </p>
               <ul className="mt-3 space-y-2">
                 {plan.mobileFeatures.map((feature) => (
