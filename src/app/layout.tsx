@@ -81,7 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if('scrollRestoration'in history)history.scrollRestoration='manual';try{var p=location.pathname;var l=p.indexOf('/fr')===0?'fr':(localStorage.getItem('standout-locale')||'en');if(l==='fr'||l==='en')document.documentElement.lang=l;if(sessionStorage.getItem('standout-loader-seen-v3')!=='1')document.documentElement.classList.add('is-booting');}catch(e){}",
+              "if('scrollRestoration'in history)history.scrollRestoration='manual';try{var p=location.pathname;var l=p.indexOf('/fr')===0?'fr':(localStorage.getItem('standout-locale')||'en');if(l==='fr'||l==='en')document.documentElement.lang=l;document.documentElement.classList.add('is-booting');}catch(e){}",
           }}
         />
       </head>

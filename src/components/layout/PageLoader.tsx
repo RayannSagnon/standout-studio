@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 
 export const BOOT_DONE_EVENT = "standout:boot-done";
-/** Bump when loader UX changes so returning visitors see it once again. */
-const SEEN_KEY = "standout-loader-seen-v3";
 
 /** Must match `@keyframes loader-bar-fill` duration in CSS. */
 const BAR_MS = 2400;
@@ -19,18 +17,14 @@ function markBootDone() {
 }
 
 export function PageLoader() {
-  // pending: wait until we know whether to show (avoids empty-bar flash when skipped)
   const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem(SEEN_KEY) === "1";
-    // In production, show once per tab session. In local/dev, always show so you can tune it.
-    const skip = reduce || (process.env.NODE_ENV === "production" && seen);
 
-    if (skip) {
+    if (reduce) {
       setGone(true);
       markBootDone();
       return;
@@ -43,7 +37,6 @@ export function PageLoader() {
     const totalMs = BAR_MS + HOLD_FULL_MS;
     const leaveTimer = window.setTimeout(() => {
       if (cancelled) return;
-      sessionStorage.setItem(SEEN_KEY, "1");
       // Reveal hero title as the loader starts fading, not after it is gone.
       markBootDone();
       setLeaving(true);
