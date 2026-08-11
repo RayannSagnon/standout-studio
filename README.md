@@ -30,7 +30,7 @@ Copy `.env.example` to `.env.local` and fill in:
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical site URL |
-| `WEB3FORMS_ACCESS_KEY` | Contact form delivery ([Web3Forms](https://web3forms.com), free). Create a key with `standout.studio.ottawa@gmail.com` as the destination. |
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Contact form delivery ([Web3Forms](https://web3forms.com), free). Create a key with `standout.studio.ottawa@gmail.com` as the destination. The key is public by design (client-side submit). |
 
 On Vercel, add the same variables in Project Settings → Environment Variables.
 

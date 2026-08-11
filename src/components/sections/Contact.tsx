@@ -6,6 +6,8 @@ import SplitText from "@/components/SplitText";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
 export function Contact() {
   const { locale } = useLocale();
   const { contact } = useContent();
@@ -16,6 +18,7 @@ export function Contact() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileInputId = useId();
   const MAX_FILE_BYTES = 5 * 1024 * 1024;
+  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -29,19 +32,66 @@ export function Contact() {
     event.preventDefault();
     if (status === "submitting") return;
 
+    if (!accessKey) {
+      setStatus("error");
+      return;
+    }
+
     const form = event.currentTarget;
     setStatus("submitting");
 
     const data = new FormData(form);
-    data.set("locale", locale);
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const need = String(data.get("need") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      phone ? `Phone: ${phone}` : null,
+      `Need: ${need}`,
+      `Locale: ${locale}`,
+      "",
+      message,
+      fileNames.length
+        ? `\nSelected files (names only; ask the client to send them by reply):\n${fileNames
+            .map((fileName) => `- ${fileName}`)
+            .join("\n")}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const payload = {
+      access_key: accessKey,
+      subject: `Standout Studio inquiry from ${name}`,
+      from_name: "Standout Studio website",
+      name,
+      email,
+      phone: phone || undefined,
+      need,
+      message: body,
+      replyto: email,
+      botcheck: data.get("botcheck") ? "true" : "",
+    };
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
-        body: data,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
+      const result = (await response.json().catch(() => null)) as {
+        success?: boolean;
+      } | null;
+
+      if (!response.ok || !result?.success) {
         setStatus("error");
         return;
       }
@@ -95,7 +145,6 @@ export function Contact() {
           </h3>
           <p className="mt-3 text-xs text-muted">{contact.requiredHint}</p>
 
-          {/* Honeypot: leave empty. Hidden from assistive tech. */}
           <input
             type="checkbox"
             name="botcheck"
