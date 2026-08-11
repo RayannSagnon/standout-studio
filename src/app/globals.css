@@ -142,12 +142,12 @@ html.allow-smooth-scroll {
   }
 }
 
-@keyframes loader-bar {
+@keyframes loader-bar-fill {
   from {
-    transform: scaleX(0);
+    width: 0%;
   }
   to {
-    transform: scaleX(1);
+    width: 100%;
   }
 }
 
@@ -168,13 +168,27 @@ html.is-hero-expanding .scroll-expand__stage {
 }
 
 .page-loader__mark {
-  animation: loader-mark-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: loader-mark-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page-loader__bar {
-  transform-origin: left center;
-  transform: scaleX(0);
-  animation: loader-bar 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
+  width: 0%;
+  height: 100%;
+}
+
+.page-loader__bar--run {
+  animation: loader-bar-fill 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Hold the hero expand title until the boot loader finishes. */
+html.is-booting {
+  overflow: hidden;
+}
+
+html.is-booting .scroll-expand__title,
+html.is-booting .scroll-expand__hint {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .animate-marquee {
@@ -246,7 +260,8 @@ html.is-hero-expanding .scroll-expand__stage {
   .animate-wave-drift,
   .animate-hero-copy-fade,
   .page-loader__mark,
-  .page-loader__bar {
+  .page-loader__bar,
+  .page-loader__bar--run {
     animation: none;
   }
 

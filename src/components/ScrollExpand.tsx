@@ -200,6 +200,8 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
     const readProgress = () => {
       const c = propsRef.current;
       if (!c.enabled) return 1;
+      // While booting, freeze expand at the start so the title stays hidden.
+      if (document.documentElement.classList.contains("is-booting")) return 0;
       const span = stageH * Math.max(0.01, c.scrollDistance);
       if (c.useWindowScroll) {
         const top = track.getBoundingClientRect().top;
@@ -236,6 +238,12 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
       kick();
     };
 
+    const onBootDone = () => {
+      target = readProgress();
+      current = target;
+      applyProgress(current);
+    };
+
     const onResize = () => {
       if (resizeRaf) return;
       resizeRaf = requestAnimationFrame(() => {
@@ -256,6 +264,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
 
     const scroller = useWindowScroll ? window : root;
     scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("standout:boot-done", onBootDone);
     window.addEventListener("resize", onResize);
     // Only observe element resize for nested scrollers — window mode
     // rewrites track height and would thrash ResizeObserver mid-expand.
@@ -270,6 +279,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
       if (raf) cancelAnimationFrame(raf);
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("standout:boot-done", onBootDone);
       window.removeEventListener("resize", onResize);
       ro?.disconnect();
     };
