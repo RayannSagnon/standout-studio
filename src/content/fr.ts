@@ -1,6 +1,6 @@
 export const site = {
   name: "Standout Studio",
-  email: "hello@standoutstudio.ca",
+  email: "standout.studio.ottawa@gmail.com",
   localeLabel: {
     active: "FR",
     inactive: "EN",
@@ -427,7 +427,7 @@ export const contact = {
     "Écrivez-nous en quelques lignes ce dont vous avez besoin. On répond avec un forfait suggéré, un échéancier réaliste et une fourchette de prix.",
   mobileIntro:
     "Un court message suffit. On répond en 1 à 2 jours ouvrables.",
-  meta: "Ottawa · À distance  ·  hello@standoutstudio.ca",
+  meta: "Ottawa · À distance  ·  standout.studio.ottawa@gmail.com",
   formTitle: "Écrivez-nous",
   requiredHint: "* Obligatoire",
   fields: {
@@ -454,22 +454,20 @@ export const contact = {
       placeholder: "Parlez-nous du projet...",
     },
     files: {
-      label: "Joindre des fichiers (optionnel)",
+      label: "Fichiers du projet (optionnel)",
       button: "Choisir des fichiers",
       empty: "Aucun fichier choisi",
-      hint: "Briefs, références, logos — PDF, PNG, JPG, DOC, 5 Mo max chacun.",
-      mailNote:
-        "Veuillez joindre ces fichiers à ce courriel avant l'envoi :",
+      hint: "Les noms de fichiers sont inclus dans votre message. On pourra vous demander de les envoyer en réponse. PDF, PNG, JPG, DOC, 5 Mo max chacun.",
       tooLarge: "Chaque fichier doit faire moins de 5 Mo.",
     },
   },
   submit: "Envoyer",
-  mailSubject: "Demande Standout Studio de",
+  submitting: "Envoi...",
   previewAltSuffix: "aperçu du site web",
   newTabHint: "(s'ouvre dans un nouvel onglet)",
-  sentWithFiles:
-    "Ouverture de votre application courriel. Joignez les fichiers choisis avant d'envoyer.",
-  sent: "Ouverture de votre application courriel avec le message prêt à envoyer.",
+  sent: "Merci. On a bien reçu votre message et on répond en 1 à 2 jours ouvrables.",
+  error:
+    "Une erreur s'est produite. Réessayez ou écrivez à standout.studio.ottawa@gmail.com.",
 };
 
 export const footer = {

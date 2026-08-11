@@ -1,6 +1,6 @@
 export const site = {
   name: "Standout Studio",
-  email: "hello@standoutstudio.ca",
+  email: "standout.studio.ottawa@gmail.com",
   localeLabel: {
     active: "EN",
     inactive: "FR",
@@ -403,7 +403,7 @@ export const contact = {
   intro:
     "Send a short note about what you need. We reply with a suggested package, a realistic timeline, and a price range.",
   mobileIntro: "A short note is enough. We reply in 1-2 business days.",
-  meta: "Ottawa · Remote  ·  hello@standoutstudio.ca",
+  meta: "Ottawa · Remote  ·  standout.studio.ottawa@gmail.com",
   formTitle: "Get in touch",
   requiredHint: "* Required",
   fields: {
@@ -425,22 +425,19 @@ export const contact = {
       placeholder: "Tell us about the project...",
     },
     files: {
-      label: "Upload project files (optional)",
+      label: "Project files (optional)",
       button: "Choose Files",
       empty: "No file chosen",
-      hint: "Briefs, refs, logos — PDF, PNG, JPG, DOC up to 5 MB each.",
-      mailNote:
-        "Please attach these files to this email before sending:",
+      hint: "File names are included in your message. We may ask you to send the files by reply. PDF, PNG, JPG, DOC up to 5 MB each.",
       tooLarge: "Each file must be under 5 MB.",
     },
   },
   submit: "Send",
-  mailSubject: "Standout Studio inquiry from",
+  submitting: "Sending...",
   previewAltSuffix: "website preview",
   newTabHint: "(opens in a new tab)",
-  sentWithFiles:
-    "Opening your email app. Attach the selected files before you send.",
-  sent: "Opening your email app with the message ready to send.",
+  sent: "Thanks. We got your message and will reply in 1-2 business days.",
+  error: "Something went wrong. Please try again or email standout.studio.ottawa@gmail.com.",
 } as const;
 
 export const footer = {

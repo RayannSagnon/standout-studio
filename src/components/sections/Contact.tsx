@@ -4,10 +4,12 @@ import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import SplitText from "@/components/SplitText";
 
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
 export function Contact() {
   const { locale } = useLocale();
-  const { contact, site } = useContent();
-  const [sent, setSent] = useState(false);
+  const { contact } = useContent();
+  const [status, setStatus] = useState<SubmitState>("idle");
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [fileError, setFileError] = useState("");
   const [mdUp, setMdUp] = useState(false);
@@ -23,37 +25,34 @@ export function Contact() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "").trim();
-    const email = String(form.get("email") || "").trim();
-    const phone = String(form.get("phone") || "").trim();
-    const need = String(form.get("need") || "").trim();
-    const message = String(form.get("message") || "").trim();
+    if (status === "submitting") return;
 
-    const body = [
-      `${contact.fields.name.mailLabel}: ${name}`,
-      `${contact.fields.email.mailLabel}: ${email}`,
-      phone ? `${contact.fields.phone.mailLabel}: ${phone}` : null,
-      `${contact.fields.need.mailLabel}: ${need}`,
-      "",
-      message,
-      fileNames.length
-        ? `\n${contact.fields.files.mailNote}\n${fileNames
-            .map((file) => `- ${file}`)
-            .join("\n")}`
-        : null,
-    ]
-      .filter(Boolean)
-      .join("\n");
+    const form = event.currentTarget;
+    setStatus("submitting");
 
-    const mailto = `mailto:${site.email}?subject=${encodeURIComponent(
-      `${contact.mailSubject} ${name}`,
-    )}&body=${encodeURIComponent(body)}`;
+    const data = new FormData(form);
+    data.set("locale", locale);
 
-    window.location.href = mailto;
-    setSent(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: data,
+      });
+
+      if (!response.ok) {
+        setStatus("error");
+        return;
+      }
+
+      form.reset();
+      setFileNames([]);
+      setFileError("");
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -95,6 +94,16 @@ export function Contact() {
             {contact.formTitle}
           </h3>
           <p className="mt-3 text-xs text-muted">{contact.requiredHint}</p>
+
+          {/* Honeypot: leave empty. Hidden from assistive tech. */}
+          <input
+            type="checkbox"
+            name="botcheck"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="hidden"
+          />
 
           <label className="mt-4 block text-[13px] font-medium text-ink">
             {contact.fields.name.label}
@@ -207,14 +216,20 @@ export function Contact() {
 
           <button
             type="submit"
-            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-full bg-hero px-7 text-sm font-semibold text-inverse transition hover:bg-teal-deep md:mt-5 md:h-[47px] md:w-auto"
+            disabled={status === "submitting"}
+            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-full bg-hero px-7 text-sm font-semibold text-inverse transition hover:bg-teal-deep disabled:cursor-not-allowed disabled:opacity-70 md:mt-5 md:h-[47px] md:w-auto"
           >
-            {contact.submit}
+            {status === "submitting" ? contact.submitting : contact.submit}
           </button>
 
-          {sent ? (
+          {status === "success" ? (
             <p className="mt-3 text-sm text-teal" aria-live="polite">
-              {fileNames.length ? contact.sentWithFiles : contact.sent}
+              {contact.sent}
+            </p>
+          ) : null}
+          {status === "error" ? (
+            <p className="mt-3 text-sm text-teal-deep" role="alert">
+              {contact.error}
             </p>
           ) : null}
         </form>
