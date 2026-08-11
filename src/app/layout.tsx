@@ -68,6 +68,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "LwQq3RKaXAXeUxVuAzyYZ7aGuBxTfM8aaWgZTRu5H6k",
+  },
   category: "Web design",
 };
 
