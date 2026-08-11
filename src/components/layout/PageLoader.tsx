@@ -16,28 +16,30 @@ function markBootDone() {
   window.dispatchEvent(new Event(BOOT_DONE_EVENT));
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function PageLoader() {
-  const [visible, setVisible] = useState(false);
+  const [runId, setRunId] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduce) {
+    if (prefersReducedMotion()) {
       setGone(true);
       markBootDone();
       return;
     }
 
+    setGone(false);
+    setLeaving(false);
     document.documentElement.classList.add("is-booting");
-    setVisible(true);
 
     let cancelled = false;
     const totalMs = BAR_MS + HOLD_FULL_MS;
     const leaveTimer = window.setTimeout(() => {
       if (cancelled) return;
-      // Reveal hero title as the loader starts fading, not after it is gone.
       markBootDone();
       setLeaving(true);
       window.setTimeout(() => {
@@ -50,12 +52,30 @@ export function PageLoader() {
       cancelled = true;
       window.clearTimeout(leaveTimer);
     };
+  }, [runId]);
+
+  // Restart when the browser restores the page from bfcache.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      if (prefersReducedMotion()) {
+        markBootDone();
+        return;
+      }
+      setGone(false);
+      setLeaving(false);
+      setRunId((id) => id + 1);
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
 
-  if (gone || !visible) return null;
+  if (gone) return null;
 
   return (
     <div
+      key={runId}
       className={[
         "page-loader fixed inset-0 z-[200] flex items-center justify-center bg-hero text-inverse",
         leaving ? "page-loader--leave" : "",
