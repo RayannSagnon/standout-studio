@@ -48,7 +48,7 @@ export function SelectedWork() {
           </p>
         </Reveal>
 
-        <div className="mt-6 hidden gap-7 md:mt-9 md:grid md:grid-cols-2">
+        <div className="mt-6 hidden gap-7 md:mt-9 md:grid md:grid-cols-2 lg:gap-8">
           {selectedWork.projects.map((project, index) => (
             <Reveal key={project.id} delayMs={index * 100}>
               <a

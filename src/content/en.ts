@@ -139,6 +139,24 @@ export const selectedWork = {
   swipeHint: "Swipe to browse →",
   projects: [
     {
+      id: "ori-atelier",
+      label: "LIVE · BUSINESS SHOWCASE",
+      name: "Orí Atelier",
+      domain: "ori-atelier.vercel.app",
+      href: "https://ori-atelier.vercel.app/",
+      image: "/work/ori-atelier-desktop.webp",
+      imageMobile: "/work/ori-atelier-mobile.webp",
+    },
+    {
+      id: "sharp",
+      label: "LIVE · PERSONAL BRAND",
+      name: "Sharp",
+      domain: "Relentless Ritchie",
+      href: "https://cozy-hotteok-6aa630.netlify.app/",
+      image: "/work/sharp-desktop.webp",
+      imageMobile: "/work/sharp-mobile.webp",
+    },
+    {
       id: "rayann",
       label: "LIVE · PERSONAL BRAND",
       name: "Rayann Sagnon",
