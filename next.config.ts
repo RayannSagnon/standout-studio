@@ -14,6 +14,28 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.standoutstudio.ca" }],
+        destination: "https://standoutstudio.ca/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "standoutstudio.vercel.app" }],
+        destination: "https://standoutstudio.ca/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "standout-studio-seven.vercel.app" }],
+        destination: "https://standoutstudio.ca/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

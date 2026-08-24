@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Standout Studio",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://standoutstudio.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://standoutstudio.ca",
   email: "standout.studio.ottawa@gmail.com",
   locales: ["en", "fr"] as const,
   defaultLocale: "en" as const,

@@ -6,7 +6,7 @@
 
 Marketing site for Standout Studio, a bilingual Ottawa web studio.
 
-- Live site: [standoutstudio.vercel.app](https://standoutstudio.vercel.app)
+- Live site: [standoutstudio.ca](https://standoutstudio.ca)
 - Design source: [Figma mockup](https://www.figma.com/design/nLEk8UpVUfFg1SsvmXmjnG)
 
 ## Stack
