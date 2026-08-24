@@ -69,7 +69,10 @@ export const metadata: Metadata = {
     follow: true,
   },
   verification: {
-    google: "LwQq3RKaXAXeUxVuAzyYZ7aGuBxTfM8aaWgZTRu5H6k",
+    google: [
+      "LwQq3RKaXAXeUxVuAzyYZ7aGuBxTfM8aaWgZTRu5H6k",
+      "OdO8BdzixEcyAfQLSNj9em2Iu1GFT3S0GjBu8oEIyxo",
+    ],
   },
   category: "Web design",
 };
