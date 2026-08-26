@@ -186,7 +186,7 @@ export const packages = {
     {
       id: "digital-card",
       name: "Digital Card",
-      price: "$299",
+      price: "$399",
       featured: false,
       features: [
         "One-screen mini page",
@@ -200,7 +200,7 @@ export const packages = {
     {
       id: "personal-brand",
       name: "Personal Brand",
-      price: "$799",
+      price: "$1099",
       featured: true,
       badge: "Most popular",
       mobileBadge: "MOST POPULAR",
@@ -216,7 +216,7 @@ export const packages = {
     {
       id: "business-starter",
       name: "Business Starter",
-      price: "$1,299",
+      price: "$1,399",
       featured: false,
       features: [
         "5 to 8 page showcase",

@@ -188,7 +188,7 @@ export const packages = {
     {
       id: "digital-card",
       name: "Carte numérique",
-      price: "299 $",
+      price: "399 $",
       featured: false,
       features: [
         "Mini page sur un écran",
@@ -202,7 +202,7 @@ export const packages = {
     {
       id: "personal-brand",
       name: "Marque personnelle",
-      price: "799 $",
+      price: "1099 $",
       featured: true,
       badge: "Le plus populaire",
       mobileBadge: "LE PLUS POPULAIRE",
@@ -223,7 +223,7 @@ export const packages = {
     {
       id: "business-starter",
       name: "Vitrine entreprise",
-      price: "1 299 $",
+      price: "1 399 $",
       featured: false,
       features: [
         "Vitrine de 5 à 8 pages",
