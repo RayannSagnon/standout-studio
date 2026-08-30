@@ -137,17 +137,8 @@ export const selectedWork = {
   mobileTitle: "Live websites",
   intro: "Open them, click around, and judge the quality yourself.",
   swipeHint: "Swipe to browse →",
-  library: {
-    badge: "MORE PROJECTS",
-    toggleOpen: "Explore more",
-    toggleClose: "Show less",
-    heading: "Additional projects",
-    subheading: "More client builds and custom websites crafted by our studio.",
-    allFilter: "All",
-    businessFilter: "Business Showcase",
-    personalFilter: "Personal Brand",
-    visitSite: "Visit site",
-  },
+  toggleMore: "More",
+  toggleLess: "Less",
   projects: [
     {
       id: "caramello",

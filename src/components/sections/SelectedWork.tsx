@@ -7,14 +7,11 @@ import SplitText from "@/components/SplitText";
 import { useContent, useLocale } from "@/components/i18n/LocaleProvider";
 import { Reveal } from "@/components/ui/Reveal";
 
-type ProjectCategory = "all" | "business" | "personal";
-
 export function SelectedWork() {
   const { locale } = useLocale();
   const { selectedWork, contact } = useContent();
-  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<ProjectCategory>("all");
-  const archiveRegionId = useId();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const extraRegionId = useId();
 
   // Exactly 4 spotlight projects for the primary view
   const featuredProjects = useMemo(
@@ -22,30 +19,14 @@ export function SelectedWork() {
     [selectedWork.projects],
   );
 
-  // Additional projects (the ones not shown in the main 4 spotlight)
+  // Remaining additional projects (5th, etc.)
   const additionalProjects = useMemo(
     () => selectedWork.projects.slice(4),
     [selectedWork.projects],
   );
 
-  // Filtered view for additional projects in the library
-  const filteredAdditionalProjects = useMemo(() => {
-    if (activeFilter === "all") return additionalProjects;
-    return additionalProjects.filter(
-      (project) => project.category === activeFilter,
-    );
-  }, [additionalProjects, activeFilter]);
-
-  const toggleLibrary = () => {
-    setIsLibraryOpen((prev) => !prev);
-  };
-
-  const closeLibrary = () => {
-    setIsLibraryOpen(false);
-    const workEl = document.getElementById("work");
-    if (workEl) {
-      workEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
   };
 
   return (
@@ -175,135 +156,97 @@ export function SelectedWork() {
           ))}
         </div>
 
-        {/* Clean, Simple View More Toggle Button */}
-        {additionalProjects.length > 0 && (
-          <div className="mt-8 flex justify-center pt-2 md:mt-10">
-            <button
-              type="button"
-              onClick={toggleLibrary}
-              aria-expanded={isLibraryOpen}
-              aria-controls={archiveRegionId}
-              className="group inline-flex items-center gap-2 rounded-full border border-[#a4c9c4] bg-white/90 px-5 py-2.5 text-sm font-semibold text-ink shadow-xs transition-all duration-200 hover:border-teal hover:bg-white hover:shadow-sm focus-visible:outline-teal"
-            >
-              <span>
-                {isLibraryOpen
-                  ? selectedWork.library.toggleClose
-                  : selectedWork.library.toggleOpen}
-              </span>
-              <svg
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-                className={`h-4 w-4 text-muted transition-transform duration-200 ${
-                  isLibraryOpen ? "rotate-180 text-teal" : "group-hover:translate-y-0.5"
-                }`}
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
-
-        {/* Expandable Section Showing ONLY Additional Projects */}
+        {/* Direct expansion showing remaining projects seamlessly */}
         <AnimatePresence>
-          {isLibraryOpen && (
+          {isExpanded && (
             <motion.div
-              id={archiveRegionId}
+              id={extraRegionId}
               role="region"
-              aria-label={selectedWork.library.heading}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden"
             >
-              <div className="pt-8">
-                {/* Additional Projects Grid */}
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-                  {filteredAdditionalProjects.map((project) => (
-                    <a
-                      key={`additional-${project.id}`}
-                      href={project.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${project.name} ${contact.newTabHint}`}
-                      className="group block"
-                    >
-                      <div className="relative overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-all duration-300 group-hover:border-[#96bcba] group-hover:shadow-[0_20px_50px_rgba(15,28,31,0.12)]">
-                        <Image
-                          src={project.image}
-                          alt={`${project.name} ${contact.previewAltSuffix}`}
-                          width={1172}
-                          height={680}
-                          sizes="(max-width: 768px) 100vw, 560px"
-                          quality={75}
-                          className="h-[340px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.035]"
-                        />
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between">
-                        <p className="text-[11px] font-semibold tracking-[0.08em] text-teal">
-                          {project.label}
-                        </p>
-                        <span className="text-[12px] text-muted">
-                          {project.categoryLabel}
-                        </span>
-                      </div>
-
-                      <div className="mt-1 flex items-baseline justify-between">
-                        <h3 className="font-display text-2xl font-semibold tracking-tight text-ink">
-                          {project.name}
-                        </h3>
-                        <div className="flex items-center gap-1 text-sm font-medium text-muted transition-colors group-hover:text-teal">
-                          <span>{project.domain}</span>
-                          <svg
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-
-                {/* Optional collapse button at bottom */}
-                <div className="mt-6 flex justify-center pb-2">
-                  <button
-                    type="button"
-                    onClick={closeLibrary}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted transition-colors hover:text-teal"
+              <div className="mt-6 grid gap-7 md:mt-8 md:grid-cols-2 lg:gap-8">
+                {additionalProjects.map((project) => (
+                  <a
+                    key={`extra-${project.id}`}
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.name} ${contact.newTabHint}`}
+                    className="group block"
                   >
-                    <span>{selectedWork.library.toggleClose}</span>
-                    <svg
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      className="h-3.5 w-3.5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z"
-                        clipRule="evenodd"
+                    <div className="relative overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-all duration-300 group-hover:border-[#96bcba] group-hover:shadow-[0_20px_50px_rgba(15,28,31,0.12)]">
+                      <Image
+                        src={project.image}
+                        alt={`${project.name} ${contact.previewAltSuffix}`}
+                        width={1172}
+                        height={680}
+                        sizes="(max-width: 768px) 100vw, 560px"
+                        quality={75}
+                        className="h-[340px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.035]"
                       />
-                    </svg>
-                  </button>
-                </div>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between">
+                      <p className="text-[11px] font-semibold tracking-[0.08em] text-teal">
+                        {project.label}
+                      </p>
+                      <span className="text-[12px] text-muted">
+                        {project.categoryLabel}
+                      </span>
+                    </div>
+
+                    <div className="mt-1 flex items-baseline justify-between">
+                      <h3 className="font-display text-2xl font-semibold tracking-tight text-ink">
+                        {project.name}
+                      </h3>
+                      <div className="flex items-center gap-1 text-sm font-medium text-muted transition-colors group-hover:text-teal">
+                        <span>{project.domain}</span>
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </a>
+                ))}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Minimalist Plus / Moins Toggle Button */}
+        {additionalProjects.length > 0 && (
+          <div className="mt-8 flex justify-center md:mt-10">
+            <button
+              type="button"
+              onClick={toggleExpand}
+              aria-expanded={isExpanded}
+              aria-controls={extraRegionId}
+              className="group inline-flex items-center gap-2 rounded-full border border-[#a4c9c4] bg-white/90 px-5 py-2.5 text-sm font-semibold text-ink shadow-xs transition-all duration-200 hover:border-teal hover:bg-white hover:shadow-sm focus-visible:outline-teal"
+            >
+              <span>
+                {isExpanded
+                  ? selectedWork.toggleLess
+                  : selectedWork.toggleMore}
+              </span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#d6ece8] text-xs font-bold text-teal transition-transform group-hover:scale-110">
+                {isExpanded ? "−" : "+"}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

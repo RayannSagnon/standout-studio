@@ -139,17 +139,8 @@ export const selectedWork = {
   mobileTitle: "Sites web en ligne",
   intro: "Ouvrez-les, naviguez, et jugez la qualité par vous-même.",
   swipeHint: "Glisser pour parcourir →",
-  library: {
-    badge: "AUTRES PROJETS",
-    toggleOpen: "Voir plus",
-    toggleClose: "Voir moins",
-    heading: "Projets supplémentaires",
-    subheading: "D'autres créations et sites web sur mesure réalisés par notre studio.",
-    allFilter: "Tous",
-    businessFilter: "Vitrine entreprise",
-    personalFilter: "Marque personnelle",
-    visitSite: "Visiter le site",
-  },
+  toggleMore: "Plus",
+  toggleLess: "Moins",
   projects: [
     {
       id: "caramello",
