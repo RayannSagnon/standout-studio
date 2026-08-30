@@ -140,12 +140,11 @@ export const selectedWork = {
   intro: "Ouvrez-les, naviguez, et jugez la qualité par vous-même.",
   swipeHint: "Glisser pour parcourir →",
   library: {
-    badge: "ARCHIVE DU STUDIO",
-    toggleOpen: "Explorer la bibliothèque (5)",
-    toggleClose: "Afficher les 4 projets phares",
-    countLabel: "5 sites en ligne",
-    heading: "Toutes nos réalisations et mises en ligne",
-    subheading: "Une collection grandissante de sites web sur mesure, ultra-rapides et conçus pour convertir.",
+    badge: "AUTRES PROJETS",
+    toggleOpen: "Voir plus",
+    toggleClose: "Voir moins",
+    heading: "Projets supplémentaires",
+    subheading: "D'autres créations et sites web sur mesure réalisés par notre studio.",
     allFilter: "Tous",
     businessFilter: "Vitrine entreprise",
     personalFilter: "Marque personnelle",
@@ -154,7 +153,7 @@ export const selectedWork = {
   projects: [
     {
       id: "caramello",
-      label: "EN LIGNE · CAFÉ & PÂTISSERIE",
+      label: "CAFÉ & PÂTISSERIE",
       name: "Caramello Café",
       domain: "caramellocafe.ca",
       href: "https://www.caramellocafe.ca/",
@@ -167,7 +166,7 @@ export const selectedWork = {
     },
     {
       id: "sharp",
-      label: "EN LIGNE · MARQUE PERSONNELLE",
+      label: "MARQUE PERSONNELLE",
       name: "Sharp",
       domain: "Relentless Ritchie",
       href: "https://cozy-hotteok-6aa630.netlify.app/",
@@ -180,7 +179,7 @@ export const selectedWork = {
     },
     {
       id: "rayann",
-      label: "EN LIGNE · MARQUE PERSONNELLE",
+      label: "MARQUE PERSONNELLE",
       name: "Rayann Sagnon",
       domain: "rayannsagnon.com",
       href: "https://rayannsagnon.com",
@@ -193,7 +192,7 @@ export const selectedWork = {
     },
     {
       id: "steven",
-      label: "EN LIGNE · MARQUE PERSONNELLE",
+      label: "MARQUE PERSONNELLE",
       name: "Steven Atchall",
       domain: "stevenatchall.com",
       href: "https://stevenatchall.com",
@@ -206,7 +205,7 @@ export const selectedWork = {
     },
     {
       id: "ori-atelier",
-      label: "EN LIGNE · VITRINE ENTREPRISE",
+      label: "VITRINE ENTREPRISE",
       name: "Orí Atelier",
       domain: "ori-atelier.vercel.app",
       href: "https://ori-atelier.vercel.app/",

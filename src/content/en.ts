@@ -138,12 +138,11 @@ export const selectedWork = {
   intro: "Open them, click around, and judge the quality yourself.",
   swipeHint: "Swipe to browse →",
   library: {
-    badge: "STUDIO ARCHIVE",
-    toggleOpen: "Explore project archive (5)",
-    toggleClose: "Show 4 featured only",
-    countLabel: "5 live releases",
-    heading: "All studio releases & client builds",
-    subheading: "A curated collection of fast, bespoke websites engineered for conversion and brand authority.",
+    badge: "MORE PROJECTS",
+    toggleOpen: "Explore more",
+    toggleClose: "Show less",
+    heading: "Additional projects",
+    subheading: "More client builds and custom websites crafted by our studio.",
     allFilter: "All",
     businessFilter: "Business Showcase",
     personalFilter: "Personal Brand",
@@ -152,7 +151,7 @@ export const selectedWork = {
   projects: [
     {
       id: "caramello",
-      label: "LIVE · CAFE & BAKERY",
+      label: "CAFE & BAKERY",
       name: "Caramello Café",
       domain: "caramellocafe.ca",
       href: "https://www.caramellocafe.ca/",
@@ -165,7 +164,7 @@ export const selectedWork = {
     },
     {
       id: "sharp",
-      label: "LIVE · PERSONAL BRAND",
+      label: "PERSONAL BRAND",
       name: "Sharp",
       domain: "Relentless Ritchie",
       href: "https://cozy-hotteok-6aa630.netlify.app/",
@@ -178,7 +177,7 @@ export const selectedWork = {
     },
     {
       id: "rayann",
-      label: "LIVE · PERSONAL BRAND",
+      label: "PERSONAL BRAND",
       name: "Rayann Sagnon",
       domain: "rayannsagnon.com",
       href: "https://rayannsagnon.com",
@@ -191,7 +190,7 @@ export const selectedWork = {
     },
     {
       id: "steven",
-      label: "LIVE · PERSONAL BRAND",
+      label: "PERSONAL BRAND",
       name: "Steven Atchall",
       domain: "stevenatchall.com",
       href: "https://stevenatchall.com",
@@ -204,7 +203,7 @@ export const selectedWork = {
     },
     {
       id: "ori-atelier",
-      label: "LIVE · BUSINESS SHOWCASE",
+      label: "BUSINESS SHOWCASE",
       name: "Orí Atelier",
       domain: "ori-atelier.vercel.app",
       href: "https://ori-atelier.vercel.app/",
