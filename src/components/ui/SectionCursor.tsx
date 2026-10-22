@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type CursorMode =
@@ -43,29 +43,35 @@ function place(node: HTMLDivElement | null, x: number, y: number, scale: number)
   node.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 
+const FINE_POINTER_QUERY =
+  "(pointer: fine) and (hover: hover) and (prefers-reduced-motion: no-preference)";
+
+function subscribeFinePointer(onChange: () => void) {
+  const mq = window.matchMedia(FINE_POINTER_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function getFinePointerSnapshot() {
+  return window.matchMedia(FINE_POINTER_QUERY).matches;
+}
+
+function getFinePointerServerSnapshot() {
+  return false;
+}
+
 export function SectionCursor() {
   const coreRef = useRef<HTMLDivElement>(null);
   const accentRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<CursorMode>("default");
   const hoverRef = useRef(false);
   const pressRef = useRef(false);
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useSyncExternalStore(
+    subscribeFinePointer,
+    getFinePointerSnapshot,
+    getFinePointerServerSnapshot,
+  );
   const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia(
-      "(pointer: fine) and (hover: hover) and (prefers-reduced-motion: no-preference)",
-    );
-    const sync = () => setEnabled(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
 
   useEffect(() => {
     if (!enabled) return;
@@ -151,7 +157,7 @@ export function SectionCursor() {
     };
   }, [enabled]);
 
-  if (!enabled || !mounted) return null;
+  if (!enabled) return null;
 
   return createPortal(
     <div

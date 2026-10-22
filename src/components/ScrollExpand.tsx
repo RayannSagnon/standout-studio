@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import Image from "next/image";
 
 import "./ScrollExpand.css";
 
@@ -86,24 +87,27 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
   const hintRef = useRef<HTMLDivElement | null>(null);
   const onProgressRef = useRef(onProgress);
   const lastEmittedRef = useRef(-1);
-  onProgressRef.current = onProgress;
-
   const propsRef = useRef<Required<Pick<ScrollExpandProps, ConfigKey>>>(
     {} as Required<Pick<ScrollExpandProps, ConfigKey>>,
   );
-  propsRef.current = {
-    startWidth,
-    startHeight,
-    startRadius,
-    endRadius,
-    mediaZoom,
-    scrollDistance,
-    holdDistance,
-    smoothing,
-    overlayScrim,
-    useWindowScroll,
-    enabled,
-  };
+
+  // Sync latest props into refs before any effect or frame reads them.
+  useLayoutEffect(() => {
+    onProgressRef.current = onProgress;
+    propsRef.current = {
+      startWidth,
+      startHeight,
+      startRadius,
+      endRadius,
+      mediaZoom,
+      scrollDistance,
+      holdDistance,
+      smoothing,
+      overlayScrim,
+      useWindowScroll,
+      enabled,
+    };
+  });
 
   const applyProgress = useCallback((p: number) => {
     const frame = frameRef.current;
@@ -304,15 +308,17 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
         playsInline
       />
     ) : (
-      <img
+      <Image
         ref={mediaRef}
         className="scroll-expand__media"
         src={src}
         alt={alt}
         width={1536}
         height={1024}
+        sizes="100vw"
         draggable={false}
         decoding="async"
+        loading="eager"
         fetchPriority="high"
       />
     );
