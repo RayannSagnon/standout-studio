@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "@/components/brand/Logo";
 
 export const BOOT_DONE_EVENT = "standout:boot-done";
@@ -16,8 +16,20 @@ function markBootDone() {
   window.dispatchEvent(new Event(BOOT_DONE_EVENT));
 }
 
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
 function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
+}
+
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function getReducedMotionServerSnapshot() {
+  return false;
 }
 
 export function PageLoader() {
@@ -25,15 +37,19 @@ export function PageLoader() {
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    prefersReducedMotion,
+    getReducedMotionServerSnapshot,
+  );
+
   useEffect(() => {
-    if (prefersReducedMotion()) {
-      setGone(true);
+    if (reducedMotion) {
       markBootDone();
       return;
     }
 
-    setGone(false);
-    setLeaving(false);
+    // pageshow resets leaving/gone before bumping runId.
     document.documentElement.classList.add("is-booting");
 
     let cancelled = false;
@@ -52,7 +68,7 @@ export function PageLoader() {
       cancelled = true;
       window.clearTimeout(leaveTimer);
     };
-  }, [runId]);
+  }, [runId, reducedMotion]);
 
   // Restart when the browser restores the page from bfcache.
   useEffect(() => {
@@ -71,7 +87,7 @@ export function PageLoader() {
     return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
 
-  if (gone) return null;
+  if (gone || reducedMotion) return null;
 
   return (
     <div

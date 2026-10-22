@@ -29,11 +29,8 @@ export function Reveal({
     const node = ref.current;
     if (!node) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setVisible(true);
-      return;
-    }
+    // Reduced motion: globals.css already shows `.reveal` content as-is.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {

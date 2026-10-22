@@ -26,14 +26,6 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-function readStoredLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-  const fromHtml = document.documentElement.lang;
-  if (fromHtml === "fr" || fromHtml === "en") return fromHtml;
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored === "fr" || stored === "en" ? stored : "en";
-}
-
 type LocaleProviderProps = {
   children: ReactNode;
   initialLocale?: Locale;
@@ -50,21 +42,16 @@ export function LocaleProvider({
       ? "en"
       : null;
 
-  const [locale, setLocaleState] = useState<Locale>(
+  const [chosenLocale, setLocaleState] = useState<Locale>(
     () => initialLocale ?? pathLocale ?? "en",
   );
+  // The URL wins; other routes (404) keep the server-provided locale.
+  const locale = pathLocale ?? chosenLocale;
 
   useEffect(() => {
-    if (pathLocale) {
-      setLocaleState(pathLocale);
-      document.documentElement.lang = pathLocale;
-      window.localStorage.setItem(STORAGE_KEY, pathLocale);
-      return;
-    }
-    const stored = readStoredLocale();
-    setLocaleState(stored);
-    document.documentElement.lang = stored;
-  }, [pathLocale]);
+    document.documentElement.lang = locale;
+    if (pathLocale) window.localStorage.setItem(STORAGE_KEY, pathLocale);
+  }, [locale, pathLocale]);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
