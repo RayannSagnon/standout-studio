@@ -219,7 +219,7 @@ export const packages = {
   {
     id: "essential",
     name: "Essentiel",
-    price: "499 $",
+    price: "399 $",
     featured: false,
     features: [
       "Site web d'une page",
@@ -240,7 +240,7 @@ export const packages = {
   {
     id: "growth",
     name: "Croissance",
-    price: "1 299 $",
+    price: "999 $",
     featured: true,
     badge: "Le plus populaire",
     mobileBadge: "LE PLUS POPULAIRE",
@@ -265,7 +265,7 @@ export const packages = {
   {
     id: "signature",
     name: "Signature",
-    price: "1 999 $",
+    price: "1 299 $",
     featured: false,
     features: [
       "Site web de 6 à 10 pages",
