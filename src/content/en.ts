@@ -217,7 +217,7 @@ export const packages = {
   {
     id: "essential",
     name: "Essential",
-    price: "399",
+    price: "$399",
     featured: false,
     features: [
       "One-page website",
