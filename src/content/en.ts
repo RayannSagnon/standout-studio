@@ -10,7 +10,7 @@ export const site = {
 export const seo = {
   title: "Standout Studio | Web Design & Development in Ottawa",
   description:
-    "Bilingual web studio in Ottawa. Custom websites, digital cards, and Shopify stores for freelancers and small businesses. Clear packages from $299.",
+    "Bilingual web studio in Ottawa. Custom websites, digital cards, and Shopify stores for freelancers and small businesses. Clear packages from $399.",
   ogLocale: "en_CA",
   keywords: [
     "Ottawa web design",

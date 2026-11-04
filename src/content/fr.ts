@@ -10,7 +10,7 @@ export const site = {
 export const seo = {
   title: "Standout Studio | Conception et développement web à Ottawa",
   description:
-    "Studio web bilingue à Ottawa. Sites web sur mesure, cartes numériques et boutiques Shopify pour freelances et PME. Forfaits clairs dès 299 $.",
+    "Studio web bilingue à Ottawa. Sites web sur mesure, cartes numériques et boutiques Shopify pour freelances et PME. Forfaits clairs dès 399 $.",
   ogLocale: "fr_CA",
   keywords: [
     "conception web Ottawa",
