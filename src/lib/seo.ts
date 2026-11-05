@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PROJECTS } from "@/site/projects";
 import { siteConfig } from "@/lib/site";
+import { ACCOUNTS_ENABLED } from "@/site/features";
 
 export type Lang = "en" | "fr";
 
@@ -56,7 +57,9 @@ const PRIVATE = new Set(["login", "account"]);
 export function sitePaths(): string[][] {
   return [
     [],
-    ...Object.keys(PAGES).map((p) => [p]),
+    ...Object.keys(PAGES)
+      .filter((p) => ACCOUNTS_ENABLED || !PRIVATE.has(p))
+      .map((p) => [p]),
     ...PROJECTS.map((p) => ["work", p.slug]),
   ];
 }

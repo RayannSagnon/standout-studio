@@ -13,6 +13,7 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Account from './pages/Account';
 import NotFound from './pages/NotFound';
+import { ACCOUNTS_ENABLED } from './features';
 import { useAuth } from './auth/AuthContext';
 import { fmt, useLang } from './i18n';
 import { EASE, EASE_IO, observeReveals, reduceMotion, splitChars } from './motion';
@@ -121,7 +122,10 @@ export default function App({ initialRoute }) {
   const firstPage = useRef(true);
 
   // Private pages
-  const guard = r => (r.name === 'account' && !user ? { name: 'login' } : r.name === 'login' && user ? { name: 'account' } : r);
+  const guard = r => {
+    if (!ACCOUNTS_ENABLED && (r.name === 'login' || r.name === 'account')) return { name: 'notfound' };
+    return r.name === 'account' && !user ? { name: 'login' } : r.name === 'login' && user ? { name: 'account' } : r;
+  };
   const current = guard(route);
 
   useEffect(() => {
@@ -424,19 +428,21 @@ export default function App({ initialRoute }) {
         </a>
         <div className="hdr-right">
           <LangSwitch lang={lang} setLang={setLang} label={c.nav.lang} />
-          <a href={href(accountName)} className="hdr-account">
-            {user ? (
-              <>
-                <span className="avatar" aria-hidden="true">
-                  {user.firstName[0]}
-                  {user.lastName[0]}
-                </span>
-                {c.nav.myAccount}
-              </>
-            ) : (
-              c.nav.account
-            )}
-          </a>
+          {ACCOUNTS_ENABLED && (
+            <a href={href(accountName)} className="hdr-account">
+              {user ? (
+                <>
+                  <span className="avatar" aria-hidden="true">
+                    {user.firstName[0]}
+                    {user.lastName[0]}
+                  </span>
+                  {c.nav.myAccount}
+                </>
+              ) : (
+                c.nav.account
+              )}
+            </a>
+          )}
           <button
             type="button"
             className="menu-btn"
@@ -471,7 +477,7 @@ export default function App({ initialRoute }) {
               ))}
             </ul>
             <div className="menu-utility">
-              <a href={href(accountName)}>{user ? fmt(c.menu.hello, { name: user.firstName }) : c.nav.account}</a>
+              {ACCOUNTS_ENABLED && <a href={href(accountName)}>{user ? fmt(c.menu.hello, { name: user.firstName }) : c.nav.account}</a>}
               <a href={href('card')}>{c.nav.card}</a>
               <span>{c.where}</span>
             </div>
