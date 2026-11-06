@@ -67,7 +67,9 @@ export const COPY = {
     caseStudy: {
       client: 'Client', sector: 'Secteur', scope: 'Ce qu’on a fait', year: 'Année', live: 'En ligne',
       visit: 'Voir le site en ligne', next: 'Projet suivant', back: 'Toutes les réalisations',
-      outcomeTitle: 'Le résultat', outcome: 'Le site est en ligne. Le mieux, c’est encore d’aller voir.'
+      outcomeTitle: 'Le résultat', outcome: 'Le site est en ligne. Le mieux, c’est encore d’aller voir.',
+      explore: 'Faites défiler l’intérieur des écrans pour parcourir tout le site, sur ordinateur et sur téléphone.',
+      desktopAlt: 'Page d’accueil complète de {name} sur ordinateur', mobileAlt: 'Page d’accueil complète de {name} sur téléphone'
     },
     servicesPage: {
       intro: 'Tout ce qu’on fait tient en deux mots. D’abord, une base solide. Ensuite, on la fait remarquer.',
@@ -247,7 +249,9 @@ export const COPY = {
     caseStudy: {
       client: 'Client', sector: 'Sector', scope: 'What we did', year: 'Year', live: 'Live',
       visit: 'See the live site', next: 'Next project', back: 'All work',
-      outcomeTitle: 'The result', outcome: 'The site is live. The best way to judge is to go and see.'
+      outcomeTitle: 'The result', outcome: 'The site is live. The best way to judge is to go and see.',
+      explore: 'Scroll inside the screens to walk through the whole site, on a computer and on a phone.',
+      desktopAlt: 'The full {name} home page on a computer', mobileAlt: 'The full {name} home page on a phone'
     },
     servicesPage: {
       intro: 'Everything we do fits in two words. First, a solid base. Then we make it impossible to miss.',

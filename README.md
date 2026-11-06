@@ -104,8 +104,8 @@ src/
     pages/              One file per page, plus shared pieces (Footer, DotEnd...)
     rb/                 Adapted React Bits effects (see LICENSE-react-bits.md)
     auth/               Demo client-area service
-public/work/            Screenshots of client sites (WebP, 1200 px wide)
-scripts/                Playwright helpers for capturing screenshots
+public/work/<slug>/     Screenshots of each client site (see below)
+scripts/                capture-work.mjs takes those screenshots
 ```
 
 ## Common edits
@@ -114,9 +114,32 @@ scripts/                Playwright helpers for capturing screenshots
   live in `src/lib/seo.ts`.
 - **Prices:** the packages in `src/site/i18n.jsx`, plus the starting price in `src/lib/seo.ts`
   and the share images (`src/app/opengraph-image.tsx`, `src/app/fr/opengraph-image.tsx`).
-- **Add a project:** add an entry to `PROJECTS` in `src/site/projects.js` and a screenshot in
-  `public/work/<slug>.webp`. Its case study page, sitemap entry and metadata follow
-  automatically. On Work, projects alternate sides in the same layout.
+- **Add a project:** add an entry to `PROJECTS` in `src/site/projects.js` (and its URL to
+  `scripts/capture-work.mjs`), then capture it. Its case study page, sitemap entry and
+  metadata follow automatically. On Work, projects alternate sides in the same layout.
+
+## Client site screenshots
+
+Each project has three captures in `public/work/<slug>/`:
+
+| File | What it is | Where it shows |
+| --- | --- | --- |
+| `desktop.webp` | First screen, 1440 x 900 at 2x | Work, case study header, next project |
+| `page.webp` | Whole home page, 1440 wide | Scrollable browser window in the case study, home showcase |
+| `mobile.webp` | Whole home page, 390 wide at 2x | Scrollable phone in the case study, case study header on phones |
+
+Refresh them after a client site changes (all projects, or one slug):
+
+```bash
+node scripts/capture-work.mjs
+```
+
+```bash
+node scripts/capture-work.mjs caramello-cafe
+```
+
+Long pages are cut at 8000 px. If Playwright's own browser is not installed, point
+`PW_CHROMIUM` at a Chromium binary.
 
 ## Design tokens
 

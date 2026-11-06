@@ -1,5 +1,5 @@
 import Footer from './Footer';
-import { pick, useLang } from '../i18n';
+import { fmt, pick, useLang } from '../i18n';
 import { href } from '../router';
 import DotEnd from './DotEnd';
 
@@ -11,6 +11,29 @@ const luminance = hex => {
 
 // Each case study borrows the client's own palette and one of three compositions,
 // so no two projects read like the same template. Standout keeps only its punctuation: the dot.
+
+// The real site, explorable: the whole home page in a browser window and on a phone.
+// Both screens scroll on their own (Lenis is told to let them), with the keyboard too.
+function Screens({ p, k }) {
+  return (
+    <div className="case-screens">
+      <figure className="cs-browser" data-reveal="frame">
+        <div className="cs-bar" aria-hidden="true">
+          {p.domain}
+        </div>
+        <div className="cs-view" data-lenis-prevent role="region" tabIndex={0} aria-label={fmt(k.desktopAlt, { name: p.name })}>
+          <img src={p.image} alt={fmt(k.desktopAlt, { name: p.name })} loading="lazy" />
+        </div>
+      </figure>
+      <figure className="cs-phone" data-reveal="frame" style={{ '--i': 1 }}>
+        <div className="cs-view" data-lenis-prevent role="region" tabIndex={0} aria-label={fmt(k.mobileAlt, { name: p.name })}>
+          <img src={p.mobile} alt={fmt(k.mobileAlt, { name: p.name })} loading="lazy" />
+        </div>
+      </figure>
+      <p className="cs-hint">{k.explore}</p>
+    </div>
+  );
+}
 export default function CaseStudy({ projects, route }) {
   const { c, lang } = useLang();
   const k = c.caseStudy;
@@ -24,7 +47,10 @@ export default function CaseStudy({ projects, route }) {
     <>
       <article className={`case case--${p.variant}`} style={vars} data-tone={tone}>
         <figure className="case-hero">
-          <img src={p.image} alt={pick(p.headline, lang)} />
+          <picture>
+            <source media="(max-width: 899px)" srcSet={p.mobile} />
+            <img src={p.cover} alt={pick(p.headline, lang)} />
+          </picture>
         </figure>
 
         <header className="case-head">
@@ -66,16 +92,7 @@ export default function CaseStudy({ projects, route }) {
             <p className="case-text" data-reveal="focus">
               {pick(s.text, lang)}
             </p>
-            {n === 0 && (
-              <div className="case-visuals">
-                <figure className="cv cv-wide" data-reveal="frame">
-                  <img src={p.image} alt="" loading="lazy" style={{ objectPosition: '50% 38%' }} />
-                </figure>
-                <figure className="cv cv-narrow" data-reveal="frame" style={{ '--i': 1 }}>
-                  <img src={p.image} alt="" loading="lazy" style={{ objectPosition: '50% 82%' }} />
-                </figure>
-              </div>
-            )}
+            {n === 0 && <Screens p={p} k={k} />}
           </section>
         ))}
 
@@ -99,7 +116,7 @@ export default function CaseStudy({ projects, route }) {
             <DotEnd text={next.name} />
           </span>
           <span className="case-next-media">
-            <img src={next.image} alt="" loading="lazy" />
+            <img src={next.cover} alt="" loading="lazy" />
           </span>
         </a>
         <a className="link case-back" href={href('work')}>

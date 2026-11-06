@@ -1,6 +1,9 @@
 // Live client sites listed on standoutstudio.ca.
-// `screenshot`: real full-page captures (1200 px wide) served from /public/work.
-// Without one, a drawn placeholder is generated in the browser.
+// Captures live in /public/work/<slug>/ (made by scripts/capture-work.mjs):
+//   desktop.webp  first screen, 1440 x 900 at 2x  -> `cover`
+//   page.webp     whole page, 1440 wide            -> `image`
+//   mobile.webp   whole page on a phone, 390 at 2x -> `mobile`
+// Set `captured: false` on a new project to get a drawn placeholder until it is captured.
 
 export const PROJECTS = [
   {
@@ -12,7 +15,6 @@ export const PROJECTS = [
     field: { fr: 'Restauration', en: 'Hospitality' },
     domain: 'caramellocafe.ca',
     url: 'https://www.caramellocafe.ca/',
-    screenshot: '/work/caramello-cafe.webp',
     mock: { bg: '#F5EFE8', ink: '#3A2418', accent: '#9A6440', soft: '#E6D8C9', layout: 'split' }
   },
   {
@@ -24,7 +26,6 @@ export const PROJECTS = [
     field: { fr: 'Coaching et mise en forme', en: 'Coaching & fitness' },
     domain: 'Relentless Ritchie',
     url: 'https://cozy-hotteok-6aa630.netlify.app/',
-    screenshot: '/work/relentless-ritchie.webp',
     mock: { bg: '#121314', ink: '#F2F2F0', accent: '#D8F04A', soft: '#26282A', layout: 'full' }
   },
   {
@@ -36,7 +37,6 @@ export const PROJECTS = [
     field: { fr: 'Portfolio d’ingénierie', en: 'Engineering portfolio' },
     domain: 'rayannsagnon.com',
     url: 'https://rayannsagnon.com',
-    screenshot: '/work/rayann-sagnon.webp',
     mock: { bg: '#F3F5F9', ink: '#141B2D', accent: '#3554E8', soft: '#DFE4EF', layout: 'center' }
   },
   {
@@ -48,7 +48,6 @@ export const PROJECTS = [
     field: { fr: 'Design et direction', en: 'Design & direction' },
     domain: 'stevenatchall.com',
     url: 'https://stevenatchall.com',
-    screenshot: '/work/steven-atchall.webp',
     mock: { bg: '#0F0F13', ink: '#EDEDF2', accent: '#8B6CFF', soft: '#1E1E26', layout: 'split' }
   }
 ];
@@ -337,6 +336,15 @@ export const CASES = {
   }
 };
 
+const shots = p => {
+  if (p.captured === false) {
+    const mock = typeof document !== 'undefined' ? drawSiteMock(p) : '';
+    return { cover: mock, image: mock, mobile: mock };
+  }
+  const dir = `/work/${p.slug}`;
+  return { cover: `${dir}/desktop.webp`, image: `${dir}/page.webp`, mobile: `${dir}/mobile.webp` };
+};
+
 export function buildProjects() {
-  return PROJECTS.map(p => ({ ...p, ...CASES[p.id], image: p.screenshot || (typeof document !== 'undefined' ? drawSiteMock(p) : '') }));
+  return PROJECTS.map(p => ({ ...p, ...CASES[p.id], ...shots(p) }));
 }
