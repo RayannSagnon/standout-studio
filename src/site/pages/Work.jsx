@@ -104,8 +104,8 @@ function Index({ projects }) {
   );
 }
 
-// The exhibition: four projects, four compositions. Image first, then the name,
-// which is allowed to cross into the picture.
+// The exhibition: every project shares one composition (16:10 window beside its
+// name), alternating sides down the page.
 export default function Work({ projects }) {
   const { c, lang } = useLang();
   return (
@@ -120,7 +120,7 @@ export default function Work({ projects }) {
           </p>
         </header>
         {projects.map((p, i) => (
-          <article className={`ex-item ex-n${i}`} key={p.id}>
+          <article className={`ex-item${i % 2 ? ' ex-flip' : ''}`} key={p.id}>
             <a href={href('case', p.slug)} data-flip="true" className="ex-link">
               <span className="ex-media" data-reveal="frame">
                 <img src={p.image} alt={pick(p.headline, lang)} loading={i > 0 ? 'lazy' : undefined} />
