@@ -81,7 +81,7 @@ function Index({ projects }) {
                   <span className="wi-head">{pick(p.headline, lang)}</span>
                   <span>{pick(p.field, lang)}</span>
                 </span>
-                <img className="wi-thumb" src={p.image} alt="" aria-hidden="true" />
+                <img className="wi-thumb" src={p.cover} alt="" aria-hidden="true" />
               </a>
             </li>
           ))}
@@ -96,7 +96,7 @@ function Index({ projects }) {
         {projects.map((p, i) => (
           <div key={p.id} className="wi-preview-layer" data-pos={i === shown ? 'on' : i < shown ? 'above' : 'below'}>
             <div className="wi-preview-bar">{p.domain}</div>
-            <img src={p.image} alt="" />
+            <img src={p.cover} alt="" />
           </div>
         ))}
       </div>
@@ -104,8 +104,8 @@ function Index({ projects }) {
   );
 }
 
-// The exhibition: four projects, four compositions. Image first, then the name,
-// which is allowed to cross into the picture.
+// The exhibition: every project shares one composition (16:10 window beside its
+// name), alternating sides down the page.
 export default function Work({ projects }) {
   const { c, lang } = useLang();
   return (
@@ -120,10 +120,10 @@ export default function Work({ projects }) {
           </p>
         </header>
         {projects.map((p, i) => (
-          <article className={`ex-item ex-n${i}`} key={p.id}>
+          <article className={`ex-item${i % 2 ? ' ex-flip' : ''}`} key={p.id}>
             <a href={href('case', p.slug)} data-flip="true" className="ex-link">
               <span className="ex-media" data-reveal="frame">
-                <img src={p.image} alt={pick(p.headline, lang)} loading={i > 0 ? 'lazy' : undefined} />
+                <img src={p.cover} alt={pick(p.headline, lang)} loading={i > 0 ? 'lazy' : undefined} />
               </span>
               <span className="ex-text">
                 <span className="ex-meta">
