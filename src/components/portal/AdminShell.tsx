@@ -23,20 +23,20 @@ const OK: Record<string, string> = {
   saved: "Enregistré.",
   invited: "Invitation envoyée.",
   project_created: "Projet créé.",
-  stage: "Étape changée. Le client a reçu un email.",
-  version_shared: "Version partagée. Le client a reçu un email.",
-  invoice_created: "Facture créée en brouillon. Elle n'est pas encore visible par le client.",
+  stage: "Étape changée. Le client a reçu un courriel.",
+  version_shared: "Version partagée. Le client a reçu un courriel.",
+  invoice_created: "Brouillon créé. Le client ne le voit pas encore.",
   invoice_sent: "Facture envoyée au client.",
   invoice_paid: "Facture marquée payée.",
   invoice_void: "Facture annulée.",
   message: "Message envoyé.",
-  reminders: "Relances lancées.",
+  reminders: "Relances envoyées.",
   demo_reset: "Démo remise à zéro.",
 };
 
 const ERR: Record<string, string> = {
   name: "Le nom est obligatoire (120 caractères au plus).",
-  email: "L'adresse email n'est pas valide.",
+  email: "Ce courriel n'est pas valide.",
   email_taken: "Cette adresse est déjà utilisée par un autre client.",
   preview_url: "Le lien de prévisualisation doit commencer par https://.",
   version_pending: "Une version attend déjà la réponse du client. Une seule à la fois.",
@@ -49,7 +49,7 @@ const ERR: Record<string, string> = {
   body: "Le message est vide.",
   stage: "Étape inconnue.",
   not_found: "Introuvable.",
-  generic: "Une erreur est survenue. Regardez les journaux du serveur.",
+  generic: "Ça n'a pas marché. Le détail est dans les journaux Vercel.",
 };
 
 export default function AdminShell({
@@ -65,10 +65,10 @@ export default function AdminShell({
 }) {
   const ok = typeof search.ok === "string" ? search.ok : undefined;
   const error = typeof search.error === "string" ? search.error : undefined;
-  const okText = ok === "reminders" ? `Relances lancées : ${search.n ?? 0} email(s) envoyé(s).` : ok ? OK[ok] : null;
+  const okText = ok === "reminders" ? `Relances envoyées : ${search.n ?? 0} courriel(s).` : ok ? OK[ok] : null;
   return (
     <div className="pt" lang="fr">
-      {mode === "demo" && <p className="pt-demo">Mode démo : données fictives. Les emails sont visibles dans « Emails » au lieu d&apos;être envoyés.</p>}
+      {mode === "demo" && <p className="pt-demo">Démo : les données sont fictives. Les courriels apparaissent dans « Courriels » au lieu de partir.</p>}
       <Bar area="Admin" home="/admin">
         <nav className="pt-nav" aria-label="Admin">
           <a href="/admin" aria-current={current === "home" ? "page" : undefined}>
@@ -79,7 +79,7 @@ export default function AdminShell({
           </a>
           {mode === "demo" && (
             <a href="/admin/emails" aria-current={current === "emails" ? "page" : undefined}>
-              Emails
+              Courriels
             </a>
           )}
         </nav>
@@ -141,7 +141,7 @@ export function adminEventText(e: PortalEvent): string {
     case "reminder.invoice":
       return "Relance envoyée : facture en retard.";
     case "email.failed":
-      return `Email non envoyé : ${d.subject} (${d.error}).`;
+      return `Courriel non envoyé : ${d.subject} (${d.error}).`;
     default:
       return e.type;
   }

@@ -46,47 +46,53 @@ export default async function SignIn({ lang, searchParams }: { lang: Lang; searc
           </p>
         </div>
 
-        <div className="pt-login-panel">
+        <div className="pt-login-side">
           {mode === "off" ? (
             <p>{l.off}</p>
           ) : sent ? (
-            <>
+            <div className="pt-form">
               <h2 className="pt-h2">{l.sentTitle}</h2>
               <p>{l.sentText}</p>
               {safeDemo && (
-                <a className="btn btn-primary" href={safeDemo}>
-                  <span>{l.demoOpen}</span>
-                </a>
+                <p>
+                  <a className="btn btn-primary" href={safeDemo}>
+                    <span>{l.demoOpen}</span>
+                  </a>
+                </p>
               )}
-              <a className="link pt-small" href={`${home}/login`}>
+              <a className="link pt-small" href={`${home}/login`} style={{ justifySelf: "start" }}>
                 {l.again}
               </a>
-            </>
+            </div>
           ) : (
             <>
-              <Flash text={bad ? l.badLink : null} tone="error" />
               <form action={requestLinkAction} className="pt-form">
+                <Flash text={bad ? l.badLink : null} tone="error" />
                 {hidden}
                 <label className="pt-field">
                   <span>{l.email}</span>
                   <input className="pt-input" type="email" name="email" required autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} />
                 </label>
-                <Primary>{l.submit}</Primary>
                 <p className="pt-small pt-muted">{l.how}</p>
+                <div>
+                  <Primary>{l.submit}</Primary>
+                </div>
               </form>
 
               {mode === "demo" && (
                 <div className="pt-form">
-                  <p className="pt-label">{l.demoTitle}</p>
-                  <p className="pt-small pt-muted">{l.demoText}</p>
-                  <div className="pt-demo-list">
+                  <div>
+                    <h2 className="pt-h3">{l.demoTitle}</h2>
+                    <p className="pt-small pt-muted">{l.demoText}</p>
+                  </div>
+                  <div className="pt-accounts">
                     {DEMO_ACCOUNTS.map((a) => (
                       <form action={requestLinkAction} key={a.email}>
                         {hidden}
                         <input type="hidden" name="email" value={a.email} />
                         <button>
                           <span>{a.name}</span>
-                          <span className="pt-muted">{a.role === "admin" ? "Admin" : lang === "fr" ? "Client" : "Client"}</span>
+                          <span>{a.role === "admin" ? l.studio : l.client}</span>
                         </button>
                       </form>
                     ))}

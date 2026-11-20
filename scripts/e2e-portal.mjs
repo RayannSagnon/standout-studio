@@ -42,9 +42,9 @@ async function shots(name) {
 
 async function signIn(name, path = "/fr/client/login") {
   await page.goto(BASE + path);
-  await page.locator(".pt-demo-list button", { hasText: name }).click();
+  await page.locator(".pt-accounts button", { hasText: name }).click();
   await page.waitForURL(/sent=1/);
-  await page.getByRole("link", { name: /Ouvrir le lien reçu|Open the emailed link/ }).click();
+  await page.getByRole("link", { name: /^(Ouvrir le lien|Open the link)$/ }).click();
   await page.waitForLoadState("networkidle");
 }
 
@@ -95,8 +95,8 @@ try {
   await page.locator("textarea[name=comment]").fill("Mettre la photo de Camille plus grande sur l'accueil.");
   await page.getByRole("button", { name: "Envoyer mes commentaires" }).click();
   await page.waitForURL(/ok=changes/);
-  check((await flash()).includes("Commentaires envoyés"), "feedback confirmation shown");
-  check((await page.locator(".pt-meter p").first().innerText()).includes("2 révisions utilisées sur 3"), "revision counter moved to 2 of 3");
+  check((await flash()).includes("prochaine version"), "feedback confirmation shown");
+  check((await page.locator("#project .pt-small").first().innerText()).includes("2 révisions utilisées sur 3"), "revision counter moved to 2 of 3");
   log("client asks for changes, revision counter updates");
 
   await page.locator("textarea[name=body]").fill("Merci ! Et pour le blogue, on en reparle en décembre ?");
@@ -169,7 +169,7 @@ try {
   log("prospect invited and given a project");
 
   await page.goto(`${BASE}/admin/emails`);
-  const subjects = await page.locator(".pt-details summary b").allInnerTexts();
+  const subjects = await page.locator(".pt-mail summary b").allInnerTexts();
   check(subjects.some((s) => s.includes("La version 3 de votre site est prête")), "version email in outbox");
   check(subjects.some((s) => s.includes("Facture F-2026-002")), "invoice email in outbox");
   check(subjects.some((s) => s.includes("Votre espace client Standout Studio")), "invite email in outbox");

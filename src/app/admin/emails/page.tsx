@@ -15,22 +15,20 @@ export default async function DemoEmails({ searchParams }: { searchParams: Promi
   return (
     <AdminShell mode={mode} current="emails" search={await searchParams}>
       <div className="pt-head">
-        <Title>Emails</Title>
-        <p className="pt-sub">En mode démo, rien ne part. Voici ce que chaque personne aurait reçu, du plus récent au plus ancien.</p>
+        <Title>Courriels</Title>
+        <p className="pt-sub">En démo, rien ne part. Voici ce que chacun aurait reçu, du plus récent au plus ancien.</p>
       </div>
-      <div className="pt-col">
-        {outbox.length === 0 && <p className="pt-empty">Aucun email pour l&apos;instant. Partagez une version ou envoyez une facture pour en voir un.</p>}
+      <div>
+        {outbox.length === 0 && <p className="pt-empty">Aucun courriel pour l&apos;instant. Partagez une version ou envoyez une facture pour en voir un.</p>}
         {outbox.map((m) => (
-          <details key={m.id} className="pt-card pt-details">
+          <details key={m.id} className="pt-more pt-mail">
             <summary>
               <span>
                 <b>{m.subject}</b>
                 <span className="pt-small pt-muted"> · à {m.to.join(", ")} · {fmtDate(m.created_at, "fr")}</span>
               </span>
             </summary>
-            <div className="pt-mail">
-              <iframe title={m.subject} srcDoc={m.html} sandbox="" />
-            </div>
+            <iframe title={m.subject} srcDoc={m.html} sandbox="" />
           </details>
         ))}
       </div>

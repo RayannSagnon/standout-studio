@@ -33,10 +33,10 @@ ${paras}${button}
 }
 
 const FOOT = {
-  fr: "Standout Studio, Ottawa. Vous recevez cet email parce que vous avez un espace client chez nous.",
+  fr: "Standout Studio, Ottawa. Vous recevez ce courriel parce que vous avez un espace client chez nous.",
   en: "Standout Studio, Ottawa. You are receiving this email because you have a client area with us.",
 };
-const ADMIN_FOOT = "Email automatique de l'espace admin Standout Studio.";
+const ADMIN_FOOT = "Courriel envoyé par l'admin Standout Studio.";
 
 function make(subject: string, b: Block): Email {
   return { subject, ...layout(b) };
@@ -47,13 +47,13 @@ export const emails = {
     return lang === "fr"
       ? make("Votre lien de connexion", {
           heading: "Votre lien de connexion",
-          lines: ["Cliquez sur le bouton pour ouvrir votre espace. Le lien fonctionne une seule fois, pendant une heure.", "Si vous n'avez rien demandé, ignorez cet email."],
+          lines: ["Ce lien ouvre votre espace client. Il sert une seule fois et reste valable une heure.", "Vous n'avez rien demandé ? Ignorez ce courriel."],
           cta: { label: "Ouvrir mon espace", url },
           footer: FOOT.fr,
         })
       : make("Your sign-in link", {
           heading: "Your sign-in link",
-          lines: ["Click the button to open your client area. The link works once, for one hour.", "If you didn't ask for it, you can ignore this email."],
+          lines: ["This link opens your client area. It works once, for one hour.", "Didn't ask for it? You can ignore this email."],
           cta: { label: "Open my client area", url },
           footer: FOOT.en,
         });
@@ -64,8 +64,8 @@ export const emails = {
       ? make("Votre espace client Standout Studio", {
           heading: `Bienvenue, ${name}`,
           lines: [
-            "Votre espace client est prêt. Vous y suivrez l'avancement de votre site, validerez chaque version, réglerez vos factures et pourrez nous écrire.",
-            "Pas de mot de passe : à chaque connexion, on vous envoie un lien comme celui-ci.",
+            "Votre espace client est prêt. C'est là qu'on vous montrera chaque version de votre site avant la mise en ligne.",
+            "Pour revenir plus tard, entrez votre courriel sur la page de connexion. On vous enverra un lien comme celui-ci.",
           ],
           cta: { label: "Ouvrir mon espace", url },
           footer: FOOT.fr,
@@ -73,8 +73,8 @@ export const emails = {
       : make("Your Standout Studio client area", {
           heading: `Welcome, ${name}`,
           lines: [
-            "Your client area is ready. Follow your site's progress, approve each version, pay invoices and write to us, all in one place.",
-            "No password: each time you sign in, we send you a link like this one.",
+            "Your client area is ready. That's where we'll show you each version of your website before it goes live.",
+            "To come back later, enter your email on the sign-in page and we'll send you a link like this one.",
           ],
           cta: { label: "Open my client area", url },
           footer: FOOT.en,
@@ -85,14 +85,14 @@ export const emails = {
     return lang === "fr"
       ? make(`La version ${n} de votre site est prête`, {
           heading: `La version ${n} est prête`,
-          lines: [note || "Une nouvelle version de votre site vous attend.", "Regardez-la, puis dites-nous si vous l'approuvez ou ce qu'il faut changer."],
-          cta: { label: "Voir et donner mon avis", url },
+          lines: [note || "Une nouvelle version de votre site est en ligne.", "Regardez-la, puis approuvez-la ou dites-nous ce qu'il faut changer."],
+          cta: { label: "Voir la version", url },
           footer: FOOT.fr,
         })
       : make(`Version ${n} of your website is ready`, {
           heading: `Version ${n} is ready`,
-          lines: [note || "A new version of your website is waiting for you.", "Take a look, then tell us if you approve it or what should change."],
-          cta: { label: "Review it", url },
+          lines: [note || "A new version of your website is up.", "Take a look, then approve it or tell us what should change."],
+          cta: { label: "See the version", url },
           footer: FOOT.en,
         });
   },
@@ -101,13 +101,13 @@ export const emails = {
     return lang === "fr"
       ? make(`Votre projet passe à l'étape : ${stageLabel}`, {
           heading: `Nouvelle étape : ${stageLabel}`,
-          lines: ["Votre projet avance. Les détails et la prochaine action sont dans votre espace."],
+          lines: ["La suite est expliquée dans votre espace client."],
           cta: { label: "Voir mon projet", url },
           footer: FOOT.fr,
         })
       : make(`Your project moved to: ${stageLabel}`, {
           heading: `New stage: ${stageLabel}`,
-          lines: ["Your project is moving forward. Details and the next step are in your client area."],
+          lines: ["What happens next is in your client area."],
           cta: { label: "See my project", url },
           footer: FOOT.en,
         });
@@ -117,13 +117,13 @@ export const emails = {
     return lang === "fr"
       ? make(`Facture ${number}`, {
           heading: `Facture ${number}`,
-          lines: [`${label} : ${money(total, "fr")}.`, due ? `À régler avant le ${due}.` : "Vous pouvez la régler par carte depuis votre espace."],
+          lines: [`${label} : ${money(total, "fr")}.`, due ? `À payer avant le ${due}, par carte, depuis votre espace client.` : "Vous pouvez la payer par carte depuis votre espace client."],
           cta: { label: "Voir et payer", url },
           footer: FOOT.fr,
         })
       : make(`Invoice ${number}`, {
           heading: `Invoice ${number}`,
-          lines: [`${label}: ${money(total, "en")}.`, due ? `Due by ${due}.` : "You can pay it by card from your client area."],
+          lines: [`${label}: ${money(total, "en")}.`, due ? `Due by ${due}. You can pay by card from your client area.` : "You can pay it by card from your client area."],
           cta: { label: "View and pay", url },
           footer: FOOT.en,
         });
@@ -132,7 +132,7 @@ export const emails = {
   invoicePaidClient(lang: Lang, number: string, total: number, url: string): Email {
     return lang === "fr"
       ? make(`Paiement reçu, facture ${number}`, {
-          heading: "Merci, paiement reçu",
+          heading: "Paiement reçu, merci",
           lines: [`Nous avons bien reçu ${money(total, "fr")} pour la facture ${number}.`],
           cta: { label: "Voir mes factures", url },
           footer: FOOT.fr,
@@ -153,16 +153,16 @@ export const emails = {
 
   reminderFeedback(lang: Lang, n: number, days: number, url: string): Email {
     return lang === "fr"
-      ? make(`Petit rappel : la version ${n} attend votre avis`, {
-          heading: "On attend votre avis",
-          lines: [`La version ${n} de votre site attend votre réponse depuis ${days} jours. Un clic suffit pour l'approuver, ou quelques mots pour demander des changements.`],
-          cta: { label: "Donner mon avis", url },
+      ? make(`Rappel : la version ${n} attend votre réponse`, {
+          heading: "On attend votre réponse",
+          lines: [`La version ${n} de votre site attend votre réponse depuis ${days} jours. Il vous suffit de l'approuver, ou de nous dire en quelques mots ce qu'il faut changer.`],
+          cta: { label: "Voir la version", url },
           footer: FOOT.fr,
         })
-      : make(`Quick reminder: version ${n} is waiting for you`, {
-          heading: "We're waiting for your feedback",
-          lines: [`Version ${n} of your website has been waiting for ${days} days. One click approves it, or a few words ask for changes.`],
-          cta: { label: "Give feedback", url },
+      : make(`Reminder: version ${n} is waiting for your answer`, {
+          heading: "We're waiting for your answer",
+          lines: [`Version ${n} of your website has been waiting for your answer for ${days} days. You can approve it, or tell us in a few words what should change.`],
+          cta: { label: "See the version", url },
           footer: FOOT.en,
         });
   },
@@ -171,13 +171,13 @@ export const emails = {
     return lang === "fr"
       ? make(`Rappel : facture ${number} en retard`, {
           heading: `La facture ${number} est en retard`,
-          lines: [`Le montant de ${money(total, "fr")} n'est pas encore réglé. Si c'est déjà fait, ignorez ce message.`],
+          lines: [`${money(total, "fr")} restent à payer. Si vous venez de le faire, ignorez ce courriel.`],
           cta: { label: "Payer maintenant", url },
           footer: FOOT.fr,
         })
       : make(`Reminder: invoice ${number} is overdue`, {
           heading: `Invoice ${number} is overdue`,
-          lines: [`${money(total, "en")} is still unpaid. If you already paid, please ignore this message.`],
+          lines: [`${money(total, "en")} is still unpaid. If you just paid, you can ignore this email.`],
           cta: { label: "Pay now", url },
           footer: FOOT.en,
         });

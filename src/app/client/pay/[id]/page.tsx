@@ -27,7 +27,7 @@ export default async function DemoPay({ params, searchParams }: { params: Promis
   const fr = lang === "fr";
   return (
     <div className="pt" lang={lang}>
-      <p className="pt-demo">{fr ? "Mode démo : aucune carte n'est débitée." : "Demo mode: no card is charged."}</p>
+      <p className="pt-demo">{fr ? "Démo : aucune carte n'est débitée." : "Demo: no card is charged."}</p>
       <Bar area={fr ? "Paiement" : "Payment"} home={home} />
       <main className="pt-login" id="main">
         <div className="pt-login-copy">
@@ -36,11 +36,11 @@ export default async function DemoPay({ params, searchParams }: { params: Promis
             {invoice.number} · {invoice.label}
           </p>
         </div>
-        <div className="pt-login-panel">
+        <div className="pt-login-side">
           <p>
             {fr
-              ? "En vrai, cette page est celle de Stripe : le client entre sa carte, Stripe confirme, et la facture passe à « payée » toute seule."
-              : "For real, this is Stripe's page: the client enters a card, Stripe confirms, and the invoice turns to paid on its own."}
+              ? "En vrai, c'est la page de Stripe qui s'ouvre ici. Une fois la carte acceptée, la facture passe à « payée » toute seule."
+              : "For real, Stripe's own page opens here. Once the card goes through, the invoice turns to paid on its own."}
           </p>
           <form action={demoPayAction} className="pt-form">
             <input type="hidden" name="lang" value={lang} />
