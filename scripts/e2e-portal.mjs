@@ -58,7 +58,7 @@ const flash = () => page.locator(".pt-flash").first().innerText();
 try {
   // Reset the demo store through the admin, so the run starts from the seed
   await signIn("Rayann");
-  await page.goto(`${BASE}/admin`);
+  await page.goto(`${BASE}/admin/journal`);
   await page.getByRole("button", { name: "Remettre la démo à zéro" }).click();
   await page.waitForURL(/demo_reset/);
   await signOut();
@@ -181,7 +181,7 @@ try {
   await shots("05-admin-emails");
   log("every expected email is in the demo outbox");
 
-  await page.goto(`${BASE}/admin`);
+  await page.goto(`${BASE}/admin/journal`);
   await page.getByRole("button", { name: "Lancer les relances" }).click();
   await page.waitForURL(/ok=reminders/);
   log(`reminders ran: ${await flash()}`);

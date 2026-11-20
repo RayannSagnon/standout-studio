@@ -36,8 +36,8 @@ function seed(): Partial<{ [N in keyof Tables]: Tables[N][] }> {
       { id: "t2", client_id: camille, author_id: "u-rayann", author_name: "Rayann", body: "Ok. Je lui fais un prix pour le blogue après le lancement.", created_at: daysAgo(9, 19) },
     ],
     users: [
-      { id: "u-rayann", email: "rayann@demo.standout", name: "Rayann", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(0) },
-      { id: "u-steven", email: "steven@demo.standout", name: "Steven", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(1) },
+      { id: "u-rayann", email: "rayann@demo.standout", name: "Rayann", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(0), seen_at: daysAgo(4, 18) },
+      { id: "u-steven", email: "steven@demo.standout", name: "Steven", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(1), seen_at: daysAgo(1, 20) },
       { id: "u-camille", email: "camille@demo.standout", name: "Camille Roy", role: "client", client_id: camille, created_at: daysAgo(47), last_login_at: daysAgo(3) },
       { id: "u-julien", email: "julien@demo.standout", name: "Julien Dubois", role: "client", client_id: julien, created_at: daysAgo(119), last_login_at: daysAgo(30) },
     ],

@@ -39,6 +39,8 @@ export type User = {
   client_id: string | null;
   created_at: string;
   last_login_at: string | null;
+  /** Admins: last time they opened the dashboard. What happened after it shows as new. */
+  seen_at?: string | null;
 };
 
 export type Project = {

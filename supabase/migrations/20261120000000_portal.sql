@@ -37,6 +37,7 @@ create table public.users (
   client_id uuid references public.clients (id) on delete cascade,
   created_at timestamptz not null default now(),
   last_login_at timestamptz,
+  seen_at timestamptz,
   check ((role = 'client') = (client_id is not null))
 );
 

@@ -112,13 +112,13 @@ export async function adminMessageAction(f: FormData) {
 }
 
 export async function runRemindersAction() {
-  const r = await asAdmin("/admin", async () => svc.runReminders(await systemCtx()));
-  redirect(`/admin?ok=reminders&n=${r.feedback + r.invoices}`);
+  const r = await asAdmin("/admin/journal", async () => svc.runReminders(await systemCtx()));
+  redirect(`/admin/journal?ok=reminders&n=${r.feedback + r.invoices}#relances`);
 }
 
 export async function resetDemoAction() {
   const { mode } = await portal();
   if (mode !== "demo") redirect("/admin");
-  await asAdmin("/admin", async () => resetDemo());
-  redirect("/admin?ok=demo_reset");
+  await asAdmin("/admin/journal", async () => resetDemo());
+  redirect("/admin/journal?ok=demo_reset");
 }

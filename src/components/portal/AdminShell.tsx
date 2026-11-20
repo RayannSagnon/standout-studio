@@ -60,7 +60,7 @@ export default function AdminShell({
   children,
 }: {
   mode: PortalMode;
-  current: "home" | "new" | "emails" | "client";
+  current: "home" | "clients" | "journal" | "new" | "emails" | "client";
   search: Record<string, string | string[] | undefined>;
   children: ReactNode;
 }) {
@@ -75,8 +75,11 @@ export default function AdminShell({
           <a href="/admin" aria-current={current === "home" ? "page" : undefined}>
             Tableau de bord
           </a>
-          <a href="/admin/clients/new" aria-current={current === "new" ? "page" : undefined}>
-            Nouveau client
+          <a href="/admin/clients" aria-current={current === "clients" || current === "client" || current === "new" ? "page" : undefined}>
+            Clients
+          </a>
+          <a href="/admin/journal" aria-current={current === "journal" ? "page" : undefined}>
+            Journal
           </a>
           {mode === "demo" && (
             <a href="/admin/emails" aria-current={current === "emails" ? "page" : undefined}>

@@ -286,7 +286,7 @@ export async function adminOverview(ctx: Ctx) {
     ctx.db.list("clients", {}, { order: ["created_at", "desc"] }),
     ctx.db.list("projects", {}, { order: ["created_at", "desc"] }),
     ctx.db.list("invoices", { status: ["sent", "overdue"] }, { order: ["due_date", "asc"] }),
-    ctx.db.list("events", {}, { order: ["created_at", "desc"], limit: 25 }),
+    ctx.db.list("events", {}, { order: ["created_at", "desc"], limit: 100 }),
   ]);
   const name = new Map(clients.map((c) => [c.id, c.name]));
   const active = projects.filter((p) => p.stage !== "live");
@@ -298,6 +298,87 @@ export async function adminOverview(ctx: Ctx) {
     unpaid: invoices.map((i) => ({ ...i, clientName: name.get(i.client_id) ?? "" })),
     events: events.map((e) => ({ ...e, clientName: e.client_id ? (name.get(e.client_id) ?? "") : "" })),
   };
+}
+
+/** Events that are worth telling an admin about when they come back. */
+const NEWS: EventType[] = [
+  "lead.created",
+  "version.shared",
+  "version.approved",
+  "version.changes_requested",
+  "project.stage",
+  "invoice.sent",
+  "invoice.paid",
+  "invoice.overdue",
+  "care.active",
+  "care.past_due",
+  "care.canceled",
+  "message.posted",
+  "client.invited",
+  "team.note",
+  "email.failed",
+];
+
+export type Todo = { key: string; clientId: string; clientName: string; text: string; amount?: number; tone?: "warn" | "wait"; href: string };
+
+/**
+ * The dashboard: what happened since this admin's last visit (done by someone
+ * else), and one list of things to do, most urgent first.
+ */
+export async function adminHome(ctx: Ctx) {
+  const v = requireAdmin(ctx);
+  const me = await ctx.db.get("users", v.userId);
+  const since = me?.seen_at ?? new Date(now(ctx).getTime() - 7 * DAY).toISOString();
+  const [clients, projects, versions, invoices, messages, events] = await Promise.all([
+    ctx.db.list("clients", {}),
+    ctx.db.list("projects", {}),
+    ctx.db.list("versions", {}, { order: ["number", "desc"] }),
+    ctx.db.list("invoices", { status: ["sent", "overdue"] }, { order: ["due_date", "asc"] }),
+    ctx.db.list("messages", {}, { order: ["created_at", "asc"] }),
+    ctx.db.list("events", { type: NEWS }, { order: ["created_at", "desc"], limit: 60 }),
+  ]);
+  const name = new Map(clients.map((c) => [c.id, c.name]));
+  const nameOf = (id: string | null) => (id ? (name.get(id) ?? "") : "");
+
+  const news = events
+    .filter((e) => e.created_at > since && e.actor_name !== v.name)
+    .filter((e) => e.type !== "message.posted" || e.data.by === "client" || e.actor_name)
+    .slice(0, 12)
+    .map((e) => ({ ...e, clientName: nameOf(e.client_id) }));
+
+  const todo: Todo[] = [];
+  const day = today(ctx);
+  for (const i of invoices) {
+    if (i.status === "overdue" || (i.due_date && i.due_date < day)) {
+      todo.push({ key: `i${i.id}`, clientId: i.client_id, clientName: nameOf(i.client_id), text: `Facture ${i.number} en retard`, amount: invoiceTotal(i), tone: "warn", href: `/admin/clients/${i.client_id}#factures` });
+    }
+  }
+  const lastByClient = new Map<string, (typeof messages)[number]>();
+  for (const m of messages) lastByClient.set(m.client_id, m);
+  for (const [clientId, m] of lastByClient) {
+    if (m.author_role === "client") todo.push({ key: `m${clientId}`, clientId, clientName: nameOf(clientId), text: "Répondre à son message", tone: "wait", href: `/admin/clients/${clientId}#messages` });
+  }
+  for (const c of clients.filter((x) => x.status === "prospect")) {
+    todo.push({ key: `p${c.id}`, clientId: c.id, clientName: c.name, text: "Nouvelle demande à traiter", tone: "wait", href: `/admin/clients/${c.id}` });
+  }
+  for (const p of projects.filter((x) => x.stage !== "live" && x.waiting_on === "studio")) {
+    // Written for the studio, not copied from what the client sees
+    const last = versions.find((x) => x.project_id === p.id);
+    const text =
+      last?.status === "changes_requested"
+        ? `Préparer la version ${last.number + 1} (commentaires reçus)`
+        : last?.status === "approved"
+          ? `Version ${last.number} approuvée : passer à la suite`
+          : p.next_action_fr || "Écrire la prochaine étape du projet";
+    todo.push({ key: `j${p.id}`, clientId: p.client_id, clientName: nameOf(p.client_id), text, href: `/admin/clients/${p.client_id}#projets` });
+  }
+  return { since: me?.seen_at ?? null, news, todo };
+}
+
+/** Remembers that this admin has seen the dashboard, so "new" starts again from here. */
+export async function markSeen(ctx: Ctx) {
+  const v = requireAdmin(ctx);
+  if (await ctx.db.get("users", v.userId)) await ctx.db.update("users", v.userId, { seen_at: iso(ctx) });
 }
 
 export async function adminClient(ctx: Ctx, clientId: string) {

@@ -263,3 +263,29 @@ test("demo tokens: valid, tampered, expired", async () => {
   assert.equal(readToken("s3cret", tok.slice(0, -2) + "xx"), null);
   assert.equal(readToken("s3cret", signToken("s3cret", { uid: "u1" }, -1)), null);
 });
+
+test("dashboard: news since my last visit (not my own actions), urgent things first", async () => {
+  const t = setup();
+  const { A, C, client, project } = await clientWithProject(t);
+  await t.db.insert("users", { id: t.admin.userId, email: t.admin.email, name: "Rayann", role: "admin", client_id: null, created_at: "", last_login_at: null });
+  const S = t.as({ userId: "admin-2", email: "steven@studio.test", name: "Steven", role: "admin", clientId: null });
+  await t.db.insert("users", { id: "admin-2", email: "steven@studio.test", name: "Steven", role: "admin", client_id: null, created_at: "", last_login_at: null });
+
+  await svc.markSeen(A);
+  t.advance(1);
+  await svc.shareVersion(A, project.id, { preview_url: "https://preview.test/v1" }); // mine: not news for me
+  const inv = await svc.createInvoice(S, client.id, { label: "Dépôt", amount: "100", due_date: "2026-11-21" });
+  await svc.sendInvoice(S, inv.id); // Steven's: news for me
+  await svc.postMessage(C, { body: "Une question" }); // the client's: news
+  t.advance(3);
+
+  const home = await svc.adminHome(A);
+  const types = home.news.map((e) => e.type);
+  assert.ok(types.includes("invoice.sent") && types.includes("message.posted"));
+  assert.ok(!types.includes("version.shared"), "my own action is not news to me");
+  assert.equal(home.todo[0].tone, "warn", "the overdue invoice comes first");
+  assert.ok(home.todo.some((x) => x.text === "Répondre à son message"));
+
+  await svc.markSeen(A);
+  assert.equal((await svc.adminHome(A)).news.length, 0, "after a visit, nothing is new");
+});
