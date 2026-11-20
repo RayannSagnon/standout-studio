@@ -124,7 +124,7 @@
 .pt-preview { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 16px 18px; border-radius: 14px; background: var(--panel-soft); text-decoration: none; }
 .pt-preview:hover { background: var(--tint); }
 .pt-preview-url { font-size: 14px; color: var(--muted); overflow-wrap: anywhere; min-width: 0; }
-.pt-quote { padding-left: 14px; border-left: 2px solid var(--sarcelle); white-space: pre-line; overflow-wrap: anywhere; }
+.pt-quote { padding: 10px 14px; border-radius: 12px; background: var(--panel-soft); white-space: pre-line; overflow-wrap: anywhere; }
 .pt-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .pt-details { border-radius: 14px; box-shadow: inset 0 0 0 1px var(--rule); }
 .pt-details > summary { list-style: none; cursor: pointer; padding: 14px 18px; font-weight: 500; display: flex; justify-content: space-between; gap: 12px; }
