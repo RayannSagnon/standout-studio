@@ -322,3 +322,18 @@ test("dashboard tasks: done, later, claimed; a new client message brings the tas
   await assert.rejects(svc.setTodo(A, "bad key!", "done"), InputError);
   await assert.rejects(svc.setTodo(C, first!.key, "done"), ForbiddenError);
 });
+
+test("printable invoices: a client sees only their own, never drafts", async () => {
+  const t = setup();
+  const one = await clientWithProject(t);
+  const A = t.as(t.admin);
+  const draft = await svc.createInvoice(A, one.client.id, { label: "Devis", amount: "100" });
+  await assert.rejects(svc.invoiceDoc(one.C, draft.id), NotFoundError, "drafts are not shown to the client");
+  await svc.sendInvoice(A, draft.id);
+  assert.equal((await svc.invoiceDoc(one.C, draft.id)).invoice.id, draft.id);
+  const other = await svc.createClient(A, { name: "Other", email: "other@client.test" });
+  const theirs = await svc.createInvoice(A, other.id, { label: "X", amount: "10" });
+  await svc.sendInvoice(A, theirs.id);
+  await assert.rejects(svc.invoiceDoc(one.C, theirs.id), NotFoundError);
+  assert.equal((await svc.invoiceDoc(A, theirs.id)).client.id, other.id, "admins see every invoice");
+});

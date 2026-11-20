@@ -2,6 +2,7 @@
 // who is signed in, and handles sign-in links. Never imported by browser code.
 
 import "server-only";
+import { randomInt } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { createClient as createSupabase, type SupabaseClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
@@ -165,20 +166,22 @@ export async function systemCtx(): Promise<Ctx> {
 // ---------- sign-in ----------
 
 const recent = new Map<string, number>();
+const CODE_TRIES = 5;
 
 /**
- * Sends a sign-in link if the address belongs to someone. The answer is the same
- * either way, so the form never reveals who is a client. In demo mode the link is
- * also returned so the page can show it.
+ * Sends a sign-in email with a link and a 6-digit code (for when the email is
+ * read on another device) if the address belongs to someone. The answer is the
+ * same either way, so the form never reveals who is a client. In demo mode the
+ * link and code are also returned so the page can show them.
  */
-export async function requestSignIn(rawEmail: string, lang: Lang): Promise<{ demoLink?: string }> {
+export async function requestSignIn(rawEmail: string, lang: Lang): Promise<{ demoLink?: string; demoCode?: string; throttled?: boolean }> {
   const mode = portalMode();
   if (mode === "off") return {};
   const email = rawEmail.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return {};
   // One email per address every 30 seconds (no real email leaves in demo mode)
   const last = recent.get(email) ?? 0;
-  if (mode !== "demo" && Date.now() - last < 30_000) return {};
+  if (mode !== "demo" && Date.now() - last < 30_000) return { throttled: true };
   recent.set(email, Date.now());
 
   const ctx = await makeCtx(mode, null);
@@ -190,16 +193,57 @@ export async function requestSignIn(rawEmail: string, lang: Lang): Promise<{ dem
   let userLang: Lang = lang;
   if (user?.client_id) userLang = (await ctx.db.get("clients", user.client_id))?.lang ?? lang;
   const next = isAdmin ? "/admin" : userLang === "fr" ? "/fr/client" : "/client";
-  const link = await ctx.auth.loginLink(email, next);
+
+  let link: string;
+  let code: string;
+  if (mode === "demo") {
+    link = await ctx.auth.loginLink(email, next);
+    code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+    demoState().codes.set(email, { code, next, exp: Date.now() + LINK_TTL, tries: 0 });
+  } else {
+    const { data, error } = await service().auth.admin.generateLink({ type: "magiclink", email });
+    if (error || !data?.properties?.hashed_token) throw error ?? new Error("could not create link");
+    link = `${ctx.baseUrl}/auth/confirm?${new URLSearchParams({ token_hash: data.properties.hashed_token, type: "magiclink", next })}`;
+    code = data.properties.email_otp;
+  }
   try {
-    await ctx.mailer.send({ to: [email], ...emails.login(isAdmin ? "fr" : userLang, link) });
+    await ctx.mailer.send({ to: [email], ...emails.login(isAdmin ? "fr" : userLang, link, code) });
   } catch (err) {
     console.error("[portal] sign-in email failed", err);
   }
-  return mode === "demo" ? { demoLink: link } : {};
+  return mode === "demo" ? { demoLink: link, demoCode: code } : {};
 }
 
-/** Handles the link from the email. Returns where to go next, or null if the link is invalid. */
+async function startDemoSession(ctx: Ctx, email: string) {
+  let user = (await ctx.db.list("users", { email }))[0] ?? (await ensureAdminUser(ctx, crypto.randomUUID(), email));
+  if (!user) return null;
+  user = await touchLogin(ctx, user.id);
+  (await cookies()).set(DEMO_COOKIE, signToken(demoSecret(), { uid: user.id }, SESSION_DAYS * 86_400_000), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: SESSION_DAYS * 86_400,
+  });
+  return user;
+}
+
+async function finishSupabase(ctx: Ctx, sb: SupabaseClient, authUser: { id: string; email?: string }, next: string | null) {
+  if (!authUser.email) return null;
+  const user = (await ctx.db.get("users", authUser.id)) ?? (await ensureAdminUser(ctx, authUser.id, authUser.email));
+  if (!user) {
+    await sb.auth.signOut();
+    return null;
+  }
+  await touchLogin(ctx, user.id);
+  return safeNext(next, user.role === "admin" ? "/admin" : "/client");
+}
+
+/**
+ * Handles the link from the email, once the person clicks "Ouvrir mon espace"
+ * (mail scanners that open links on their own never get this far).
+ * Returns where to go next, or null if the link is invalid.
+ */
 export async function confirmSignIn(params: URLSearchParams): Promise<string | null> {
   const mode = portalMode();
   if (mode === "off") return null;
@@ -210,31 +254,42 @@ export async function confirmSignIn(params: URLSearchParams): Promise<string | n
     const state = demoState();
     if (!data || state.used.has(data.n)) return null;
     state.used.add(data.n);
-    let user = (await ctx.db.list("users", { email: data.email }))[0] ?? (await ensureAdminUser(ctx, crypto.randomUUID(), data.email));
-    if (!user) return null;
-    user = await touchLogin(ctx, user.id);
-    (await cookies()).set(DEMO_COOKIE, signToken(demoSecret(), { uid: user.id }, SESSION_DAYS * 86_400_000), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: SESSION_DAYS * 86_400,
-    });
-    return safeNext(data.next);
+    state.codes.delete(data.email);
+    return (await startDemoSession(ctx, data.email)) ? safeNext(data.next) : null;
   }
 
   const tokenHash = params.get("token_hash");
   if (!tokenHash) return null;
   const sb = await session();
   const { data, error } = await sb.auth.verifyOtp({ type: "magiclink", token_hash: tokenHash });
-  if (error || !data.user?.email) return null;
-  const user = (await ctx.db.get("users", data.user.id)) ?? (await ensureAdminUser(ctx, data.user.id, data.user.email));
-  if (!user) {
-    await sb.auth.signOut();
-    return null;
+  if (error || !data.user) return null;
+  return finishSupabase(ctx, sb, data.user, params.get("next"));
+}
+
+/** The 6-digit code from the same email, typed on the sign-in page. */
+export async function verifySignInCode(rawEmail: string, rawCode: string): Promise<string | null> {
+  const mode = portalMode();
+  if (mode === "off") return null;
+  const email = rawEmail.trim().toLowerCase();
+  const code = rawCode.replace(/\D/g, "");
+  if (code.length !== 6) return null;
+  const ctx = await makeCtx(mode, null);
+
+  if (mode === "demo") {
+    const entry = demoState().codes.get(email);
+    if (!entry || entry.exp < Date.now() || entry.tries >= CODE_TRIES) return null;
+    if (entry.code !== code) {
+      entry.tries++;
+      return null;
+    }
+    demoState().codes.delete(email);
+    return (await startDemoSession(ctx, email)) ? safeNext(entry.next) : null;
   }
-  await touchLogin(ctx, user.id);
-  return safeNext(params.get("next"), user.role === "admin" ? "/admin" : "/client");
+
+  const sb = await session();
+  const { data, error } = await sb.auth.verifyOtp({ email, token: code, type: "email" });
+  if (error || !data.user) return null;
+  return finishSupabase(ctx, sb, data.user, null);
 }
 
 export async function signOut() {

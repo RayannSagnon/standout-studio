@@ -49,7 +49,8 @@ Sécurité : chaque table a la sécurité par ligne de Postgres activée. Ce que
 
 1. La personne entre son email sur `/client/login`.
 2. Si l'email correspond à un compte (ou à `ADMIN_EMAILS`), le serveur génère un lien à usage unique valable 1 heure et l'envoie par email avec notre gabarit. Sinon, il ne se passe rien, mais l'écran affiche le même message (on ne révèle pas qui est client).
-3. Le lien ouvre `/auth/confirm`, qui crée la session (cookie `httpOnly`, `Secure`) et redirige vers `/client` ou `/admin` selon le rôle.
+3. Le lien ouvre `/auth/confirm`, une page avec un seul bouton « Ouvrir mon espace ». C'est ce clic qui crée la session (cookie `httpOnly`, `Secure`), pas l'ouverture du lien : certaines messageries ouvrent les liens toutes seules pour les vérifier, et elles useraient un lien à usage unique.
+   Le même courriel contient un code à 6 chiffres, à taper sur la page de connexion quand on lit ses courriels sur un autre appareil (5 essais au plus). Un bouton « Renvoyer le courriel » est toujours visible.
 4. L'admin invite un client : création du compte, puis email d'invitation avec un lien de connexion.
 
 Les adresses dans `ADMIN_EMAILS` deviennent admin à leur première connexion. Personne d'autre ne peut devenir admin. Une même adresse ne peut demander qu'un lien toutes les 30 secondes.

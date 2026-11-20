@@ -44,6 +44,17 @@ export function ago(iso: string, now: Date, lang: Lang = "fr"): string {
 /** Whole days between a past day and today (0 when today or in the future). */
 export const daysSince = (iso: string, now: Date) => Math.max(0, Math.round((Date.parse(dayOf(now)) - Date.parse(iso.slice(0, 10))) / 86_400_000));
 
+/** Day headings for logs: "Aujourd'hui", "Hier", "lundi 17 novembre". */
+export function dayLabel(iso: string, now: Date, lang: Lang = "fr"): string {
+  const d = dayOf(new Date(iso));
+  const days = Math.round((Date.parse(dayOf(now)) - Date.parse(d)) / 86_400_000);
+  if (days === 0) return lang === "fr" ? "Aujourd'hui" : "Today";
+  if (days === 1) return lang === "fr" ? "Hier" : "Yesterday";
+  const sameYear = d.slice(0, 4) === dayOf(now).slice(0, 4);
+  const label = new Date(`${d}T12:00:00`).toLocaleDateString(lang === "fr" ? "fr-CA" : "en-CA", { weekday: "long", day: "numeric", month: "long", ...(sameYear ? {} : { year: "numeric" }) });
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 /** Calendar day in Ottawa, as YYYY-MM-DD. */
 export const dayOf = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
 

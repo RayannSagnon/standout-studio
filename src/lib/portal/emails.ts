@@ -43,17 +43,18 @@ function make(subject: string, b: Block): Email {
 }
 
 export const emails = {
-  login(lang: Lang, url: string): Email {
+  login(lang: Lang, url: string, code?: string): Email {
+    const spaced = code ? `${code.slice(0, 3)} ${code.slice(3)}` : "";
     return lang === "fr"
       ? make("Votre lien de connexion", {
           heading: "Votre lien de connexion",
-          lines: ["Ce lien ouvre votre espace client. Il sert une seule fois et reste valable une heure.", "Vous n'avez rien demandé ? Ignorez ce courriel."],
+          lines: ["Ce lien ouvre votre espace client. Il sert une seule fois et reste valable une heure.", ...(code ? [`Sur un autre appareil ? Entrez plutôt ce code sur la page de connexion : ${spaced}`] : []), "Vous n'avez rien demandé ? Ignorez ce courriel."],
           cta: { label: "Ouvrir mon espace", url },
           footer: FOOT.fr,
         })
       : make("Your sign-in link", {
           heading: "Your sign-in link",
-          lines: ["This link opens your client area. It works once, for one hour.", "Didn't ask for it? You can ignore this email."],
+          lines: ["This link opens your client area. It works once, for one hour.", ...(code ? [`On another device? Enter this code on the sign-in page instead: ${spaced}`] : []), "Didn't ask for it? You can ignore this email."],
           cta: { label: "Open my client area", url },
           footer: FOOT.en,
         });

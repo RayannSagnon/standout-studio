@@ -13,11 +13,12 @@ import {
   updateClientAction,
   voidInvoiceAction,
 } from "@/app/admin/actions";
-import AdminShell, { adminEventText, adminPage } from "@/components/portal/AdminShell";
+import AdminShell, { adminPage } from "@/components/portal/AdminShell";
+import EventLog, { isAuto } from "@/components/portal/EventLog";
 import { Ghost, Icon, More, Primary, Section, Stages, Status, Title } from "@/components/portal/ui";
 import { NotFoundError } from "@/lib/portal/db";
 import { money } from "@/lib/portal/emails";
-import { CARE_LABEL, fmtDate, INVOICE_LABEL, PACKAGE_LABEL, STAGE_LABEL, VERSION_LABEL } from "@/lib/portal/labels";
+import { ago, CARE_LABEL, fmtDate, INVOICE_LABEL, PACKAGE_LABEL, STAGE_LABEL, VERSION_LABEL } from "@/lib/portal/labels";
 import * as svc from "@/lib/portal/service";
 import { invoiceTotal, PACKAGES, STAGES } from "@/lib/portal/types";
 
@@ -43,6 +44,20 @@ export default async function AdminClientPage({
   // The other admins, by first name, for "Envoyer à Steven"
   const others = (await ctx.db.list("users", { role: "admin" })).filter((u) => u.id !== ctx.viewer!.userId).map((u) => u.name.split(" ")[0]);
   const cid = <input type="hidden" name="client_id" value={c.id} />;
+  const clock = ctx.now ? ctx.now() : new Date();
+
+  // Summary at the top: where the work stands, who acts, what's owed, last contact
+  const active = d.projects.find((p) => p.stage !== "live") ?? d.projects[0];
+  const due = d.invoices.filter((i) => i.status === "sent" || i.status === "overdue").reduce((s, i) => s + invoiceTotal(i), 0);
+  const lastMsg = d.messages.at(-1);
+  const facts: [string, string][] = [
+    ["Étape", active ? STAGE_LABEL.fr[active.stage] : "Aucun projet"],
+    ["Qui agit", active?.waiting_on === "client" ? "Le client" : active?.waiting_on === "studio" ? "Nous" : "Personne"],
+    ["À payer", due ? money(due, "fr") : "Rien"],
+    ["Dernier message", lastMsg ? `${ago(lastMsg.created_at, clock)}, ${lastMsg.author_role === "client" ? "de lui" : "de nous"}` : "Aucun"],
+  ];
+  const mainEvents = d.events.filter((e) => !isAuto(e));
+  const autoEvents = d.events.filter(isAuto);
 
   return (
     <AdminShell mode={mode} current="client" search={await searchParams}>
@@ -52,6 +67,22 @@ export default async function AdminClientPage({
         </a>
         <Title>{c.name}</Title>
         <p className="pt-sub">{[c.company, c.email, c.phone, c.lang === "fr" ? "en français" : "en anglais"].filter(Boolean).join(", ")}</p>
+        <dl className="pt-facts">
+          {facts.map(([k, v]) => (
+            <div key={k}>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <nav className="pt-jump" aria-label="Sections">
+          <a href="#entre-nous">Entre nous</a>
+          <a href="#projets">Projets</a>
+          <a href="#factures">Factures</a>
+          <a href="#messages">Messages</a>
+          <a href="#acces">Accès</a>
+          <a href="#historique">Historique</a>
+        </nav>
       </div>
 
       {c.source_message && (
@@ -252,7 +283,9 @@ export default async function AdminClientPage({
                 <li className="pt-row" key={i.id}>
                   <div className="pt-row-main">
                     <span>{i.label}</span>
-                    <span className="pt-small pt-muted">{meta.join(", ")}</span>
+                    <span className="pt-small pt-muted">
+                      {meta.join(", ")} · <a href={`/admin/invoices/${i.id}`}>{i.status === "paid" ? "Reçu (PDF)" : "Facture (PDF)"}</a>
+                    </span>
                   </div>
                   <div className="pt-row-end">
                     <span className="pt-amount">{money(invoiceTotal(i), "fr")}</span>
@@ -437,15 +470,13 @@ export default async function AdminClientPage({
         </More>
       </Section>
 
-      <Section id="historique" title="Historique">
-        <ol className="pt-log">
-          {d.events.map((e) => (
-            <li key={e.id}>
-              <time dateTime={e.created_at}>{fmtDate(e.created_at, "fr", true)}</time>
-              <span className={e.type === "email.failed" ? "pt-danger" : undefined}>{adminEventText(e)}</span>
-            </li>
-          ))}
-        </ol>
+      <Section id="historique" title="Historique" note="Les relances et les messages sont repliés.">
+        <EventLog events={mainEvents} clock={clock} />
+        {autoEvents.length > 0 && (
+          <More label={`Voir aussi les événements automatiques (${autoEvents.length})`}>
+            <EventLog events={autoEvents} clock={clock} />
+          </More>
+        )}
       </Section>
     </AdminShell>
   );

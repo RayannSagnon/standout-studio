@@ -1,6 +1,7 @@
 // The client's dashboard. Server component: data is read on the server for the
 // signed-in client only, and every button is a plain form (works without JavaScript).
 
+import Root, { ThemeSwitch } from "@/components/portal/Root";
 import { notFound, redirect } from "next/navigation";
 import { careAction, messageAction, payAction, respondAction, signOutAction } from "@/app/client/actions";
 import { CLIENT_COPY, eventText } from "@/lib/portal/copy";
@@ -37,7 +38,7 @@ export default async function ClientArea({ lang, searchParams }: { lang: Lang; s
   const hidden = <input type="hidden" name="lang" value={lang} />;
 
   return (
-    <div className="pt" lang={lang}>
+    <Root lang={lang}>
       {mode === "demo" && <p className="pt-demo">{k.demo}</p>}
       <Bar area={k.area} home={home}>
         <a href={lang === "fr" ? "/client" : "/fr/client"} hrefLang={lang === "fr" ? "en" : "fr"} aria-label={k.switchLangLabel}>
@@ -46,6 +47,7 @@ export default async function ClientArea({ lang, searchParams }: { lang: Lang; s
         <a className="pt-hide-sm" href={lang === "fr" ? "/fr" : "/"}>
           {k.site}
         </a>
+        <ThemeSwitch lang={lang} />
         <form action={signOutAction} className="pt-inline">
           {hidden}
           <button className="pt-textbtn">{k.signOut}</button>
@@ -92,12 +94,21 @@ export default async function ClientArea({ lang, searchParams }: { lang: Lang; s
 
                 {latest.status === "pending" ? (
                   <>
-                    <form action={respondAction}>
-                      {hidden}
-                      <input type="hidden" name="version_id" value={latest.id} />
-                      <input type="hidden" name="decision" value="approved" />
-                      <Primary>{k.approve}</Primary>
-                    </form>
+                    {/* Approving can't be undone: one more click, so a slip of the thumb doesn't count */}
+                    <details className="pt-confirm">
+                      <summary className="btn btn-primary">
+                        <span>{k.approve}</span>
+                      </summary>
+                      <form action={respondAction} className="pt-confirm-box">
+                        {hidden}
+                        <input type="hidden" name="version_id" value={latest.id} />
+                        <input type="hidden" name="decision" value="approved" />
+                        <p>{k.approveConfirm(latest.number)}</p>
+                        <div>
+                          <Primary small>{k.approveYes(latest.number)}</Primary>
+                        </div>
+                      </form>
+                    </details>
                     <More label={k.requestChanges} open={error === "comment"}>
                       <form action={respondAction} className="pt-form">
                         {hidden}
@@ -171,12 +182,16 @@ export default async function ClientArea({ lang, searchParams }: { lang: Lang; s
                         <form action={payAction} className="pt-inline">
                           {hidden}
                           <input type="hidden" name="invoice_id" value={i.id} />
-                          <Primary small>{k.pay}</Primary>
+                          <Primary small>{k.pay(money(invoiceTotal(i), lang))}</Primary>
                         </form>
                       ) : (
                         <Status tone={i.status === "paid" ? "ok" : undefined}>{INVOICE_LABEL[lang][i.status]}</Status>
                       )}
                     </div>
+                    <p className="pt-small pt-inv-links">
+                      <a href={`/client/invoices/${i.id}?lang=${lang}`}>{i.status === "paid" ? k.receipt : k.invoicePdf}</a>
+                      {payable && <span className="pt-muted"> · {k.paySecure}</span>}
+                    </p>
                   </li>
                 );
               })}
@@ -259,6 +274,6 @@ export default async function ClientArea({ lang, searchParams }: { lang: Lang; s
           </Section>
         )}
       </main>
-    </div>
+    </Root>
   );
 }

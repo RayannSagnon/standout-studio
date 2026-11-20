@@ -45,6 +45,9 @@ async function signIn(name, path = "/fr/client/login") {
   await page.locator(".pt-accounts button", { hasText: name }).click();
   await page.waitForURL(/sent=1/);
   await page.getByRole("link", { name: /^(Ouvrir le lien|Open the link)$/ }).click();
+  // The link lands on a page with one button, so mail scanners can't spend it
+  await page.waitForURL(/\/auth\/confirm/);
+  await page.getByRole("button", { name: /^(Ouvrir mon espace|Open my client area)$/ }).click();
   await page.waitForLoadState("networkidle");
 }
 
@@ -72,8 +75,24 @@ try {
   log("client area is closed to strangers");
 
   await page.goto(`${BASE}/auth/confirm?demo=forged.token`);
-  check(page.url().includes("error=link"), "a forged link is refused");
-  log("forged sign-in link refused");
+  check(page.url().includes("/auth/confirm"), "opening the link alone signs nobody in");
+  await page.getByRole("button", { name: "Ouvrir mon espace" }).click();
+  await page.waitForURL(/error=link/);
+  log("forged sign-in link refused, and opening a link alone does nothing");
+
+  // Sign in with the 6-digit code instead of the link
+  await page.goto(`${BASE}/client/login`);
+  await page.locator(".pt-accounts button", { hasText: "Julien Dubois" }).click();
+  await page.waitForURL(/sent=1/);
+  const code = new URL(page.url()).searchParams.get("code");
+  await page.locator("input[name=code]").fill("000000");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.waitForURL(/error=code/);
+  await page.locator("input[name=code]").fill(code);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.waitForURL(/\/client$/);
+  log("wrong code refused, right code signs in");
+  await signOut();
 
   await signIn("Camille Roy");
   check(page.url().endsWith("/fr/client"), `Camille lands on /fr/client (got ${page.url()})`);
@@ -204,17 +223,22 @@ try {
   await signOut();
 
   await signIn("Camille Roy");
-  await page.getByRole("button", { name: "J'approuve cette version" }).click();
+  await page.getByText("J'approuve cette version").click();
+  await page.getByRole("button", { name: "Oui, j'approuve la version 3" }).click();
   await page.waitForURL(/ok=approved/);
   check((await page.locator(".pt-next-text").innerText()).includes("Version 3 approuvée"), "next step updates after approval");
   log("client approves version 3");
 
-  await page.getByRole("button", { name: "Payer par carte" }).click();
+  await page.getByRole("button", { name: /^Payer 499,50/ }).click();
   await page.waitForURL(/\/client\/pay\//);
   await shots("06-demo-checkout");
   await page.getByRole("button", { name: "Simuler un paiement réussi" }).click();
   await page.waitForURL(/ok=paid/);
-  check(!(await page.getByRole("button", { name: "Payer par carte" }).count()), "no more invoice to pay");
+  check(!(await page.getByRole("button", { name: /^Payer / }).count()), "no more invoice to pay");
+  await page.getByRole("link", { name: "Voir le reçu (PDF)" }).first().click();
+  check((await page.locator(".pt-doc-title h1").innerText()) === "Reçu", "receipt page for a paid invoice");
+  await shots("09-receipt");
+  await page.goBack();
   await shots("07-client-after");
   log("client pays the balance (simulated Stripe)");
   await signOut();
@@ -227,6 +251,23 @@ try {
   await page.getByRole("link", { name: "Français" }).click();
   await page.waitForURL(/\/fr\/client$/);
   log("language switch");
+  await signOut();
+
+  // Admin: theme, client filters, day-grouped journal
+  await signIn("Steven");
+  await page.getByRole("button", { name: "Sombre" }).click();
+  await page.waitForFunction(() => document.querySelector(".pt")?.getAttribute("data-theme") === "dark", null, { timeout: 8000 }).catch(() => {});
+  check((await page.locator(".pt").getAttribute("data-theme")) === "dark", "dark theme on request");
+  await shots("10-admin-dark");
+  await page.getByRole("button", { name: "Clair" }).click();
+  await page.waitForFunction(() => document.querySelector(".pt")?.getAttribute("data-theme") === "light", null, { timeout: 8000 }).catch(() => {});
+  check((await page.locator(".pt").getAttribute("data-theme")) === "light", "back to light");
+  await page.goto(`${BASE}/admin/clients?statut=archived`);
+  check(await page.getByText("Aucun client dans ce filtre.").isVisible(), "empty filter says so");
+  await page.goto(`${BASE}/admin/journal`);
+  check(await page.getByRole("heading", { name: "Aujourd'hui" }).isVisible(), "journal grouped by day");
+  await shots("11-journal");
+  log("theme switch, client filters, journal by day");
   await signOut();
 
   // The public site is untouched

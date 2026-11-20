@@ -841,3 +841,15 @@ export async function ensureAdminUser(ctx: Ctx, authId: string, mail: string) {
 export async function touchLogin(ctx: Ctx, userId: string) {
   return ctx.db.update("users", userId, { last_login_at: iso(ctx) });
 }
+
+// ---------- printable invoice ----------
+
+/** An invoice and its client, for the printable page. Clients only see their own, never drafts. */
+export async function invoiceDoc(ctx: Ctx, invoiceId: string) {
+  const v = ctx.viewer;
+  if (!v) throw new ForbiddenError();
+  const inv = await ctx.db.get("invoices", invoiceId);
+  if (!inv) throw new NotFoundError();
+  if (v.role !== "admin" && (inv.client_id !== v.clientId || inv.status === "draft")) throw new NotFoundError();
+  return { invoice: inv, client: await getClient(ctx, inv.client_id) };
+}

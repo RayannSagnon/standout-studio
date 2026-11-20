@@ -1,8 +1,9 @@
+import Root from "@/components/portal/Root";
 import { Bar, Title } from "@/components/portal/ui";
 
 export default function AdminNotFound() {
   return (
-    <div className="pt" lang="fr">
+    <Root lang="fr">
       <Bar area="Admin" home="/admin" />
       <main className="pt-main">
         <div className="pt-head">
@@ -12,6 +13,6 @@ export default function AdminNotFound() {
           </p>
         </div>
       </main>
-    </div>
+    </Root>
   );
 }

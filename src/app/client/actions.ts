@@ -3,9 +3,11 @@
 // Client area form actions. Each one checks the session again on the server,
 // then answers with a redirect that carries a short status code.
 
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { THEME_COOKIE } from "@/lib/portal/theme";
 import { ForbiddenError, InputError } from "@/lib/portal/db";
-import { portal, requestSignIn, signOut } from "@/lib/portal/server";
+import { confirmSignIn, portal, requestSignIn, signOut, verifySignInCode } from "@/lib/portal/server";
 import * as svc from "@/lib/portal/service";
 import { billingPortalUrl, careCheckoutUrl, invoiceCheckoutUrl, stripe } from "@/lib/portal/stripe";
 import type { Lang } from "@/lib/portal/types";
@@ -105,15 +107,53 @@ export async function demoPayAction(form: FormData) {
 
 export async function requestLinkAction(form: FormData) {
   const lang = langOf(form);
-  const email = String(form.get("email") || "");
-  const { demoLink } = await requestSignIn(email, lang);
-  const q = new URLSearchParams({ sent: "1" });
+  const email = String(form.get("email") || "").trim().toLowerCase();
+  const { demoLink, demoCode, throttled } = await requestSignIn(email, lang);
+  const q = new URLSearchParams({ sent: "1", email });
+  if (throttled) q.set("wait", "1");
   if (demoLink) q.set("demo", demoLink);
+  if (demoCode) q.set("code", demoCode);
   redirect(`${loginPath(lang)}?${q}`);
+}
+
+/** The 6-digit code from the sign-in email. */
+export async function verifyCodeAction(form: FormData) {
+  const lang = langOf(form);
+  const email = String(form.get("email") || "");
+  const next = await verifySignInCode(email, String(form.get("code") || ""));
+  if (next) redirect(next);
+  redirect(`${loginPath(lang)}?${new URLSearchParams({ sent: "1", email, error: "code" })}`);
+}
+
+/** The click on "Ouvrir mon espace" after following the emailed link. */
+export async function confirmLinkAction(form: FormData) {
+  const params = new URLSearchParams();
+  for (const k of ["demo", "token_hash", "type", "next"]) {
+    const v = form.get(k);
+    if (typeof v === "string" && v) params.set(k, v);
+  }
+  const next = await confirmSignIn(params);
+  if (next) redirect(next);
+  redirect(`${langOf(form) === "en" ? "" : "/fr"}/client/login?error=link`);
 }
 
 export async function signOutAction(form: FormData) {
   const lang = langOf(form);
   await signOut();
   redirect(loginPath(lang));
+}
+
+/** Clair, Sombre or Auto, for the client and admin areas. */
+export async function themeAction(form: FormData) {
+  const v = form.get("theme");
+  const theme = v === "dark" || v === "auto" ? v : "light";
+  (await cookies()).set(THEME_COOKIE, theme, { path: "/", maxAge: 365 * 86_400, sameSite: "lax", httpOnly: false });
+  let back = "/admin";
+  try {
+    const ref = new URL((await headers()).get("referer") || "");
+    back = ref.pathname + ref.search;
+  } catch {
+    /* no referer: admin home */
+  }
+  redirect(back.startsWith("/") && !back.startsWith("//") ? back : "/admin");
 }

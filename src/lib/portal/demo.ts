@@ -85,11 +85,11 @@ function seed(): Partial<{ [N in keyof Tables]: Tables[N][] }> {
   };
 }
 
-type DemoState = { db: Db; outbox: OutboxEmail[]; used: Set<string> };
+type DemoState = { db: Db; outbox: OutboxEmail[]; used: Set<string>; codes: Map<string, { code: string; next: string; exp: number; tries: number }> };
 const g = globalThis as unknown as { __standoutDemo?: DemoState };
 
 export function demoState(): DemoState {
-  return (g.__standoutDemo ??= { db: memoryDb(seed()), outbox: [], used: new Set() });
+  return (g.__standoutDemo ??= { db: memoryDb(seed()), outbox: [], used: new Set(), codes: new Map() });
 }
 
 export function resetDemo() {

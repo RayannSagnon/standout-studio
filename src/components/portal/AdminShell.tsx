@@ -1,5 +1,6 @@
 // Frame for every admin page: checks the admin session, bar, navigation, messages.
 
+import Root, { ThemeSwitch } from "@/components/portal/Root";
 import type { ReactNode } from "react";
 import { notFound, redirect } from "next/navigation";
 import { signOutAction } from "@/app/client/actions";
@@ -76,7 +77,7 @@ export default function AdminShell({
   const error = typeof search.error === "string" ? search.error : undefined;
   const okText = ok === "reminders" ? `Relances envoyées : ${search.n ?? 0} courriel(s).` : ok ? OK[ok] : null;
   return (
-    <div className="pt" lang="fr">
+    <Root lang="fr">
       {mode === "demo" && <p className="pt-demo">Démo : les données sont fictives. Les courriels apparaissent dans « Courriels » au lieu de partir.</p>}
       <Bar area="Admin" home="/admin">
         <nav className="pt-nav" aria-label="Admin">
@@ -95,6 +96,7 @@ export default function AdminShell({
             </a>
           )}
         </nav>
+        <ThemeSwitch />
         <form action={signOutAction} className="pt-inline">
           <input type="hidden" name="lang" value="fr" />
           <button className="pt-textbtn">Se déconnecter</button>
@@ -105,7 +107,7 @@ export default function AdminShell({
         <Flash text={error ? (ERR[error] ?? ERR.generic) : null} tone="error" />
         {children}
       </main>
-    </div>
+    </Root>
   );
 }
 

@@ -1,8 +1,9 @@
+import Root from "@/components/portal/Root";
 import { Bar, Title } from "@/components/portal/ui";
 
 export default function ClientNotFound() {
   return (
-    <div className="pt">
+    <Root>
       <Bar area="Standout Studio" home="/" />
       <main className="pt-main">
         <div className="pt-head">
@@ -12,6 +13,6 @@ export default function ClientNotFound() {
           </p>
         </div>
       </main>
-    </div>
+    </Root>
   );
 }

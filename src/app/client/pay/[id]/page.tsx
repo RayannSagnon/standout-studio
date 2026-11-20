@@ -1,5 +1,6 @@
 // Demo only: stands in for the Stripe checkout page.
 
+import Root from "@/components/portal/Root";
 import { notFound, redirect } from "next/navigation";
 import { demoPayAction } from "@/app/client/actions";
 import { Bar, Primary, Title } from "@/components/portal/ui";
@@ -26,7 +27,7 @@ export default async function DemoPay({ params, searchParams }: { params: Promis
   const { invoice } = found;
   const fr = lang === "fr";
   return (
-    <div className="pt" lang={lang}>
+    <Root lang={lang}>
       <p className="pt-demo">{fr ? "Démo : aucune carte n'est débitée." : "Demo: no card is charged."}</p>
       <Bar area={fr ? "Paiement" : "Payment"} home={home} />
       <main className="pt-login" id="main">
@@ -52,6 +53,6 @@ export default async function DemoPay({ params, searchParams }: { params: Promis
           </a>
         </div>
       </main>
-    </div>
+    </Root>
   );
 }
