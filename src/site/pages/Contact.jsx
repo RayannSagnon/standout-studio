@@ -24,6 +24,15 @@ export default function Contact() {
     const subject = `${k.subject} : ${need}`;
     const body = [`${k.hello} ${form.name}, ${k.needIntro} ${need}.`, `${k.body.email} : ${form.email}`, '', form.message].join('\n');
 
+    // Also file the request as a prospect in the admin. Fire and forget: Web3Forms
+    // (or the mail app) stays the main delivery, so a failure here changes nothing.
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({ name: form.name, email: form.email, message: `${need}\n\n${form.message}`.trim(), lang, botcheck: form.botcheck })
+    }).catch(() => {});
+
     // Without a Web3Forms key (local preview), fall back to the visitor's mail app
     if (!ACCESS_KEY) {
       window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

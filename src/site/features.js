@@ -1,4 +1,6 @@
-// Client accounts stay hidden until the real backend exists (decision, 2026-11-05).
-// Turning this on brings back the header link, the menu and footer links, and the
-// /login and /account pages (still running on the demo service in auth/mockAuth.js).
-export const ACCOUNTS_ENABLED = false;
+// The client area lives outside this app, at /client and /fr/client (real server pages).
+// The header, menu and footer link to it once NEXT_PUBLIC_CLIENT_AREA=1 is set, that is
+// when the real backend (Supabase) is connected.
+export const ACCOUNTS_ENABLED = process.env.NEXT_PUBLIC_CLIENT_AREA === '1';
+
+export const clientAreaHref = lang => (lang === 'fr' ? '/fr/client' : '/client');

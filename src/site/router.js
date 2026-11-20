@@ -1,13 +1,13 @@
 // Router for the real site. English lives at the root, French under /fr:
-//   /, /work, /work/:slug, /services, /about, /contact, /card, /login, /account
+//   /, /work, /work/:slug, /services, /about, /contact, /card
 //   /fr, /fr/work, /fr/work/:slug, ...
 // Navigation stays inside the app (history.pushState) so the page transitions can run.
 
-export const PAGES = ['home', 'work', 'case', 'services', 'about', 'contact', 'card', 'login', 'account', 'notfound'];
-const PATHS = { home: '/', work: '/work', services: '/services', about: '/about', contact: '/contact', card: '/card', login: '/login', account: '/account' };
+export const PAGES = ['home', 'work', 'case', 'services', 'about', 'contact', 'card', 'notfound'];
+const PATHS = { home: '/', work: '/work', services: '/services', about: '/about', contact: '/contact', card: '/card' };
 
 // Old anchors from the prototype keep working
-const ALIASES = { accueil: 'home', realisations: 'work', approche: 'about', carte: 'card', connexion: 'login', compte: 'account', travaux: 'work' };
+const ALIASES = { accueil: 'home', realisations: 'work', approche: 'about', carte: 'card', travaux: 'work' };
 
 export const keyOf = r => (r.name === 'case' ? `case:${r.slug}` : r.name);
 export const same = (a, b) => keyOf(a) === keyOf(b);
