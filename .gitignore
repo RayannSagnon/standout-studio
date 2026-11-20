@@ -49,3 +49,6 @@ next-env.d.ts
 
 .vercel
 tmp-compare/
+
+# Screenshots from scripts/e2e-portal.mjs
+tmp-e2e/

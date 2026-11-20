@@ -1,9 +1,9 @@
 import { useLang } from '../i18n';
 import { href } from '../router';
-import { ACCOUNTS_ENABLED } from '../features';
+import { ACCOUNTS_ENABLED, clientAreaHref } from '../features';
 
 export default function Footer() {
-  const { c } = useLang();
+  const { c, lang } = useLang();
   return (
     <footer className="footer" data-tone="dark">
       <div className="footer-top">
@@ -17,7 +17,7 @@ export default function Footer() {
           <a href={href('about')}>{c.nav.about}</a>
           <a href={href('contact')}>{c.nav.contact}</a>
           <a href={href('card')}>{c.nav.card}</a>
-          {ACCOUNTS_ENABLED && <a href={href('login')}>{c.nav.account}</a>}
+          {ACCOUNTS_ENABLED && <a href={clientAreaHref(lang)}>{c.nav.account}</a>}
         </nav>
       </div>
       <div className="footer-bottom">

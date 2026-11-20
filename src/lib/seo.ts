@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PROJECTS } from "@/site/projects";
 import { siteConfig } from "@/lib/site";
-import { ACCOUNTS_ENABLED } from "@/site/features";
 
 export type Lang = "en" | "fr";
 
@@ -41,25 +40,13 @@ const PAGES: Record<string, Record<Lang, Copy>> = {
     en: { title: "Digital business card", description: "Your business card fits in a phone: a scan to add you, Apple Wallet and Google Wallet included." },
     fr: { title: "Carte de visite numérique", description: "Votre carte de visite tient dans un téléphone : un scan pour vous ajouter, Apple Wallet et Google Wallet inclus." },
   },
-  login: {
-    en: { title: "Client area", description: "Follow your site's progress, leave feedback and manage your hosting and digital card." },
-    fr: { title: "Espace client", description: "Suivez l'avancement de votre site, donnez vos commentaires, gérez votre hébergement et votre carte numérique." },
-  },
-  account: {
-    en: { title: "Client area", description: "Your Standout Studio client area." },
-    fr: { title: "Espace client", description: "Votre espace client Standout Studio." },
-  },
 };
-
-const PRIVATE = new Set(["login", "account"]);
 
 /** Every path (without language prefix) the site serves. */
 export function sitePaths(): string[][] {
   return [
     [],
-    ...Object.keys(PAGES)
-      .filter((p) => ACCOUNTS_ENABLED || !PRIVATE.has(p))
-      .map((p) => [p]),
+    ...Object.keys(PAGES).map((p) => [p]),
     ...PROJECTS.map((p) => ["work", p.slug]),
   ];
 }
@@ -107,8 +94,7 @@ export function metadataFor(lang: Lang, slug: string[] = []): Metadata {
       description: copy.description,
     },
     twitter: { card: "summary_large_image", title: copy.title, description: copy.description },
-    robots: PRIVATE.has(key ?? "") ? { index: false, follow: true } : undefined,
   };
 }
 
-export { HOME as HOME_SEO, PRIVATE as PRIVATE_PAGES };
+export { HOME as HOME_SEO };

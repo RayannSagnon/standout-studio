@@ -10,7 +10,7 @@ export const COPY = {
       card: 'La carte', account: 'Espace client', myAccount: 'Mon espace', skip: 'Aller au contenu',
       menu: 'Menu', close: 'Fermer', homeAria: 'Standout Studio, accueil', lang: 'Langue'
     },
-    routes: { home: 'Accueil', work: 'Réalisations', services: 'Services', about: 'À propos', contact: 'Contact', card: 'La carte', login: 'Espace client', account: 'Espace client', notfound: 'Page introuvable' },
+    routes: { home: 'Accueil', work: 'Réalisations', services: 'Services', about: 'À propos', contact: 'Contact', card: 'La carte', notfound: 'Page introuvable' },
     notFound: { title: ['Cette page', 'n’existe pas'], text: 'Le lien est peut-être ancien, ou il manque une lettre. Le reste du site, lui, est bien là.', back: 'Retour à l’accueil' },
     loader: 'Studio web bilingue, Ottawa',
     where: 'Ottawa et à distance. Français et anglais.',
@@ -154,36 +154,6 @@ export const COPY = {
       subject: 'Projet', subjectDefault: 'site web',
       body: { name: 'Nom', email: 'Courriel', phone: 'Téléphone', need: 'Besoin' }
     },
-    login: {
-      title: 'Espace client',
-      lead: 'Suivez l’avancement de votre site, donnez vos commentaires, gérez votre hébergement et votre carte numérique.',
-      notClient: `Pas encore client${NNBSP}?`, start: 'Démarrer un projet',
-      signIn: 'Connexion', resetTitle: 'Mot de passe oublié',
-      resetHelp: 'Entrez votre courriel, on vous envoie un lien pour en choisir un nouveau.',
-      email: 'Courriel', password: 'Mot de passe', show: 'Afficher', hide: 'Masquer',
-      submit: 'Se connecter', submitting: 'Connexion…', sendLink: 'Envoyer le lien', sending: 'Envoi…',
-      forgot: 'Mot de passe oublié', back: 'Revenir à la connexion',
-      checkTitle: 'Vérifiez vos courriels.',
-      checkText: 'Si un compte existe pour {email}, un lien pour choisir un nouveau mot de passe vient d’être envoyé.',
-      thisAddress: 'cette adresse',
-      demoTitle: 'Compte de démonstration.', demoEmail: 'Courriel', demoPassword: 'mot de passe', demoFill: 'Remplir avec le compte démo',
-      errors: { invalid_credentials: 'Courriel ou mot de passe incorrect.', generic: 'Connexion impossible pour le moment. Réessayez.' }
-    },
-    account: {
-      hello: 'Bonjour, {name}.', since: 'Forfait {pkg}, client depuis le {date}.', signOut: 'Se déconnecter',
-      loading: 'Chargement de votre espace…', revision: 'Révision {used} sur {total}', progress: 'Avancement du projet',
-      inProgress: 'En cours', upcoming: 'À venir', next: 'Prochaine étape', working: 'Version de travail',
-      previewAlt: 'Aperçu de la version 2 de {name}',
-      requestLabel: 'Demander une modification',
-      requestPh: 'Ex. : remplacer la photo de l’accueil, ajouter mes tarifs en anglais…',
-      send: 'Envoyer la demande', sending: 'Envoi…', sent: 'Demande envoyée. On vous répond en 1 à 2 jours ouvrables.',
-      careTitle: 'Hébergement et entretien', perMonth: 'par mois', careIncl: 'Mises à jour, sauvegardes et petites corrections incluses.',
-      careStatus: 'À activer au lancement',
-      cardTitle: 'Votre carte numérique', cardEdit: 'Modifier ma carte', cardAlt: 'Carte numérique de {name}',
-      activity: 'Activité', you: 'Vous', studio: 'Standout', invoices: 'Factures',
-      paidOn: 'Payée le {date}', dueAtLaunch: 'À la mise en ligne',
-      note: 'Espace de démonstration : toutes les données sont fictives.'
-    }
   },
 
   en: {
@@ -192,7 +162,7 @@ export const COPY = {
       card: 'The card', account: 'Client area', myAccount: 'My account', skip: 'Skip to content',
       menu: 'Menu', close: 'Close', homeAria: 'Standout Studio, home', lang: 'Language'
     },
-    routes: { home: 'Home', work: 'Work', services: 'Services', about: 'About', contact: 'Contact', card: 'The card', login: 'Client area', account: 'Client area', notfound: 'Page not found' },
+    routes: { home: 'Home', work: 'Work', services: 'Services', about: 'About', contact: 'Contact', card: 'The card', notfound: 'Page not found' },
     notFound: { title: ['This page', 'doesn’t exist'], text: 'The link may be old, or a letter is missing. The rest of the site is right where it should be.', back: 'Back to home' },
     loader: 'Bilingual web studio, Ottawa',
     where: 'Ottawa and remote. English and French.',
@@ -336,36 +306,6 @@ export const COPY = {
       subject: 'Project', subjectDefault: 'website',
       body: { name: 'Name', email: 'Email', phone: 'Phone', need: 'Need' }
     },
-    login: {
-      title: 'Client area',
-      lead: 'Follow your website’s progress, leave feedback, and manage your hosting and digital card.',
-      notClient: 'Not a client yet?', start: 'Start a project',
-      signIn: 'Sign in', resetTitle: 'Forgot your password',
-      resetHelp: 'Enter your email and we’ll send you a link to choose a new one.',
-      email: 'Email', password: 'Password', show: 'Show', hide: 'Hide',
-      submit: 'Sign in', submitting: 'Signing in…', sendLink: 'Send the link', sending: 'Sending…',
-      forgot: 'Forgot password', back: 'Back to sign in',
-      checkTitle: 'Check your email.',
-      checkText: 'If an account exists for {email}, we just sent a link to choose a new password.',
-      thisAddress: 'this address',
-      demoTitle: 'Demo account.', demoEmail: 'Email', demoPassword: 'password', demoFill: 'Fill in the demo account',
-      errors: { invalid_credentials: 'Incorrect email or password.', generic: 'We can’t sign you in right now. Try again.' }
-    },
-    account: {
-      hello: 'Hello, {name}.', since: '{pkg} package, client since {date}.', signOut: 'Sign out',
-      loading: 'Loading your account…', revision: 'Revision {used} of {total}', progress: 'Project progress',
-      inProgress: 'In progress', upcoming: 'Upcoming', next: 'Next step', working: 'Working version',
-      previewAlt: 'Preview of version 2 of {name}',
-      requestLabel: 'Request a change',
-      requestPh: 'E.g. replace the homepage photo, add my rates in French…',
-      send: 'Send request', sending: 'Sending…', sent: 'Request sent. We reply within 1–2 business days.',
-      careTitle: 'Hosting & care', perMonth: 'per month', careIncl: 'Updates, backups and small fixes included.',
-      careStatus: 'Starts at launch',
-      cardTitle: 'Your digital card', cardEdit: 'Edit my card', cardAlt: 'Digital card of {name}',
-      activity: 'Activity', you: 'You', studio: 'Standout', invoices: 'Invoices',
-      paidOn: 'Paid {date}', dueAtLaunch: 'Due at launch',
-      note: 'Demo area: all data is fictional.'
-    }
   }
 };
 

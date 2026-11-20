@@ -47,6 +47,8 @@ On Vercel, add the same variables in Project Settings, Environment Variables.
 | `npm run build` | Production build  |
 | `npm run start` | Serve production  |
 | `npm run lint`  | ESLint            |
+| `npm test`      | Business rules of the client and admin areas |
+| `node scripts/e2e-portal.mjs` | Browser walk through both areas in demo mode (server running on :3177) |
 
 ## How it works
 
@@ -76,12 +78,32 @@ Inside the app, `src/site/router.js` handles navigation with `history.pushState`
 
 Old prototype anchors (`#realisations`, `#work-caramello-cafe`...) still land on the right page.
 
-### Client area (hidden)
+### Client area and admin area
 
-`/login` and `/account` exist but are turned off by `ACCOUNTS_ENABLED` in
-`src/site/features.js` until the real backend is ready. While off, they answer 404 and stay
-out of the sitemap and navigation. They run on a demo service (`src/site/auth/mockAuth.js`)
-whose comments describe the API contract the backend should follow.
+Real server pages, outside the single app (`SiteRoot` renders nothing on these paths):
+
+| Area | English | French |
+| --- | --- | --- |
+| Client dashboard | `/client` | `/fr/client` |
+| Sign-in (clients and studio) | `/client/login` | `/fr/client/login` |
+| Admin (French only) | `/admin` | |
+
+- **Sign-in** is by emailed link, no password. Accounts exist only by invitation from the
+  admin. Addresses in `ADMIN_EMAILS` become admins on first sign-in.
+- **Backends.** With the Supabase variables set, data lives in Supabase
+  (`supabase/migrations/`). Without them, **demo mode** runs on an in-memory store with
+  fictional data, shows emails in `/admin/emails` and simulates payments. Demo mode is
+  refused in production unless `PORTAL_DEMO=1`.
+- **One place for the rules:** `src/lib/portal/service.ts` (who can do what, revision
+  counter, invoices, reminders, emails). Both backends use it; `npm test` covers it.
+- **Security:** client reads go through Postgres row-level security; every write goes
+  through the server after the rules check access. Internal notes live in an admin-only
+  table.
+- **Links between the three parts:** the contact form files a prospect (`/api/leads`),
+  events send emails (`src/lib/portal/emails.ts`), Stripe confirms payments
+  (`/api/stripe/webhook`), and a daily cron sends reminders (`/api/cron/reminders`).
+- Design and decisions: `docs/superpowers/specs/2026-11-20-espace-client-design.md`.
+  Going live: `docs/espace-client-mise-en-ligne.md`.
 
 ## Project structure
 
@@ -90,11 +112,14 @@ src/
   app/                  Next.js routes, metadata, sitemap, robots, icons, share images
     globals.css         All site styles and design tokens
   lib/                  Site config (site.ts), SEO (seo.ts), share image (og.tsx)
+  lib/portal/           Client and admin areas: rules, storage, sign-in, emails, Stripe
+  components/portal/    Client and admin screens
+  app/portal.css        Client and admin styles
   components/seo/       JSON-LD
-  proxy.ts              Sets the locale header for <html lang>
+  proxy.ts              Locale header for <html lang>; refreshes Supabase sessions
   instrumentation-client.ts  PostHog setup
   site/
-    SiteRoot.jsx        Entry point: language, auth and the app
+    SiteRoot.jsx        Entry point: language and the app
     App.jsx             Header, menu, loader, page transitions, smooth scroll
     router.js           URLs and in-app navigation
     i18n.jsx            All French and English copy
@@ -103,8 +128,9 @@ src/
     motion.js           Shared easing and reveal helpers
     pages/              One file per page, plus shared pieces (Footer, DotEnd...)
     rb/                 Adapted React Bits effects (see LICENSE-react-bits.md)
-    auth/               Demo client-area service
 public/work/<slug>/     Screenshots of each client site (see below)
+supabase/migrations/    Database tables and row-level security
+tests/                  npm test
 scripts/                capture-work.mjs takes those screenshots
 ```
 

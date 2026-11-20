@@ -10,19 +10,16 @@ import Services from './pages/Services';
 import About from './pages/About';
 import CardPage from './pages/CardPage';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
-import Account from './pages/Account';
 import NotFound from './pages/NotFound';
-import { ACCOUNTS_ENABLED } from './features';
-import { useAuth } from './auth/AuthContext';
-import { fmt, useLang } from './i18n';
+import { ACCOUNTS_ENABLED, clientAreaHref } from './features';
+import { useLang } from './i18n';
 import { EASE, EASE_IO, observeReveals, reduceMotion, splitChars } from './motion';
 import { commit, fromHref, href, keyOf, listen, parse, same } from './router';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SLUGS = PROJECTS.map(p => p.slug);
-const PAGES = { home: Home, work: Work, case: CaseStudy, services: Services, about: About, contact: Contact, card: CardPage, login: Login, account: Account, notfound: NotFound };
+const PAGES = { home: Home, work: Work, case: CaseStudy, services: Services, about: About, contact: Contact, card: CardPage, notfound: NotFound };
 const NAV = ['work', 'services', 'about', 'contact'];
 
 function Loader({ ready, onDone, line }) {
@@ -104,7 +101,6 @@ const coverRadius = (x, y) => Math.hypot(Math.max(x, window.innerWidth - x), Mat
 const ALL_PROJECTS = buildProjects();
 
 export default function App({ initialRoute }) {
-  const { user } = useAuth();
   const { c, lang, setLang } = useLang();
   const projects = ALL_PROJECTS;
   const [fontsReady, setFontsReady] = useState(false);
@@ -121,12 +117,7 @@ export default function App({ initialRoute }) {
   const busy = useRef(false);
   const firstPage = useRef(true);
 
-  // Private pages
-  const guard = r => {
-    if (!ACCOUNTS_ENABLED && (r.name === 'login' || r.name === 'account')) return { name: 'notfound' };
-    return r.name === 'account' && !user ? { name: 'login' } : r.name === 'login' && user ? { name: 'account' } : r;
-  };
-  const current = guard(route);
+  const current = route;
 
   useEffect(() => {
     let alive = true;
@@ -313,14 +304,8 @@ export default function App({ initialRoute }) {
       if (opts.flip && next.name === 'case' && !reduceMotion()) flipTo(next, opts.flip);
       else irisTo(next, opts.origin);
     },
-    [current, user, irisTo, flipTo] // eslint-disable-line react-hooks/exhaustive-deps
+    [current, irisTo, flipTo]
   );
-
-  // Right after signing in, leave the login page for the client area
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reacts to the auth change by starting a page transition
-    if (user && route.name === 'login') navigate({ name: 'account' });
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Back / forward and typed URLs
   useEffect(
@@ -401,7 +386,6 @@ export default function App({ initialRoute }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const accountName = user ? 'account' : 'login';
   const Page = PAGES[current.name] || Home;
   const headerTone = menuOpen ? 'dark' : tone;
   const activeNav = current.name === 'case' ? 'work' : current.name;
@@ -429,18 +413,8 @@ export default function App({ initialRoute }) {
         <div className="hdr-right">
           <LangSwitch lang={lang} setLang={setLang} label={c.nav.lang} />
           {ACCOUNTS_ENABLED && (
-            <a href={href(accountName)} className="hdr-account">
-              {user ? (
-                <>
-                  <span className="avatar" aria-hidden="true">
-                    {user.firstName[0]}
-                    {user.lastName[0]}
-                  </span>
-                  {c.nav.myAccount}
-                </>
-              ) : (
-                c.nav.account
-              )}
+            <a href={clientAreaHref(lang)} className="hdr-account">
+              {c.nav.account}
             </a>
           )}
           <button
@@ -477,7 +451,7 @@ export default function App({ initialRoute }) {
               ))}
             </ul>
             <div className="menu-utility">
-              {ACCOUNTS_ENABLED && <a href={href(accountName)}>{user ? fmt(c.menu.hello, { name: user.firstName }) : c.nav.account}</a>}
+              {ACCOUNTS_ENABLED && <a href={clientAreaHref(lang)}>{c.nav.account}</a>}
               <a href={href('card')}>{c.nav.card}</a>
               <span>{c.where}</span>
             </div>
