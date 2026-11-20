@@ -28,8 +28,8 @@ export type Client = {
   created_at: string;
 };
 
-/** Internal notes live in their own admin-only table so a client can never read them. */
-export type ClientNote = { id: string; client_id: string; body: string; updated_at: string };
+/** The studio's internal thread about a client. Admin-only table: a client can never read it. */
+export type TeamNote = { id: string; client_id: string; author_id: string | null; author_name: string; body: string; created_at: string };
 
 export type User = {
   id: string;
@@ -124,6 +124,7 @@ export type EventType =
   | "message.posted"
   | "reminder.feedback"
   | "reminder.invoice"
+  | "team.note"
   | "email.failed";
 
 export type PortalEvent = {
@@ -133,6 +134,8 @@ export type PortalEvent = {
   type: EventType;
   data: Record<string, unknown>;
   visible_to_client: boolean;
+  /** The admin who did it (null for clients, webhooks and the daily cron). */
+  actor_name: string | null;
   created_at: string;
 };
 
@@ -147,7 +150,7 @@ export type OutboxEmail = {
 
 export type Tables = {
   clients: Client;
-  client_notes: ClientNote;
+  team_notes: TeamNote;
   users: User;
   projects: Project;
   versions: Version;

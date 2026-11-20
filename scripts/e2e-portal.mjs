@@ -152,10 +152,12 @@ try {
   check(await page.getByText("282,50").first().isVisible(), "draft shows the total with 13 % tax");
   log("admin creates a draft with tax");
 
-  await page.locator("textarea[name=notes]").fill("Préfère les appels le matin. Calendly. Relancer pour le blogue en décembre.");
-  await page.getByRole("button", { name: "Enregistrer" }).first().click();
-  await page.waitForURL(/ok=saved/);
-  log("admin saves internal notes");
+  check(await page.getByText("Elle veut un formulaire de réservation relié à Calendly.").isVisible(), "Steven's internal note is visible to Rayann");
+  await page.locator("textarea[name=team_body]").fill("Je relance Camille pour le blogue en décembre.");
+  await page.getByRole("button", { name: "Envoyer à Steven" }).click();
+  await page.waitForURL(/ok=team_note/);
+  check((await page.locator("#historique").innerText()).includes("Version 3 partagée, par Rayann"), "history says who shared the version");
+  log("Rayann writes to Steven in the internal thread; history shows who did what");
 
   await page.goto(`${BASE}/admin`);
   if (!leadShown) await page.getByRole("link", { name: "Nadia Haddad" }).first().click();
@@ -173,6 +175,8 @@ try {
   check(subjects.some((s) => s.includes("La version 3 de votre site est prête")), "version email in outbox");
   check(subjects.some((s) => s.includes("Facture F-2026-002")), "invoice email in outbox");
   check(subjects.some((s) => s.includes("Votre espace client Standout Studio")), "invite email in outbox");
+  check(subjects.some((s) => s.includes("Rayann a écrit sur Camille Roy")), "Steven is told about Rayann's internal note");
+  check(subjects.some((s) => s.includes("Rayann a partagé la version 3 avec Camille Roy")), "Steven is told about the shared version");
   soft(subjects.some((s) => s.includes("Nouveau prospect : Test Formulaire")), "admin lead email in outbox");
   await shots("05-admin-emails");
   log("every expected email is in the demo outbox");

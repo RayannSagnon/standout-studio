@@ -1,7 +1,7 @@
 -- Client area and admin area: tables and row-level security.
 -- Writes go through the server (service role) after the business rules check access.
 -- Reads by a signed-in client go through these policies, so a client can only ever
--- see rows of their own client_id, never drafts, never internal notes.
+-- see rows of their own client_id, never drafts, never the studio's internal thread.
 
 create extension if not exists pgcrypto;
 
@@ -18,12 +18,16 @@ create table public.clients (
 );
 create index clients_email_idx on public.clients (lower(email));
 
-create table public.client_notes (
+-- The studio's internal thread about each client (Rayann and Steven only)
+create table public.team_notes (
   id uuid primary key default gen_random_uuid(),
-  client_id uuid not null unique references public.clients (id) on delete cascade,
-  body text not null default '',
-  updated_at timestamptz not null default now()
+  client_id uuid not null references public.clients (id) on delete cascade,
+  author_id uuid references auth.users (id) on delete set null,
+  author_name text not null,
+  body text not null check (char_length(body) between 1 and 5000),
+  created_at timestamptz not null default now()
 );
+create index team_notes_client_idx on public.team_notes (client_id, created_at);
 
 create table public.users (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -113,6 +117,7 @@ create table public.events (
   type text not null,
   data jsonb not null default '{}'::jsonb,
   visible_to_client boolean not null default false,
+  actor_name text,
   created_at timestamptz not null default now()
 );
 create index events_client_idx on public.events (client_id, created_at desc);
@@ -136,7 +141,7 @@ grant execute on function public.current_client_id() to authenticated;
 grant execute on function public.is_admin() to authenticated;
 
 alter table public.clients enable row level security;
-alter table public.client_notes enable row level security;
+alter table public.team_notes enable row level security;
 alter table public.users enable row level security;
 alter table public.projects enable row level security;
 alter table public.versions enable row level security;
@@ -150,7 +155,7 @@ alter table public.events enable row level security;
 create policy clients_read on public.clients for select to authenticated
   using (public.is_admin() or id = public.current_client_id());
 
-create policy notes_read on public.client_notes for select to authenticated
+create policy team_notes_read on public.team_notes for select to authenticated
   using (public.is_admin());
 
 create policy users_read on public.users for select to authenticated

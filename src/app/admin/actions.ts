@@ -45,10 +45,10 @@ export async function updateClientAction(f: FormData) {
   done(clientPage(id, "#fiche"), "saved");
 }
 
-export async function saveNotesAction(f: FormData) {
+export async function teamNoteAction(f: FormData) {
   const id = field(f, "client_id")!;
-  await asAdmin(clientPage(id, "#notes"), (ctx) => svc.saveNotes(ctx, id, field(f, "notes")));
-  done(clientPage(id, "#notes"), "saved");
+  await asAdmin(clientPage(id, "#entre-nous"), (ctx) => svc.postTeamNote(ctx, id, field(f, "team_body")));
+  done(clientPage(id, "#entre-nous"), "team_note");
 }
 
 export async function inviteAction(f: FormData) {

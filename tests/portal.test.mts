@@ -81,13 +81,33 @@ test("a client never sees another client's data", async () => {
   await assert.rejects(svc.payableInvoice(one.C, inv.id), NotFoundError);
 });
 
-test("internal notes never reach the client dashboard", async () => {
+test("the studio's internal thread never reaches the client", async () => {
   const t = setup();
   const { A, C, client } = await clientWithProject(t);
-  await svc.saveNotes(A, client.id, "Paie toujours en retard");
+  await svc.postTeamNote(A, client.id, "Paie toujours en retard");
   const dash = await svc.clientDashboard(C);
   assert.ok(!JSON.stringify(dash).includes("Paie toujours en retard"));
-  assert.equal((await svc.adminClient(A, client.id)).notes, "Paie toujours en retard");
+  assert.equal((await svc.adminClient(A, client.id)).team[0].body, "Paie toujours en retard");
+  await assert.rejects(svc.postTeamNote(C, client.id, "x"), ForbiddenError);
+});
+
+test("admins see who did what, and the other admin is told", async () => {
+  const t = setup();
+  const { A, client, project } = await clientWithProject(t);
+  await t.db.insert("users", { id: "admin-2", email: "steven@studio.test", name: "Steven", role: "admin", client_id: null, created_at: "", last_login_at: null });
+  await t.db.insert("users", { id: t.admin.userId, email: t.admin.email, name: "Rayann", role: "admin", client_id: null, created_at: "", last_login_at: null });
+  t.sent.length = 0;
+
+  await svc.shareVersion(A, project.id, { preview_url: "https://preview.test/v1" });
+  const ev = (await t.db.list("events", { type: "version.shared" }))[0];
+  assert.equal(ev.actor_name, "Rayann");
+  assert.equal(t.sent.filter((m) => m.to.includes("steven@studio.test")).length, 1, "Steven hears that Rayann shared a version");
+  assert.ok(!t.sent.some((m) => m.subject.includes("a partagé") && m.to.includes("rayann@studio.test")), "Rayann is not emailed about her own action");
+
+  t.sent.length = 0;
+  await svc.postTeamNote(A, client.id, "Elle veut un blogue en décembre.");
+  assert.deepEqual(t.sent.map((m) => m.to), [["steven@studio.test"]]);
+  assert.match(t.sent[0].subject, /Rayann a écrit sur Camille Roy/);
 });
 
 test("version flow: share, request changes, count revisions, approve", async () => {

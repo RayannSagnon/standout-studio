@@ -30,6 +30,7 @@ const OK: Record<string, string> = {
   invoice_paid: "Facture marquée payée.",
   invoice_void: "Facture annulée.",
   message: "Message envoyé.",
+  team_note: "C'est dans le fil. L'autre a reçu un courriel.",
   reminders: "Relances envoyées.",
   demo_reset: "Démo remise à zéro.",
 };
@@ -97,8 +98,13 @@ export default function AdminShell({
   );
 }
 
-/** What each journal event means, for the studio. */
+/** What each journal event means, for the studio, with who did it. */
 export function adminEventText(e: PortalEvent): string {
+  const text = eventLine(e);
+  return e.actor_name ? `${text.replace(/\.$/, "")}, par ${e.actor_name}.` : text;
+}
+
+function eventLine(e: PortalEvent): string {
   const d = e.data as Record<string, string | number | boolean>;
   const stage = (s: unknown) => STAGE_LABEL.fr[s as Stage] ?? String(s);
   switch (e.type) {
@@ -140,6 +146,8 @@ export function adminEventText(e: PortalEvent): string {
       return "Relance envoyée : commentaires attendus.";
     case "reminder.invoice":
       return "Relance envoyée : facture en retard.";
+    case "team.note":
+      return "Mot dans le fil interne.";
     case "email.failed":
       return `Courriel non envoyé : ${d.subject} (${d.error}).`;
     default:

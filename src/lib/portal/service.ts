@@ -106,6 +106,7 @@ function httpsUrl(v: unknown, field: string): string {
 }
 
 const langOf = (v: unknown): Lang => (v === "en" ? "en" : "fr");
+const text_ = (v: unknown) => text(v, "body", { max: 5000 }) as string;
 
 export const clientUrl = (ctx: Ctx, lang: Lang, hash = "") => `${ctx.baseUrl}${lang === "fr" ? "/fr" : ""}/client${hash}`;
 export const adminUrl = (ctx: Ctx, clientId?: string) => `${ctx.baseUrl}/admin${clientId ? `/clients/${clientId}` : ""}`;
@@ -115,7 +116,8 @@ async function record(
   type: EventType,
   { client_id = null, project_id = null, data = {}, visible = false }: { client_id?: string | null; project_id?: string | null; data?: Record<string, unknown>; visible?: boolean },
 ) {
-  return ctx.db.insert("events", { client_id, project_id, type, data, visible_to_client: visible, created_at: iso(ctx) });
+  const actor_name = ctx.viewer?.role === "admin" ? ctx.viewer.name : null;
+  return ctx.db.insert("events", { client_id, project_id, type, data, visible_to_client: visible, actor_name, created_at: iso(ctx) });
 }
 
 /** Sending never breaks the action that triggered it. Failures land in the journal. */
@@ -132,6 +134,16 @@ async function deliver(ctx: Ctx, to: string[], mail: Email, clientId: string | n
 async function adminRecipients(ctx: Ctx) {
   const admins = await ctx.db.list("users", { role: "admin" });
   return [...admins.map((a) => a.email), ...ctx.adminEmails];
+}
+
+/**
+ * Tells the rest of the studio what one admin just did, so Rayann and Steven
+ * stay in sync. The person who acted is never emailed about their own action.
+ */
+async function tellTeam(ctx: Ctx, clientId: string, subject: string, lines: string[] = []) {
+  const me = ctx.viewer?.role === "admin" ? ctx.viewer.email.toLowerCase() : null;
+  const to = (await adminRecipients(ctx)).filter((e) => e.toLowerCase() !== me);
+  await deliver(ctx, to, emails.admin(subject, lines, adminUrl(ctx, clientId)));
 }
 
 async function clientRecipients(ctx: Ctx, clientId: string) {
@@ -259,6 +271,7 @@ export async function postMessage(ctx: Ctx, input: { clientId?: string; body: un
   await record(ctx, "message.posted", { client_id: clientId, data: { by: v.role } });
   if (v.role === "admin") {
     await deliver(ctx, await clientRecipients(ctx, clientId), emails.messageToClient(client.lang, `${v.name}, Standout Studio`, body, clientUrl(ctx, client.lang, "#messages")), clientId);
+    await tellTeam(ctx, clientId, `${v.name} a répondu à ${client.name}`, [body]);
   } else {
     await deliver(ctx, await adminRecipients(ctx), emails.admin(`Message de ${client.name}`, [body], `${adminUrl(ctx, clientId)}#messages`), clientId);
   }
@@ -291,7 +304,7 @@ export async function adminClient(ctx: Ctx, clientId: string) {
   requireAdmin(ctx);
   const client = await getClient(ctx, clientId);
   const [notes, users, projects, versions, invoices, subs, messages, events] = await Promise.all([
-    ctx.db.list("client_notes", { client_id: clientId }),
+    ctx.db.list("team_notes", { client_id: clientId }, { order: ["created_at", "asc"] }),
     ctx.db.list("users", { client_id: clientId }),
     ctx.db.list("projects", { client_id: clientId }, { order: ["created_at", "desc"] }),
     ctx.db.list("versions", { client_id: clientId }, { order: ["number", "desc"] }),
@@ -302,7 +315,7 @@ export async function adminClient(ctx: Ctx, clientId: string) {
   ]);
   return {
     client,
-    notes: notes[0]?.body ?? "",
+    team: notes,
     users,
     projects: projects.map((p) => {
       const vs = versions.filter((x) => x.project_id === p.id);
@@ -345,14 +358,15 @@ export async function updateClient(ctx: Ctx, clientId: string, input: Record<str
   });
 }
 
-export async function saveNotes(ctx: Ctx, clientId: string, body: unknown) {
-  requireAdmin(ctx);
-  await getClient(ctx, clientId);
-  const value = typeof body === "string" ? body.slice(0, 20000) : "";
-  const existing = (await ctx.db.list("client_notes", { client_id: clientId }))[0];
-  return existing
-    ? ctx.db.update("client_notes", existing.id, { body: value, updated_at: iso(ctx) })
-    : ctx.db.insert("client_notes", { client_id: clientId, body: value, updated_at: iso(ctx) });
+/** A message in the studio's internal thread about a client. The other admins get an email. */
+export async function postTeamNote(ctx: Ctx, clientId: string, body: unknown) {
+  const v = requireAdmin(ctx);
+  const client = await getClient(ctx, clientId);
+  const text = text_(body);
+  const note = await ctx.db.insert("team_notes", { client_id: clientId, author_id: v.userId, author_name: v.name, body: text, created_at: iso(ctx) });
+  await record(ctx, "team.note", { client_id: clientId });
+  await tellTeam(ctx, clientId, `${v.name} a écrit sur ${client.name}`, [text]);
+  return note;
 }
 
 export async function inviteUser(ctx: Ctx, clientId: string, input: Record<string, unknown>) {
@@ -371,6 +385,7 @@ export async function inviteUser(ctx: Ctx, clientId: string, input: Record<strin
   const link = await ctx.auth.loginLink(mail, client.lang === "fr" ? "/fr/client" : "/client");
   await deliver(ctx, [mail], emails.invite(client.lang, name.split(" ")[0], link), clientId);
   await record(ctx, "client.invited", { client_id: clientId, data: { email: mail } });
+  await tellTeam(ctx, clientId, `${ctx.viewer!.name} a invité ${name} dans l'espace client`, [mail]);
   return user;
 }
 
@@ -410,6 +425,7 @@ export async function setStage(ctx: Ctx, projectId: string, stage: unknown) {
   await record(ctx, "project.stage", { client_id: project.client_id, project_id: projectId, data: { stage: s }, visible: true });
   const client = await getClient(ctx, project.client_id);
   await deliver(ctx, await clientRecipients(ctx, client.id), emails.stageChanged(client.lang, STAGE_LABEL[client.lang][s], clientUrl(ctx, client.lang)), client.id);
+  await tellTeam(ctx, client.id, `${ctx.viewer!.name} a passé ${client.name} à l'étape ${STAGE_LABEL.fr[s]}`);
   return updated;
 }
 
@@ -451,6 +467,7 @@ export async function shareVersion(ctx: Ctx, projectId: string, input: Record<st
   await record(ctx, "version.shared", { client_id: project.client_id, project_id: projectId, data: { number: n }, visible: true });
   const client = await getClient(ctx, project.client_id);
   await deliver(ctx, await clientRecipients(ctx, client.id), emails.versionShared(client.lang, n, note, clientUrl(ctx, client.lang, "#version")), client.id);
+  await tellTeam(ctx, client.id, `${ctx.viewer!.name} a partagé la version ${n} avec ${client.name}`, [url, ...(note ? [note] : [])]);
   return version;
 }
 
@@ -511,6 +528,7 @@ export async function sendInvoice(ctx: Ctx, invoiceId: string) {
     emails.invoiceSent(client.lang, inv.number, inv.label, invoiceTotal(inv), inv.due_date ? fmtDate(inv.due_date, client.lang) : null, clientUrl(ctx, client.lang, "#invoices")),
     client.id,
   );
+  await tellTeam(ctx, client.id, `${ctx.viewer!.name} a envoyé la facture ${inv.number} à ${client.name}`, [`${inv.label} : ${(invoiceTotal(inv) / 100).toFixed(2)} $`]);
   return updated;
 }
 
@@ -534,7 +552,9 @@ export async function markInvoicePaid(ctx: Ctx, invoiceId: string, via: "admin" 
   const client = await getClient(ctx, inv.client_id);
   const total = invoiceTotal(inv);
   await deliver(ctx, await clientRecipients(ctx, client.id), emails.invoicePaidClient(client.lang, inv.number, total, clientUrl(ctx, client.lang, "#invoices")), client.id);
-  await deliver(ctx, await adminRecipients(ctx), emails.admin(`Facture ${inv.number} payée par ${client.name}`, [`${(total / 100).toFixed(2)} $ (${via}).`], adminUrl(ctx, client.id)));
+  const paidLine = `${(total / 100).toFixed(2)} $`;
+  if (via === "admin") await tellTeam(ctx, client.id, `${ctx.viewer!.name} a marqué payée la facture ${inv.number} de ${client.name}`, [paidLine]);
+  else await deliver(ctx, await adminRecipients(ctx), emails.admin(`Facture ${inv.number} payée par ${client.name}`, [`${paidLine}, par carte.`], adminUrl(ctx, client.id)));
   return updated;
 }
 

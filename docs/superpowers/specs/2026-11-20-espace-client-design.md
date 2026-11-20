@@ -34,16 +34,16 @@ Les quatre objectifs comptent : moins d'allers-retours (A), être payé facileme
 | Table | Contenu |
 |---|---|
 | `clients` | Nom, entreprise, email de contact, téléphone, langue (`fr`/`en`), statut (`prospect`, `active`, `care`, `archived`), message d'origine. |
-| `client_notes` | Notes internes, dans une table à part que seuls les admins peuvent lire. |
+| `team_notes` | Fil interne entre Rayann et Steven sur chaque client (auteur, date, texte). Table que seuls les admins peuvent lire. |
 | `users` | Lien vers le compte de connexion : email, nom, rôle (`client`/`admin`), `client_id`. Plusieurs utilisateurs possibles par client. |
 | `projects` | Client, nom, forfait (`essential`, `growth`, `signature`), étape (`call`, `brief`, `build`, `launch`, `live`), dates de chaque étape, révisions incluses, prochaine action (texte FR/EN) et qui doit agir (`client`/`studio`). |
 | `versions` | Projet, numéro, lien de prévisualisation, note du studio, statut (`pending`, `approved`, `changes_requested`), commentaire du client, dates. Le compteur de révisions = nombre de versions avec `changes_requested`. |
 | `invoices` | Client, projet (facultatif), numéro (`F-2026-001`), libellé, montant avant taxes en cents, taux de taxe, statut (`draft`, `sent`, `paid`, `overdue`, `void`), échéance, référence Stripe. Un devis = une facture en `draft`. |
 | `subscriptions` | Entretien mensuel : client, statut (`none`, `active`, `past_due`, `canceled`), prix en cents, références Stripe. |
 | `messages` | Fil client ↔ studio : client, auteur, texte, date. |
-| `events` | Journal : type, client, projet, données, date. Sert à l'historique, aux emails et aux relances (on ne relance pas deux fois la même chose). |
+| `events` | Journal : type, client, projet, données, date, et l'admin qui a agi (`actor_name`). Sert à l'historique, aux emails et aux relances (on ne relance pas deux fois la même chose). |
 
-Sécurité : chaque table a la sécurité par ligne de Postgres activée. Ce que l'espace client affiche est lu avec la session du client : la base ne lui renvoie que les lignes de son `client_id`, jamais les factures en brouillon, jamais les notes internes. Aucune écriture n'est permise directement depuis une session : toutes les modifications passent par le serveur, après les règles de `service.ts` (double protection).
+Sécurité : chaque table a la sécurité par ligne de Postgres activée. Ce que l'espace client affiche est lu avec la session du client : la base ne lui renvoie que les lignes de son `client_id`, jamais les factures en brouillon, jamais le fil interne. Aucune écriture n'est permise directement depuis une session : toutes les modifications passent par le serveur, après les règles de `service.ts` (double protection).
 
 ## Connexion
 
@@ -66,7 +66,7 @@ Les adresses dans `ADMIN_EMAILS` deviennent admin à leur première connexion. P
 
 **Espace admin** (en français, outil interne) :
 - Tableau de bord : nouveaux prospects, projets en attente du studio, projets en attente du client, factures impayées, derniers événements.
-- Fiche client : coordonnées et notes internes, utilisateurs et invitation, projets (changer d'étape, prochaine action, partager une version), factures (créer, envoyer, marquer payée, annuler), entretien, messages, historique.
+- Fiche client : fil interne « Entre nous », coordonnées, utilisateurs et invitation, projets (changer d'étape, prochaine action, partager une version), factures (créer, envoyer, marquer payée, annuler), entretien, messages, historique.
 - Nouveau client (sans passer par le formulaire).
 - Emails envoyés (mode démo seulement), pour voir ce que les clients recevraient.
 
@@ -83,6 +83,8 @@ Les adresses dans `ADMIN_EMAILS` deviennent admin à leur première connexion. P
 | Facture envoyée | Client |
 | Facture payée | Admins et client (reçu) |
 | Nouveau message | L'autre côté |
+| Mot dans le fil interne | L'autre admin |
+| Version partagée, étape changée, facture envoyée ou marquée payée, réponse au client, invitation | L'autre admin (celui qui agit ne reçoit rien) |
 | Relance : commentaires attendus depuis 5 jours | Client (au plus tous les 5 jours) |
 | Relance : facture en retard | Client (au plus tous les 7 jours), et la facture passe en `overdue` |
 

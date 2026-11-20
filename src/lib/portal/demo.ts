@@ -31,7 +31,10 @@ function seed(): Partial<{ [N in keyof Tables]: Tables[N][] }> {
       { id: julien, name: "Julien Dubois", company: "Boulangerie Lune", email: "julien@demo.standout", phone: "613-555-0142", lang: "en", status: "care", source_message: null, created_at: daysAgo(120) },
       { id: nadia, name: "Nadia Haddad", company: null, email: "nadia@demo.standout", phone: null, lang: "fr", status: "prospect", source_message: "Bonjour, je suis photographe à Gatineau et j'aimerais un site simple pour montrer mon travail et recevoir des demandes. Budget autour de 1000 $.", created_at: daysAgo(1, 13) },
     ],
-    client_notes: [{ id: "n1", client_id: camille, body: "Préfère les appels le matin. Veut un formulaire de réservation relié à Calendly.", updated_at: daysAgo(20) }],
+    team_notes: [
+      { id: "t1", client_id: camille, author_id: "u-steven", author_name: "Steven", body: "Elle préfère les appels le matin. Elle veut un formulaire de réservation relié à Calendly.", created_at: daysAgo(20, 15) },
+      { id: "t2", client_id: camille, author_id: "u-rayann", author_name: "Rayann", body: "Ok. Je lui fais un prix pour le blogue après le lancement.", created_at: daysAgo(9, 19) },
+    ],
     users: [
       { id: "u-rayann", email: "rayann@demo.standout", name: "Rayann", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(0) },
       { id: "u-steven", email: "steven@demo.standout", name: "Steven", role: "admin", client_id: null, created_at: daysAgo(200), last_login_at: daysAgo(1) },
@@ -68,16 +71,16 @@ function seed(): Partial<{ [N in keyof Tables]: Tables[N][] }> {
       { id: "m2", client_id: camille, author_id: "u-steven", author_role: "admin", author_name: "Steven", body: "Oui, sans problème. On le prévoit après le lancement, je vous envoie un prix séparé.", created_at: daysAgo(9, 18) },
     ],
     events: [
-      { id: "e1", client_id: nadia, project_id: null, type: "lead.created", data: { name: "Nadia Haddad" }, visible_to_client: false, created_at: daysAgo(1, 13) },
-      { id: "e2", client_id: camille, project_id: pCamille, type: "version.shared", data: { number: 2 }, visible_to_client: true, created_at: daysAgo(6) },
-      { id: "e3", client_id: camille, project_id: pCamille, type: "version.changes_requested", data: { number: 1 }, visible_to_client: true, created_at: daysAgo(14) },
-      { id: "e4", client_id: camille, project_id: pCamille, type: "version.shared", data: { number: 1 }, visible_to_client: true, created_at: daysAgo(16) },
-      { id: "e5", client_id: camille, project_id: pCamille, type: "project.stage", data: { stage: "build" }, visible_to_client: true, created_at: daysAgo(30) },
-      { id: "e6", client_id: camille, project_id: null, type: "invoice.paid", data: { number: "F-2026-001" }, visible_to_client: true, created_at: daysAgo(40) },
-      { id: "e7", client_id: camille, project_id: pCamille, type: "project.stage", data: { stage: "brief" }, visible_to_client: true, created_at: daysAgo(41) },
-      { id: "e8", client_id: camille, project_id: pCamille, type: "project.created", data: { package: "growth" }, visible_to_client: true, created_at: daysAgo(48) },
-      { id: "e9", client_id: julien, project_id: null, type: "invoice.sent", data: { number: "F-2026-003" }, visible_to_client: true, created_at: daysAgo(17) },
-      { id: "e10", client_id: julien, project_id: null, type: "care.active", data: {}, visible_to_client: true, created_at: daysAgo(78) },
+      { id: "e1", client_id: nadia, project_id: null, type: "lead.created", data: { name: "Nadia Haddad" }, visible_to_client: false, actor_name: null, created_at: daysAgo(1, 13) },
+      { id: "e2", client_id: camille, project_id: pCamille, type: "version.shared", data: { number: 2 }, visible_to_client: true, actor_name: "Steven", created_at: daysAgo(6) },
+      { id: "e3", client_id: camille, project_id: pCamille, type: "version.changes_requested", data: { number: 1 }, visible_to_client: true, actor_name: null, created_at: daysAgo(14) },
+      { id: "e4", client_id: camille, project_id: pCamille, type: "version.shared", data: { number: 1 }, visible_to_client: true, actor_name: "Steven", created_at: daysAgo(16) },
+      { id: "e5", client_id: camille, project_id: pCamille, type: "project.stage", data: { stage: "build" }, visible_to_client: true, actor_name: "Rayann", created_at: daysAgo(30) },
+      { id: "e6", client_id: camille, project_id: null, type: "invoice.paid", data: { number: "F-2026-001" }, visible_to_client: true, actor_name: null, created_at: daysAgo(40) },
+      { id: "e7", client_id: camille, project_id: pCamille, type: "project.stage", data: { stage: "brief" }, visible_to_client: true, actor_name: null, created_at: daysAgo(41) },
+      { id: "e8", client_id: camille, project_id: pCamille, type: "project.created", data: { package: "growth" }, visible_to_client: true, actor_name: null, created_at: daysAgo(48) },
+      { id: "e9", client_id: julien, project_id: null, type: "invoice.sent", data: { number: "F-2026-003" }, visible_to_client: true, actor_name: "Rayann", created_at: daysAgo(17) },
+      { id: "e10", client_id: julien, project_id: null, type: "care.active", data: {}, visible_to_client: true, actor_name: null, created_at: daysAgo(78) },
     ],
   };
 }

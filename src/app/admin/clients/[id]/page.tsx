@@ -5,11 +5,11 @@ import {
   createProjectAction,
   inviteAction,
   markPaidAction,
-  saveNotesAction,
   sendInvoiceAction,
   setNextAction,
   setStageAction,
   shareVersionAction,
+  teamNoteAction,
   updateClientAction,
   voidInvoiceAction,
 } from "@/app/admin/actions";
@@ -40,6 +40,8 @@ export default async function AdminClientPage({
     throw err;
   }
   const c = d.client;
+  // The other admins, by first name, for "Envoyer à Steven"
+  const others = (await ctx.db.list("users", { role: "admin" })).filter((u) => u.id !== ctx.viewer!.userId).map((u) => u.name.split(" ")[0]);
   const cid = <input type="hidden" name="client_id" value={c.id} />;
 
   return (
@@ -59,6 +61,34 @@ export default async function AdminClientPage({
           </p>
         </Section>
       )}
+
+      <Section id="entre-nous" title="Entre nous" note={`Le client ne le voit jamais. ${others.length ? others.join(" et ") : "L'autre"} reçoit un courriel à chaque mot.`}>
+        {d.team.length === 0 ? (
+          <p className="pt-empty">Rien pour l&apos;instant. Notez ici ce que l&apos;autre doit savoir sur ce client.</p>
+        ) : (
+          <ol className="pt-thread">
+            {d.team.map((n) => (
+              <li key={n.id} className="pt-msg">
+                <p className="pt-msg-who">
+                  <b>{n.author_id === ctx.viewer!.userId ? "Vous" : n.author_name}</b>
+                  <time dateTime={n.created_at}>{fmtDate(n.created_at, "fr", true)}</time>
+                </p>
+                <p>{n.body}</p>
+              </li>
+            ))}
+          </ol>
+        )}
+        <form action={teamNoteAction} className="pt-form">
+          {cid}
+          <label className="pt-field">
+            <span>Votre mot</span>
+            <textarea className="pt-input" name="team_body" required maxLength={5000} rows={3} placeholder="Ce qu'on a promis, ce qui reste à faire, ce qu'il faut savoir avant d'appeler." />
+          </label>
+          <div className="pt-actions">
+            <Ghost small>{others.length ? `Envoyer à ${others.join(" et ")}` : "Envoyer"}</Ghost>
+          </div>
+        </form>
+      </Section>
 
       <Section id="projets" title="Projets" note={d.projects.length ? undefined : "Pas encore de projet."}>
         {d.projects.map((p) => {
@@ -354,19 +384,6 @@ export default async function AdminClientPage({
           </div>
           <div className="pt-actions">
             <Primary small>{d.users.length ? "Inviter une autre personne" : "Inviter dans l'espace client"}</Primary>
-          </div>
-        </form>
-      </Section>
-
-      <Section id="notes" title="Notes internes" note="Le client ne les voit jamais.">
-        <form action={saveNotesAction} className="pt-form">
-          {cid}
-          <label className="pt-field">
-            <span className="sr-only">Notes</span>
-            <textarea className="pt-input" name="notes" defaultValue={d.notes} rows={5} aria-label="Notes internes" />
-          </label>
-          <div className="pt-actions">
-            <Ghost small>Enregistrer</Ghost>
           </div>
         </form>
       </Section>
