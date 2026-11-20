@@ -289,3 +289,36 @@ test("dashboard: news since my last visit (not my own actions), urgent things fi
   await svc.markSeen(A);
   assert.equal((await svc.adminHome(A)).news.length, 0, "after a visit, nothing is new");
 });
+
+test("dashboard tasks: done, later, claimed; a new client message brings the task back", async () => {
+  const t = setup();
+  const { A, C, client } = await clientWithProject(t);
+  await t.db.insert("users", { id: t.admin.userId, email: t.admin.email, name: "Rayann", role: "admin", client_id: null, created_at: "", last_login_at: null });
+  const S = t.as({ userId: "admin-2", email: "steven@studio.test", name: "Steven", role: "admin", clientId: null });
+  await t.db.insert("users", { id: "admin-2", email: "steven@studio.test", name: "Steven", role: "admin", client_id: null, created_at: "", last_login_at: null });
+
+  await svc.postMessage(C, { body: "Première question" });
+  const reply = () => svc.adminHome(A).then((h) => h.todo.find((x) => x.action?.kind === "reply"));
+  const first = await reply();
+  assert.equal(first?.detail, "Première question");
+
+  await svc.setTodo(S, first!.key, "claim");
+  const seenByRayann = await reply();
+  assert.equal(seenByRayann?.claimedBy, "Steven");
+  assert.equal(seenByRayann?.mine, false);
+
+  await svc.setTodo(A, first!.key, "snooze");
+  assert.equal(await reply(), undefined, "hidden while snoozed");
+  t.advance(4);
+  assert.ok(await reply(), "back after 3 days");
+
+  await svc.setTodo(A, first!.key, "done");
+  assert.equal(await reply(), undefined, "done is gone");
+  await svc.postMessage(C, { body: "Deuxième question" });
+  assert.equal((await reply())?.detail, "Deuxième question", "a new message is a new task");
+
+  await svc.postMessage(A, { clientId: client.id, body: "Réponse" });
+  assert.equal(await reply(), undefined, "answering clears it");
+  await assert.rejects(svc.setTodo(A, "bad key!", "done"), InputError);
+  await assert.rejects(svc.setTodo(C, first!.key, "done"), ForbiddenError);
+});

@@ -150,9 +150,20 @@ export type OutboxEmail = {
   created_at: string;
 };
 
+/** Shared state of a dashboard task (id = the task key). */
+export type TodoState = {
+  id: string;
+  done_at: string | null;
+  snoozed_until: string | null;
+  claimed_by_id: string | null;
+  claimed_by_name: string | null;
+  updated_at: string;
+};
+
 export type Tables = {
   clients: Client;
   team_notes: TeamNote;
+  todo_states: TodoState;
   users: User;
   projects: Project;
   versions: Version;

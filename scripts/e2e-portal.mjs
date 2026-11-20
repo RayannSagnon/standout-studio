@@ -124,6 +124,22 @@ try {
   await shots("03-admin-dashboard");
   log("admin dashboard shows the new prospect and Camille's feedback waiting");
 
+  // Dashboard tasks: claim, reply in place, mark as seen
+  const msgTask = page.locator(".pt-task", { hasText: "Répondre à son message" });
+  await msgTask.getByRole("button", { name: "Je m'en occupe" }).click();
+  await page.waitForURL(/ok=todo_claim/);
+  check(await page.locator(".pt-task", { hasText: "Répondre à son message" }).getByText("vous vous en occupez").isVisible(), "task shows who handles it");
+  const msgTask2 = page.locator(".pt-task", { hasText: "Répondre à son message" });
+  await msgTask2.getByText("Répondre", { exact: true }).click();
+  await msgTask2.locator("textarea[name=body]").fill("Oui, on en parle en décembre. Bonne journée !");
+  await msgTask2.getByRole("button", { name: "Envoyer" }).click();
+  await page.waitForURL(/ok=message/);
+  check(!(await page.locator(".pt-task", { hasText: "Répondre à son message" }).count()), "answering from the dashboard clears the task");
+  await page.getByRole("button", { name: "Tout marquer comme vu" }).click();
+  await page.waitForURL(/ok=seen/);
+  check((await page.locator("#nouveau").innerText()).includes("Rien de nouveau"), "news cleared only when asked");
+  log("dashboard: claim a task, reply in place, mark all as seen");
+
   await page.getByRole("link", { name: "Camille Roy" }).first().click();
   await page.waitForURL(/\/admin\/clients\//);
   check(await page.getByText("Mettre la photo de Camille plus grande").first().isVisible(), "admin sees the client's feedback");

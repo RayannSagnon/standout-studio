@@ -33,6 +33,14 @@ const OK: Record<string, string> = {
   team_note: "C'est dans le fil. L'autre a reçu un courriel.",
   reminders: "Relances envoyées.",
   demo_reset: "Démo remise à zéro.",
+  seen: "Tout est marqué comme vu.",
+  todo_done: "Tâche terminée.",
+  todo_snooze: "Tâche cachée pour 3 jours.",
+  todo_claim: "C'est noté, vous vous en occupez.",
+  todo_unclaim: "Vous ne vous en occupez plus.",
+  reminded: "Relance envoyée au client.",
+  now_client: "C'est un client maintenant. Invitez-le dans son espace.",
+  archived: "Demande archivée.",
 };
 
 const ERR: Record<string, string> = {

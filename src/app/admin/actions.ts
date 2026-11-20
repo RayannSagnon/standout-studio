@@ -29,6 +29,8 @@ async function asAdmin<T>(back: string, run: (ctx: svc.Ctx) => Promise<T>): Prom
 }
 
 const clientPage = (id: string, hash = "") => `/admin/clients/${id}${hash}`;
+/** Forms on the dashboard send back=/admin so the person stays there. */
+const backOr = (f: FormData, fallback: string) => (field(f, "back") === "/admin" ? "/admin#a-faire" : fallback);
 const done = (path: string, ok: string) => {
   const [p, hash = ""] = path.split("#");
   redirect(`${p}?ok=${ok}${hash ? `#${hash}` : ""}`);
@@ -65,8 +67,13 @@ export async function createProjectAction(f: FormData) {
 
 export async function setStageAction(f: FormData) {
   const id = field(f, "client_id")!;
-  await asAdmin(clientPage(id, "#projets"), (ctx) => svc.setStage(ctx, field(f, "project_id")!, field(f, "stage")));
-  done(clientPage(id, "#projets"), "stage");
+  const back = backOr(f, clientPage(id, "#projets"));
+  await asAdmin(back, async (ctx) => {
+    await svc.setStage(ctx, field(f, "project_id")!, field(f, "stage"));
+    // From the dashboard, moving on also closes the task that suggested it
+    if (field(f, "key")) await svc.setTodo(ctx, field(f, "key"), "done");
+  });
+  done(back, "stage");
 }
 
 export async function setNextAction(f: FormData) {
@@ -77,8 +84,9 @@ export async function setNextAction(f: FormData) {
 
 export async function shareVersionAction(f: FormData) {
   const id = field(f, "client_id")!;
-  await asAdmin(clientPage(id, "#projets"), (ctx) => svc.shareVersion(ctx, field(f, "project_id")!, all(f)));
-  done(clientPage(id, "#projets"), "version_shared");
+  const back = backOr(f, clientPage(id, "#projets"));
+  await asAdmin(back, (ctx) => svc.shareVersion(ctx, field(f, "project_id")!, all(f)));
+  done(back, "version_shared");
 }
 
 export async function createInvoiceAction(f: FormData) {
@@ -107,8 +115,9 @@ export async function voidInvoiceAction(f: FormData) {
 
 export async function adminMessageAction(f: FormData) {
   const id = field(f, "client_id")!;
-  await asAdmin(clientPage(id, "#messages"), (ctx) => svc.postMessage(ctx, { clientId: id, body: field(f, "body") }));
-  done(clientPage(id, "#messages"), "message");
+  const back = backOr(f, clientPage(id, "#messages"));
+  await asAdmin(back, (ctx) => svc.postMessage(ctx, { clientId: id, body: field(f, "body") }));
+  done(back, "message");
 }
 
 export async function runRemindersAction() {
@@ -121,4 +130,34 @@ export async function resetDemoAction() {
   if (mode !== "demo") redirect("/admin");
   await asAdmin("/admin/journal", async () => resetDemo());
   redirect("/admin/journal?ok=demo_reset");
+}
+
+// ---------- dashboard ----------
+
+export async function markSeenAction() {
+  await asAdmin("/admin", (ctx) => svc.markSeen(ctx));
+  redirect("/admin?ok=seen");
+}
+
+export async function todoAction(f: FormData) {
+  const op = field(f, "op");
+  await asAdmin("/admin#a-faire", (ctx) => svc.setTodo(ctx, field(f, "key"), op));
+  done("/admin#a-faire", `todo_${op}`);
+}
+
+export async function remindAction(f: FormData) {
+  await asAdmin("/admin#a-faire", async (ctx) => {
+    await svc.remindInvoiceNow(ctx, field(f, "invoice_id")!);
+    // Reminded: hide it for 3 days, it comes back if still unpaid
+    if (field(f, "key")) await svc.setTodo(ctx, field(f, "key"), "snooze");
+  });
+  done("/admin#a-faire", "reminded");
+}
+
+export async function prospectAction(f: FormData) {
+  const id = field(f, "client_id")!;
+  const status = field(f, "status");
+  await asAdmin("/admin#a-faire", (ctx) => svc.setClientStatus(ctx, id, status));
+  if (status === "active") done(clientPage(id, "#acces"), "now_client");
+  done("/admin#a-faire", "archived");
 }

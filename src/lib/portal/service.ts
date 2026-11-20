@@ -319,26 +319,55 @@ const NEWS: EventType[] = [
   "email.failed",
 ];
 
-export type Todo = { key: string; clientId: string; clientName: string; text: string; amount?: number; tone?: "warn" | "wait"; href: string };
+/** What the row offers to do right there, without opening the client page. */
+export type TodoAction =
+  | { kind: "reply" }
+  | { kind: "remind"; invoiceId: string }
+  | { kind: "share"; projectId: string; number: number }
+  | { kind: "stage"; projectId: string; stage: Stage }
+  | { kind: "prospect" };
+
+export type Todo = {
+  key: string;
+  clientId: string;
+  clientName: string;
+  text: string;
+  /** When it started waiting, to show "depuis 3 jours" */
+  since: string;
+  /** Why it is here: the message, the request, the client's comment */
+  detail?: string | null;
+  amount?: number;
+  tone?: "warn" | "wait";
+  href: string;
+  action?: TodoAction;
+  claimedBy?: string | null;
+  mine?: boolean;
+};
+
+const SNOOZE_DAYS = 3;
 
 /**
- * The dashboard: what happened since this admin's last visit (done by someone
- * else), and one list of things to do, most urgent first.
+ * The dashboard: what happened since this admin last marked things as seen
+ * (done by someone else), what is going on overall, and one list of things to
+ * do, most urgent first. Items marked done or snoozed are left out.
  */
 export async function adminHome(ctx: Ctx) {
   const v = requireAdmin(ctx);
   const me = await ctx.db.get("users", v.userId);
   const since = me?.seen_at ?? new Date(now(ctx).getTime() - 7 * DAY).toISOString();
-  const [clients, projects, versions, invoices, messages, events] = await Promise.all([
+  const [clients, projects, versions, invoices, messages, events, states, subs] = await Promise.all([
     ctx.db.list("clients", {}),
     ctx.db.list("projects", {}),
     ctx.db.list("versions", {}, { order: ["number", "desc"] }),
     ctx.db.list("invoices", { status: ["sent", "overdue"] }, { order: ["due_date", "asc"] }),
     ctx.db.list("messages", {}, { order: ["created_at", "asc"] }),
     ctx.db.list("events", { type: NEWS }, { order: ["created_at", "desc"], limit: 60 }),
+    ctx.db.list("todo_states", {}),
+    ctx.db.list("subscriptions", { status: "active" }),
   ]);
   const name = new Map(clients.map((c) => [c.id, c.name]));
   const nameOf = (id: string | null) => (id ? (name.get(id) ?? "") : "");
+  const t = now(ctx).toISOString();
 
   const news = events
     .filter((e) => e.created_at > since && e.actor_name !== v.name)
@@ -346,39 +375,112 @@ export async function adminHome(ctx: Ctx) {
     .slice(0, 12)
     .map((e) => ({ ...e, clientName: nameOf(e.client_id) }));
 
-  const todo: Todo[] = [];
+  const all: Todo[] = [];
   const day = today(ctx);
   for (const i of invoices) {
     if (i.status === "overdue" || (i.due_date && i.due_date < day)) {
-      todo.push({ key: `i${i.id}`, clientId: i.client_id, clientName: nameOf(i.client_id), text: `Facture ${i.number} en retard`, amount: invoiceTotal(i), tone: "warn", href: `/admin/clients/${i.client_id}#factures` });
+      all.push({
+        key: `inv:${i.id}`,
+        clientId: i.client_id,
+        clientName: nameOf(i.client_id),
+        text: `Facture ${i.number} en retard`,
+        since: i.due_date ?? i.sent_at ?? i.created_at,
+        amount: invoiceTotal(i),
+        tone: "warn",
+        href: `/admin/clients/${i.client_id}#factures`,
+        action: { kind: "remind", invoiceId: i.id },
+      });
     }
   }
   const lastByClient = new Map<string, (typeof messages)[number]>();
   for (const m of messages) lastByClient.set(m.client_id, m);
   for (const [clientId, m] of lastByClient) {
-    if (m.author_role === "client") todo.push({ key: `m${clientId}`, clientId, clientName: nameOf(clientId), text: "Répondre à son message", tone: "wait", href: `/admin/clients/${clientId}#messages` });
+    if (m.author_role !== "client") continue;
+    // The key follows the message: a new message from the client brings the task back
+    all.push({ key: `msg:${m.id}`, clientId, clientName: nameOf(clientId), text: "Répondre à son message", since: m.created_at, detail: m.body, tone: "wait", href: `/admin/clients/${clientId}#messages`, action: { kind: "reply" } });
   }
   for (const c of clients.filter((x) => x.status === "prospect")) {
-    todo.push({ key: `p${c.id}`, clientId: c.id, clientName: c.name, text: "Nouvelle demande à traiter", tone: "wait", href: `/admin/clients/${c.id}` });
+    all.push({ key: `lead:${c.id}`, clientId: c.id, clientName: c.name, text: "Nouvelle demande", since: c.created_at, detail: c.source_message, tone: "wait", href: `/admin/clients/${c.id}`, action: { kind: "prospect" } });
   }
   for (const p of projects.filter((x) => x.stage !== "live" && x.waiting_on === "studio")) {
     // Written for the studio, not copied from what the client sees
     const last = versions.find((x) => x.project_id === p.id);
-    const text =
-      last?.status === "changes_requested"
-        ? `Préparer la version ${last.number + 1} (commentaires reçus)`
-        : last?.status === "approved"
-          ? `Version ${last.number} approuvée : passer à la suite`
-          : p.next_action_fr || "Écrire la prochaine étape du projet";
-    todo.push({ key: `j${p.id}`, clientId: p.client_id, clientName: nameOf(p.client_id), text, href: `/admin/clients/${p.client_id}#projets` });
+    const nextStage = STAGES[Math.min(STAGES.indexOf(p.stage) + 1, STAGES.length - 1)];
+    const base = { clientId: p.client_id, clientName: nameOf(p.client_id), href: `/admin/clients/${p.client_id}#projets` };
+    if (last?.status === "changes_requested") {
+      all.push({ ...base, key: `proj:${p.id}:${last.id}`, text: `Préparer la version ${last.number + 1}`, since: last.responded_at ?? last.shared_at, detail: last.client_comment, action: { kind: "share", projectId: p.id, number: last.number + 1 } });
+    } else if (last?.status === "approved") {
+      all.push({ ...base, key: `proj:${p.id}:${last.id}`, text: `Version ${last.number} approuvée : passer à l'étape « ${STAGE_LABEL.fr[nextStage]} »`, since: last.responded_at ?? last.shared_at, detail: last.client_comment, action: { kind: "stage", projectId: p.id, stage: nextStage } });
+    } else if (!last) {
+      all.push({ ...base, key: `proj:${p.id}:start`, text: "Partager la première version", since: p.created_at, action: { kind: "share", projectId: p.id, number: 1 } });
+    }
   }
-  return { since: me?.seen_at ?? null, news, todo };
+
+  const stateOf = new Map(states.map((s) => [s.id, s]));
+  const rank = (x: Todo) => (x.tone === "warn" ? 0 : x.action?.kind === "reply" ? 1 : x.action?.kind === "prospect" ? 2 : 3);
+  const todo = all
+    .filter((x) => {
+      const s = stateOf.get(x.key);
+      return !s?.done_at && !(s?.snoozed_until && s.snoozed_until > t);
+    })
+    .map((x) => {
+      const s = stateOf.get(x.key);
+      return { ...x, claimedBy: s?.claimed_by_name ?? null, mine: s?.claimed_by_id === v.userId };
+    })
+    .sort((a, b) => rank(a) - rank(b) || a.since.localeCompare(b.since));
+
+  const active = projects.filter((p) => p.stage !== "live");
+  const now_ = {
+    projects: active.length,
+    care: subs.length,
+    expected: invoices.reduce((s, i) => s + invoiceTotal(i), 0),
+  };
+  return { since: me?.seen_at ?? null, news, todo, now: now_ };
 }
 
-/** Remembers that this admin has seen the dashboard, so "new" starts again from here. */
+/** "Tout marquer comme vu": what is new starts again from here. */
 export async function markSeen(ctx: Ctx) {
   const v = requireAdmin(ctx);
   if (await ctx.db.get("users", v.userId)) await ctx.db.update("users", v.userId, { seen_at: iso(ctx) });
+}
+
+/** Done, snoozed for 3 days, or claimed by one admin. Shared by both admins. */
+export async function setTodo(ctx: Ctx, key: unknown, op: unknown) {
+  const v = requireAdmin(ctx);
+  const id = typeof key === "string" && /^[a-z]+:[\w:-]{1,200}$/.test(key) ? key : null;
+  if (!id) throw new InputError("todo");
+  const patch =
+    op === "done"
+      ? { done_at: iso(ctx) }
+      : op === "snooze"
+        ? { snoozed_until: new Date(now(ctx).getTime() + SNOOZE_DAYS * DAY).toISOString() }
+        : op === "claim"
+          ? { claimed_by_id: v.userId, claimed_by_name: v.name }
+          : op === "unclaim"
+            ? { claimed_by_id: null, claimed_by_name: null }
+            : null;
+  if (!patch) throw new InputError("todo");
+  const existing = await ctx.db.get("todo_states", id);
+  return existing
+    ? ctx.db.update("todo_states", id, { ...patch, updated_at: iso(ctx) })
+    : ctx.db.insert("todo_states", { id, done_at: null, snoozed_until: null, claimed_by_id: null, claimed_by_name: null, ...patch, updated_at: iso(ctx) });
+}
+
+/** Sends the overdue reminder now, from the dashboard. */
+export async function remindInvoiceNow(ctx: Ctx, invoiceId: string) {
+  const inv = await adminInvoice(ctx, invoiceId);
+  if (inv.status !== "sent" && inv.status !== "overdue") throw new InputError("invoice_not_payable");
+  const client = await getClient(ctx, inv.client_id);
+  await deliver(ctx, await clientRecipients(ctx, client.id), emails.reminderInvoice(client.lang, inv.number, invoiceTotal(inv), clientUrl(ctx, client.lang, "#invoices")), client.id);
+  await record(ctx, "reminder.invoice", { client_id: client.id, data: { invoice_id: inv.id } });
+}
+
+/** A request becomes a client, or is archived. */
+export async function setClientStatus(ctx: Ctx, clientId: string, status: unknown) {
+  requireAdmin(ctx);
+  await getClient(ctx, clientId);
+  if (!["prospect", "active", "care", "archived"].includes(String(status))) throw new InputError("status");
+  return ctx.db.update("clients", clientId, { status: status as Client["status"] });
 }
 
 export async function adminClient(ctx: Ctx, clientId: string) {

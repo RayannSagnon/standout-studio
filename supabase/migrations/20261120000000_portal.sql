@@ -124,6 +124,17 @@ create table public.events (
 create index events_client_idx on public.events (client_id, created_at desc);
 create index events_type_idx on public.events (type);
 
+-- Dashboard tasks marked done, snoozed or claimed by an admin. id is the task key
+-- ("inv:<invoice>", "msg:<message>"...), so a new message makes a new task.
+create table public.todo_states (
+  id text primary key,
+  done_at timestamptz,
+  snoozed_until timestamptz,
+  claimed_by_id uuid references auth.users (id) on delete set null,
+  claimed_by_name text,
+  updated_at timestamptz not null default now()
+);
+
 -- Who is asking. security definer so the policies below can read public.users
 -- without recursing into its own policy.
 create function public.current_client_id() returns uuid
@@ -150,6 +161,7 @@ alter table public.invoices enable row level security;
 alter table public.subscriptions enable row level security;
 alter table public.messages enable row level security;
 alter table public.events enable row level security;
+alter table public.todo_states enable row level security;
 
 -- Read policies only. No insert/update/delete policy exists for signed-in users:
 -- every change goes through the server with the service role.
@@ -179,6 +191,9 @@ create policy messages_read on public.messages for select to authenticated
 
 create policy events_read on public.events for select to authenticated
   using (public.is_admin() or (client_id = public.current_client_id() and visible_to_client));
+
+create policy todo_states_read on public.todo_states for select to authenticated
+  using (public.is_admin());
 
 -- The anonymous role reads nothing.
 revoke all on all tables in schema public from anon;
